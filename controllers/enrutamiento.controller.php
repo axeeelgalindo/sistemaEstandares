@@ -1,0 +1,23 @@
+<?php
+class ControllerEnrutamiento {
+static	public function enrutamiento() {
+		$ruta = $_GET["ruta"];
+		if ($ruta == "dashboard" || 
+		 $ruta == "personas" || 
+		 $ruta == "estandareseditar" || 
+		 $ruta == "estandaresgestion" || 
+		 $ruta == "usuarios" || 
+		 $ruta == "usuarioajustes" || 
+		 $ruta == "nivelesusuario" || 
+		 $ruta == "areas" || 
+		 $ruta == "reportes" || 
+         $ruta == "salir" 
+		) {
+			include "views/modulos/".$ruta.".php";
+		} else {
+			
+				include "views/modulos/error404.php";
+			}
+		}
+	}
+?>

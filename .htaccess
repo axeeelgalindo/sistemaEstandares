@@ -1,0 +1,9 @@
+#Impedir el listado de directorios
+Options All -Indexes
+
+#Habilitar reglas de sobre escritura
+RewriteEngine On
+
+#Crear una regla de escritura
+RewriteRule ^([-a-zA-Z0-9/]+)$ index.php?ruta=$1
+
