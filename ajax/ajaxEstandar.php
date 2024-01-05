@@ -75,11 +75,13 @@ public function CargarEstandares(){
 	echo json_encode($respuesta);
 	}
 	public function GraficosBarrasEntrenados(){
-		$respuesta = ModeloEstandar::GraficosBarrasEntrenadosMdl();
+		$id_area = $this->id_area;
+		$respuesta = ModeloEstandar::GraficosBarrasEntrenadosMdl($id_area);
 		echo json_encode($respuesta);
 	}
 	public function GraficosBarrasCreados(){
-			$respuesta = ModeloEstandar::GraficosBarrasCreadosMdl();
+		$id_area = $this->id_area;
+			$respuesta = ModeloEstandar::GraficosBarrasCreadosMdl($id_area );
 			echo json_encode($respuesta);
 	}
 	public function GraficosBarrasAreasCreados(){
@@ -93,7 +95,8 @@ public function GraficosBarrasAreasEntrenados(){
 	   echo json_encode($respuesta);
 }
 public function GraficoPiePorPilar(){
-	$respuesta = ModeloEstandar::GraficoPiePorPilarMdl();
+	$id_area = $this->id_area;
+	$respuesta = ModeloEstandar::GraficoPiePorPilarMdl($id_area);
 	echo json_encode($respuesta);
 }
 }
@@ -164,10 +167,12 @@ if ($tipoOperacion == "GraficoCreados_Entrenados") {
 }
 if ($tipoOperacion == "GraficoBarras_Entrenados") {
 	$GraficosBarrasEntrenados = new ajaxEstandar();
+	$GraficosBarrasEntrenados -> id_area = $_POST["id_area"];
 	$GraficosBarrasEntrenados -> GraficosBarrasEntrenados();
 }
 if ($tipoOperacion == "GraficoBarras_Creados") {
 	$GraficosBarrasCreados = new ajaxEstandar();
+	$GraficosBarrasCreados -> id_area = $_POST["id_area"];
 	$GraficosBarrasCreados -> GraficosBarrasCreados();
 }
 if ($tipoOperacion == "GraficoBarras_Areas_Creados") {
@@ -182,6 +187,7 @@ if ($tipoOperacion == "GraficoBarras_Areas_Entrenados") {
 }
 if ($tipoOperacion == "GraficoPie_Por_Pilar") {
 	$GraficoPiePorPilar = new ajaxEstandar();
+	$GraficoPiePorPilar -> id_area = $_POST["id_area"];
 	$GraficoPiePorPilar -> GraficoPiePorPilar();
 }
 ?>

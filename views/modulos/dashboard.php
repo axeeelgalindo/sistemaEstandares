@@ -44,7 +44,6 @@
 
               <canvas id="donutChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
               </div>
-
                           <div class="col-lg-3 col-sm-6">
                       <!-- small card -->
                       <div class="small-box bg-default">
@@ -67,9 +66,6 @@
             </div>
             <!-- /.card -->
 
-  
-            <!-- /.card -->
-
                      <!-- BAR CHART -->
                      <div class="card card-secondary">
               <div class="card-header">
@@ -89,11 +85,11 @@
               <div class="col-6 col-sm-6">
               <div class="form-group">
                   <select class="form-control areas" style="width: 60%;" name="areas">
-                  <option selected="selected">Seleccione Área</option>
+                  <option value="0">Todas las Áreas</option>
                   <?php
-          $tabla = ModeloArea::listarAreaMdl();
-          foreach ($tabla as $key => $value) {
-            echo '<option value='.$value["id"].'>'.$value["nombre"].'</option>';}?>
+                    $tabla = ModeloArea::listarAreaMdl();
+                    foreach ($tabla as $key => $value) {
+                      echo '<option value='.$value["id"].'>'.$value["nombre"].'</option>';}?>
                   </select>
                 </div>
                 <!-- /.form-group -->
@@ -174,8 +170,7 @@
                   </div>
                   </div>
 
-                </div>
-       
+                </div>     
               </div>
               <!-- /.card-body -->
             </div>

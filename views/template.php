@@ -82,7 +82,7 @@ function ExpandirMenu(id) {
     <strong>Copyright &copy; 2023 <a href="https://adminlte.io">SmartEyes</a>.</strong>
     All rights reserved.
     <div class="float-right d-none d-sm-inline-block">
-      <b>Version</b> 1.0.0
+      <b>Version</b> 1.0.1
     </div>
   </footer>
 
@@ -120,8 +120,12 @@ function ExpandirMenu(id) {
 <script src="plugins/summernote/summernote-bs4.min.js"></script>
 <!-- overlayScrollbars -->
 <script src="plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
-<script src="plugins/chart.js/Chart2.min.js"></script>
-<script src="plugins/chart.js/plugin.js"></script>
+ <script src="plugins/chart.js/Chart2.min.js"></script>
+<!--<script src="plugins/chart.js/plugin.js"></script> -->
+
+<!--<script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.0/dist/chart.min.js"></script>-->
+<script src="plugins/chart.js/datalabel2.js"></script>
+
 <script src="dist/js/pages/dashboard.js"></script>
 <!--<script type="text/javascript" src="views/dist/js/secciones.js"></script>-->
 <script type="text/javascript" src="views/dist/js/personas.js"></script>

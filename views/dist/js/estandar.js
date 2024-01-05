@@ -451,202 +451,51 @@ let creados
         porcentaje = ( entrenados * 100) / creados;
       }
 
-     $('#PorcentajeEntrenado').text(porcentaje.toFixed(2)+' %');
-     
+     $('#PorcentajeEntrenado').text(porcentaje.toFixed(2)+' %');  
       }
   })
 
-
-
-
-  const EntrenadosPorMeses = [];
-  var datosentrenados = new FormData()
-  datosentrenados.append("tipoOperacion", "GraficoBarras_Entrenados")
- 
-     $.ajax({
-       url: 'ajax/ajaxEstandar.php',
-       type: 'POST',
-       data: datosentrenados,
-       dataType: 'json',
-       processData: false,
-       contentType: false,
-       success: function(respuesta) {
-      console.log(respuesta)
-                  for (let i = 0; i < respuesta.length; i++) {
-                    EntrenadosPorMeses.push(respuesta[i]["CantidadRegistrosEntrenados"])
-                  }
-       }
-   })
-   const CreadosPorMeses = [];
-   var datoscreados = new FormData()
-   datoscreados.append("tipoOperacion", "GraficoBarras_Creados")
-  
-      $.ajax({
-        url: 'ajax/ajaxEstandar.php',
-        type: 'POST',
-        data: datoscreados,
-        dataType: 'json',
-        processData: false,
-        contentType: false,
-        success: function(respuesta) {
-       console.log(respuesta)
-                   for (let i = 0; i < respuesta.length; i++) {
-                    CreadosPorMeses.push(respuesta[i]["CantidadRegistrosCreados"])
-                   }
-        }
-    })
-
-
-    let SeguridadEntrenados
-    let SeguridadCreados
-    let CalidadEntrenados
-    let CalidadCreados
-    let ProduccionEntrenados
-    let ProduccionCreados
-    let S5Entrenados
-    let S5Creados
-    var datos = new FormData()
-    datos.append("tipoOperacion", "GraficoPie_Por_Pilar")
-   
-       $.ajax({
-         url: 'ajax/ajaxEstandar.php',
-         type: 'POST',
-         data: datos,
-         dataType: 'json',
-         processData: false,
-         contentType: false,
-         success: function(respuesta) {
-        SeguridadEntrenados = parseInt(respuesta.seguridad_entrenados)
-        SeguridadCreados = parseInt(respuesta.seguridad_creados)
-        CalidadEntrenados = parseInt(respuesta.calidad_entrenados)
-        CalidadCreados = parseInt(respuesta.calidad_creados)
-        ProduccionEntrenados = parseInt(respuesta.produccion_entrenados)
-        ProduccionCreados = parseInt(respuesta.produccion_creados)
-        S5Entrenados = parseInt(respuesta.s5_entrenados)
-        S5Creados = parseInt(respuesta.s5_creados)
-        
-         }
-     })
-
     $(function () {
- var CreadosPorMesesArea = [];
- var EntrenadosPorMesesArea = [];
+      var SeguridadEntrenados = 0
+      var SeguridadCreados = 0
+      let CalidadEntrenados = 0
+      let CalidadCreados = 0
+      var ProduccionEntrenados = 0
+      let ProduccionCreados = 0
+      let S5Entrenados = 0
+      let S5Creados = 0
 
- var GraficoArea
+      var CreadosPorMesesArea = [];
+      var EntrenadosPorMesesArea = [];
 
-var mesesDelAnio = [];
-var TotalArea = [];
-
-
-// Obtener la fecha actual
-const fechaActual = new Date();
-
-// Iniciar desde enero (mes 0) del año actual
-fechaActual.setMonth(0);
-
-// Obtener los 12 meses del año y agregarlos al array
-for (let i = 0; i < 12; i++) {
-  mesesDelAnio.push(fechaActual.toLocaleString('default', { month: 'long' }));
-  fechaActual.setMonth(fechaActual.getMonth() + 1); // Avanzar al siguiente mes
-}
-  TotalArea.push("Total Área")
-var areaChartDataAreas = {
-  labels  : TotalArea,
-  datasets: [
-    {
-      label               : 'Entrenados',
-      backgroundColor     : '#D85E05',
-      borderColor         : 'rgba(60,141,188,0.8)',
-      pointRadius          : false,
-      pointColor          : '#3b8bba',
-      pointStrokeColor    : 'rgba(60,141,188,1)',
-      pointHighlightFill  : '#fff',
-      pointHighlightStroke: 'rgba(60,141,188,1)',
-      data                : EntrenadosPorMesesArea
-    },
-    {
-      label               : 'Creados',
-      backgroundColor     : '#1C245A',
-      borderColor         : 'rgba(210, 214, 222, 1)',
-      pointRadius         : false,
-      pointColor          : 'rgba(210, 214, 222, 1)',
-      pointStrokeColor    : '#c1c7d1',
-      pointHighlightFill  : '#fff',
-      pointHighlightStroke: 'rgba(220,220,220,1)',
-      data                : CreadosPorMesesArea
-    },
-  ]
-}
-var barChartCanvas2 = $('#barChart2').get(0).getContext('2d')
-var barChartDataArea = $.extend(true, {}, areaChartDataAreas)
-var temp0A = areaChartDataAreas.datasets[0]
-var temp1A = areaChartDataAreas.datasets[1]
-barChartDataArea.datasets[0] = temp1A
-barChartDataArea.datasets[1] = temp0A
-
-GraficoArea = new Chart(barChartCanvas2, {
-  type: 'bar',
-  data: barChartDataArea,
-  options: barChartOptions
-})
+      var GraficoArea
+      var GraficoPilarSeguridad
+      var GraficoPilarCalidad
+      var GraficoPilarProduccion
+      var GraficoPilar5S
+      var GraficoBarras
 
 
-$(document).on("change", ".areas", function(){
+      var mesesDelAnio = [];
+      var TotalArea = [];
 
-  GraficoArea.data.datasets[0].data = []       
-  GraficoArea.data.datasets[1].data = []                       
-  GraficoArea.update()
+      var EntrenadosPorMeses = [];
+      var CreadosPorMeses = [];
 
-      var Area = $(this).val()
-      var datos = new FormData()
-      datos.append("id_area", Area)
-      datos.append("tipoOperacion", "GraficoBarras_Areas_Creados")
-            $.ajax({
-              url: 'ajax/ajaxEstandar.php',
-              type: 'POST',
-              data: datos,
-              dataType: 'json',
-              processData: false,
-              contentType: false,
-              success: function(respuesta) {
-                CreadosPorMesesArea = []
+    // Obtener la fecha actual
+    const fechaActual = new Date();
 
-                for (let i = 0; i < respuesta.length; i++) {
-                  CreadosPorMesesArea.push(respuesta[i]["CantidadRegistrosCreadosAreas"])
-                 }   
+    // Iniciar desde enero (mes 0) del año actual
+    fechaActual.setMonth(0);
 
-                 GraficoArea.data.datasets[0].data = CreadosPorMesesArea       
-                 
-                 GraficoArea.update()
-              }
-          })
-          var datos2 = new FormData()
-          datos2.append("id_area", Area)
-          datos2.append("tipoOperacion", "GraficoBarras_Areas_Entrenados")
-                $.ajax({
-                  url: 'ajax/ajaxEstandar.php',
-                  type: 'POST',
-                  data: datos2,
-                  dataType: 'json',
-                  processData: false,
-                  contentType: false,
-                  success: function(respuesta) {
-                    EntrenadosPorMesesArea = []
-    
-                    for (let i = 0; i < respuesta.length; i++) {
-                      EntrenadosPorMesesArea.push(respuesta[i]["CantidadRegistrosEntrenadosAreas"])
-                     }     
-                     GraficoArea.data.datasets[1].data = EntrenadosPorMesesArea  
-                                  
-                     GraficoArea.update()
-                  }
-              })
-
-    });
-
-
-    var areaChartData = {
-      labels  : mesesDelAnio,
+    // Obtener los 12 meses del año y agregarlos al array
+    for (let i = 0; i < 12; i++) {
+      mesesDelAnio.push(fechaActual.toLocaleString('default', { month: 'long' }));
+      fechaActual.setMonth(fechaActual.getMonth() + 1); // Avanzar al siguiente mes
+    }
+      TotalArea.push("Total Área")
+    var areaChartDataAreas = {
+      labels  : TotalArea,
       datasets: [
         {
           label               : 'Entrenados',
@@ -657,7 +506,7 @@ $(document).on("change", ".areas", function(){
           pointStrokeColor    : 'rgba(60,141,188,1)',
           pointHighlightFill  : '#fff',
           pointHighlightStroke: 'rgba(60,141,188,1)',
-          data                : EntrenadosPorMeses
+          data                : EntrenadosPorMesesArea
         },
         {
           label               : 'Creados',
@@ -668,209 +517,229 @@ $(document).on("change", ".areas", function(){
           pointStrokeColor    : '#c1c7d1',
           pointHighlightFill  : '#fff',
           pointHighlightStroke: 'rgba(220,220,220,1)',
-          data                : CreadosPorMeses
+          data                : CreadosPorMesesArea
         },
       ]
     }
+    var barChartCanvas2 = $('#barChart2').get(0).getContext('2d')
+    var barChartDataArea = $.extend(true, {}, areaChartDataAreas)
+    var temp0A = areaChartDataAreas.datasets[0]
+    var temp1A = areaChartDataAreas.datasets[1]
+    barChartDataArea.datasets[0] = temp1A
+    barChartDataArea.datasets[1] = temp0A
 
-  
-
-    var areaChartOptions = {
-      maintainAspectRatio : false,
-      responsive : true,
-      legend: {
-        display: false
-      },
-      scales: {
-        xAxes: [{
-          gridLines : {
-            display : false,
-          }
-        }],
-        yAxes: [{
-          gridLines : {
-            display : false,
-          }
-        }]
-      }
-    }
-
-    // This will get the first returned node in the jQuery collection.
-/*     new Chart(areaChartCanvas, {
-      type: 'line',
-      data: areaChartData,
-      options: areaChartOptions
-    })
- */
-    //-------------
-    //- LINE CHART -
-    //--------------
-   // var lineChartCanvas = $('#lineChart').get(0).getContext('2d')
-    var lineChartOptions = $.extend(true, {}, areaChartOptions)
-    var lineChartData = $.extend(true, {}, areaChartData)
-    lineChartData.datasets[0].fill = false;
-    lineChartData.datasets[1].fill = false;
-    lineChartOptions.datasetFill = false
-
-    var donutChartCanvas = $('#donutChart').get(0).getContext('2d')
-    var donutData        = {
-      labels: [
-          'Entrenados',
-          'Creados',
-      ],
-      datasets: [
-        {
-          data: [entrenados,creados],
-          backgroundColor : ['#D85E05', '#1C245A'],
-        }
-      ]
-    }
-    var donutOptions     = {
-      maintainAspectRatio : false,
-      responsive : true,
-    }
-    //Create pie or douhnut chart
-    // You can switch between pie and douhnut using the method below.
-    new Chart(donutChartCanvas, {
-      type: 'doughnut',
-      data: {
-          labels: ['Entrenados', 'Creados'],
-          datasets: [
-              {
-                  data: [entrenados, creados],
-                  backgroundColor: ['#D85E05', '#1C245A'],
+    GraficoArea = new Chart(barChartCanvas2, {
+      type: 'bar',
+      data: barChartDataArea,
+      options: barChartOptions,
+      plugins:[ChartDataLabels],
+            options:{
+              plugins:{
+                    datalabels: {
+                color: '#FFFFFF'
+              },
               }
-          ]
-      },
-      options: {
-        plugins: {
-          // Change options for ALL labels of THIS CHART
-          datalabels: {
-            color: '#36A2EB'
-          }
-               
-      },
-      },
-      
-  });
+   
+      }
+    })
 
-    //-------------
+  //-------------
     //- PIE CHART -
     //-------------
     // Get context with jQuery - using jQuery's .get() method.
 
+      var pieChartCanvasSeguridad = $('#pieChart').get(0).getContext('2d')
+      var pieChartCanvasCalidad = $('#pieChart2').get(0).getContext('2d')
+      var pieChartCanvasProduccion = $('#pieChart3').get(0).getContext('2d')
+      var pieChartCanvas5S = $('#pieChart4').get(0).getContext('2d')
 
-
-    var pieChartCanvasSeguridad = $('#pieChart').get(0).getContext('2d')
-    var pieChartCanvasCalidad = $('#pieChart2').get(0).getContext('2d')
-    var pieChartCanvasProduccion = $('#pieChart3').get(0).getContext('2d')
-    var pieChartCanvas5S = $('#pieChart4').get(0).getContext('2d')
-
-    new Chart(pieChartCanvasSeguridad, {
-      type: 'pie',
-      data: {
-          labels: ['Entrenados', 'Creados'],
-          datasets: [
-              {
-                  data: [SeguridadEntrenados, SeguridadCreados],
-                  backgroundColor: ['#D85E05', '#1C245A'],
+      GraficoPilarSeguridad =  new Chart(pieChartCanvasSeguridad, {
+            type: 'pie',
+            data: {
+                labels: ['Entrenados', 'Creados'],
+                datasets: [
+                    {
+                        data: [SeguridadEntrenados, SeguridadCreados],
+                        backgroundColor: ['#D85E05', '#1C245A'],
+                    }
+                ]
+            },
+            options: {
+              plugins: {
+                // Change options for ALL labels of THIS CHART
+                datalabels: {
+                  color: '#36A2EB'
+                } , title: {
+                  display: true,
+                  text: 'Seguridad'
               }
-          ]
-      },
-      options: {
-        plugins: {
-          // Change options for ALL labels of THIS CHART
-          datalabels: {
-            color: '#36A2EB'
-          } , title: {
-            display: true,
-            text: 'Seguridad'
-        }
-               
-      },
-      },
-      
-  });
-  new Chart(pieChartCanvasCalidad, {
-    type: 'pie',
-    data: {
-        labels: ['Entrenados', 'Creados'],
-        datasets: [
-            {
-                data: [CalidadEntrenados, CalidadCreados],
-                backgroundColor: ['#D85E05', '#1C245A'],
+                     
+            },
+            },
+            plugins:[ChartDataLabels],
+            options:{
+              plugins:{
+                    datalabels: {
+                color: '#FFFFFF'
+              },
+              title: {
+                display: true,
+                text: 'Seguridad'
             }
-        ]
-    },
-    options: {
-      plugins: {
-        // Change options for ALL labels of THIS CHART
-        datalabels: {
-          color: '#36A2EB'
-        } , title: {
-          display: true,
-          text: 'Calidad'
+              }
+   
       }
-             
-    },
-    },
-    
-});
-new Chart(pieChartCanvasProduccion,{
-  type: 'pie',
-  data: {
-      labels: ['Entrenados', 'Creados'],
-      datasets: [
-          {
-              data: [ProduccionEntrenados, ProduccionCreados],
-              backgroundColor: ['#D85E05', '#1C245A'],
+      });
+      GraficoPilarCalidad = new Chart(pieChartCanvasCalidad, {
+          type: 'pie',
+          data: {
+              labels: ['Entrenados', 'Creados'],
+              datasets: [
+                  {
+                      data: [CalidadEntrenados, CalidadCreados],
+                      backgroundColor: ['#D85E05', '#1C245A'],
+                  }
+              ]
+          },
+          options: {
+            plugins: {
+              legend:{
+                display:false
+              },
+              // Change options for ALL labels of THIS CHART
+              datalabels: {
+                color: '#36A2EB'
+              } , title: {
+                display: true,
+                text: 'Calidad'
+            }
+                  
+          },
+          },
+          plugins:[ChartDataLabels],
+          options:{
+            plugins:{
+                  datalabels: {
+              color: '#FFFFFF'
+            }, title: {
+              display: true,
+              text: 'Calidad'
           }
-      ]
-  },
-  options: {
-    plugins: {
-      // Change options for ALL labels of THIS CHART
-      datalabels: {
-        color: '#36A2EB'
-      } , title: {
-        display: true,
-        text: 'Producción'
-    }
-           
-  },
-  },
-  
-});
-new Chart(pieChartCanvas5S,{
-  type: 'pie',
-  data: {
-      labels: ['Entrenados', 'Creados'],
-      datasets: [
-          {
-              data: [S5Entrenados, S5Creados],
-              backgroundColor: ['#D85E05', '#1C245A'],
-          }
-      ]
-  },
-  options: {
-    plugins: {
-      // Change options for ALL labels of THIS CHART
-      datalabels: {
-        color: '#36A2EB'
-      } , title: {
-        display: true,
-        text: '5S'
-    }
-           
-  },
-  },
-  
-});
-
-
-
+            }
  
-    //-------------
+    }
+      });
+      GraficoPilarProduccion =  new Chart(pieChartCanvasProduccion,{
+        type: 'pie',
+        data: {
+            labels: ['Entrenados', 'Creados'],
+            datasets: [
+                {
+                    data: [ProduccionEntrenados, ProduccionCreados],
+                    backgroundColor: ['#D85E05', '#1C245A'],
+                }
+            ]
+        },
+        options: {
+            plugins: {
+              legend:{
+                display:false
+              },
+            // Change options for ALL labels of THIS CHART
+            datalabels: {
+              color: '#36A2EB'
+            } , title: {
+              display: true,
+              text: 'Producción'
+          }
+                
+        },
+        }, 
+        plugins:[ChartDataLabels],
+        options:{
+          plugins:{
+                datalabels: {
+            color: '#FFFFFF'
+          }, title: {
+            display: true,
+            text: 'Producción'
+        }
+          }
+
+      }
+        
+      });
+      GraficoPilar5S =  new Chart(pieChartCanvas5S,{
+        type: 'pie',
+        data: {
+            labels: ['Entrenados', 'Creados'],
+            datasets: [
+                {
+                    data: [S5Entrenados, S5Creados],
+                    backgroundColor: ['#D85E05', '#1C245A'],
+                }
+            ]
+        },
+        options: {
+          plugins: {
+            legend:{
+              display:false
+            },
+            // Change options for ALL labels of THIS CHART
+            datalabels: {
+              color: '#36A2EB'
+            } , title: {
+              display: true,
+              text: '5S'
+          }
+                
+        },
+        },
+
+        plugins:[ChartDataLabels],
+        options:{
+          plugins:{
+                datalabels: {
+            color: '#FFFFFF'
+          },
+          title: {
+            display: true,
+            text: '5S'
+             }
+          }
+
+       }
+      });
+
+
+      var areaChartData = {
+        labels  : mesesDelAnio,
+        datasets: [
+          {
+            label               : 'Entrenados',
+            backgroundColor     : '#D85E05',
+            borderColor         : 'rgba(60,141,188,0.8)',
+            pointRadius          : false,
+            pointColor          : '#3b8bba',
+            pointStrokeColor    : 'rgba(60,141,188,1)',
+            pointHighlightFill  : '#fff',
+            pointHighlightStroke: 'rgba(60,141,188,1)',
+            data                : EntrenadosPorMeses
+          },
+          {
+            label               : 'Creados',
+            backgroundColor     : '#1C245A',
+            borderColor         : 'rgba(210, 214, 222, 1)',
+            pointRadius         : false,
+            pointColor          : 'rgba(210, 214, 222, 1)',
+            pointStrokeColor    : '#c1c7d1',
+            pointHighlightFill  : '#fff',
+            pointHighlightStroke: 'rgba(220,220,220,1)',
+            data                : CreadosPorMeses
+          },
+        ]
+      }
+          //-------------
     //- BAR CHART -
     //-------------
     var barChartCanvas = $('#barChart').get(0).getContext('2d')
@@ -881,12 +750,32 @@ new Chart(pieChartCanvas5S,{
     barChartData.datasets[0] = temp1
     barChartData.datasets[1] = temp0
 
+    GraficoBarras = new Chart(barChartCanvas, {
+      type: 'bar',
+      data: barChartData,
+      options: barChartOptions,
+   
+      plugins:[ChartDataLabels],
+      options:{
+        plugins:{
+              datalabels: {
+          color: '#FFFFFF'
+        },
+        }
+
+}
+    })
+
     var barChartOptions = {
       responsive              : true,
       maintainAspectRatio     : false,
       datasetFill             : false,
       plugins: {
+        legend:{
+          display:false
+        },
         datalabels: {
+          display: true,
             color: 'black', // Color de las etiquetas
             anchor: 'end',  // Posición de las etiquetas (puedes ajustarla según tus preferencias)
             align: 'end',   // Alineación de las etiquetas (puedes ajustarla según tus preferencias)
@@ -900,11 +789,214 @@ new Chart(pieChartCanvas5S,{
     }
     }
 
-    new Chart(barChartCanvas, {
-      type: 'bar',
-      data: barChartData,
-      options: barChartOptions
+
+$(document).on("change", ".areas", function(){
+
+  CargarInformacionGraficos($(this).val())
+
+    });
+
+
+    function CargarInformacionGraficos(area){
+
+      GraficoArea.data.datasets[0].data = []       
+      GraficoArea.data.datasets[1].data = []                       
+      GraficoArea.update()
+      GraficoPilarSeguridad.data.datasets[0].data = [0,0]                   
+      GraficoPilarSeguridad.update()
+      GraficoPilarProduccion.data.datasets[0].data = [0,0]                       
+      GraficoPilarProduccion.update()
+      GraficoPilarCalidad.data.datasets[0].data = [0,0]                       
+      GraficoPilarCalidad.update()
+      GraficoPilar5S.data.datasets[0].data =[0,0]                      
+      GraficoPilar5S.update()
+      GraficoBarras.data.datasets[0].data = []       
+      GraficoBarras.data.datasets[1].data = []                       
+      GraficoBarras.update()
+    
+          var Area = area
+          var datos = new FormData()
+          datos.append("id_area", Area)
+          datos.append("tipoOperacion", "GraficoBarras_Areas_Creados")
+                $.ajax({
+                  url: 'ajax/ajaxEstandar.php',
+                  type: 'POST',
+                  data: datos,
+                  dataType: 'json',
+                  processData: false,
+                  contentType: false,
+                  success: function(respuesta) {
+                    CreadosPorMesesArea = []
+    
+                    for (let i = 0; i < respuesta.length; i++) {
+                      CreadosPorMesesArea.push(respuesta[i]["CantidadRegistrosCreadosAreas"])
+                     }   
+    
+                     GraficoArea.data.datasets[0].data = CreadosPorMesesArea       
+                     
+                     GraficoArea.update()
+                  }
+              })
+              var datos2 = new FormData()
+              datos2.append("id_area", Area)
+              datos2.append("tipoOperacion", "GraficoBarras_Areas_Entrenados")
+                    $.ajax({
+                      url: 'ajax/ajaxEstandar.php',
+                      type: 'POST',
+                      data: datos2,
+                      dataType: 'json',
+                      processData: false,
+                      contentType: false,
+                      success: function(respuesta) {
+                        EntrenadosPorMesesArea = []
+        
+                        for (let i = 0; i < respuesta.length; i++) {
+                          EntrenadosPorMesesArea.push(respuesta[i]["CantidadRegistrosEntrenadosAreas"])
+                         }     
+                         GraficoArea.data.datasets[1].data = EntrenadosPorMesesArea  
+                                      
+                         GraficoArea.update()
+                      }
+                  })
+    
+                  var datosentrenados = new FormData()
+                  datosentrenados.append("id_area", Area)
+                  datosentrenados.append("tipoOperacion", "GraficoBarras_Entrenados")
+                 
+                     $.ajax({
+                       url: 'ajax/ajaxEstandar.php',
+                       type: 'POST',
+                       data: datosentrenados,
+                       dataType: 'json',
+                       processData: false,
+                       contentType: false,
+                       success: function(respuesta) {
+                      console.log(respuesta)
+                       EntrenadosPorMeses = []
+    
+                                  for (let i = 0; i < respuesta.length; i++) {
+                                    EntrenadosPorMeses.push(respuesta[i]["CantidadRegistrosEntrenados"])
+                                  }
+                             GraficoBarras.data.datasets[1].data = EntrenadosPorMeses                                
+                            GraficoBarras.update()
+    
+                       }
+                   })
+        
+                   var datoscreados = new FormData()
+                   datoscreados.append("id_area", Area)
+                   datoscreados.append("tipoOperacion", "GraficoBarras_Creados")
+                  
+                      $.ajax({
+                        url: 'ajax/ajaxEstandar.php',
+                        type: 'POST',
+                        data: datoscreados,
+                        dataType: 'json',
+                        processData: false,
+                        contentType: false,
+                        success: function(respuesta) {
+                       console.log(respuesta)
+                       CreadosPorMeses = []
+                                   for (let i = 0; i < respuesta.length; i++) {
+                                    CreadosPorMeses.push(respuesta[i]["CantidadRegistrosCreados"])
+                                   }
+    
+                                  GraficoBarras.data.datasets[0].data = CreadosPorMeses    
+                                  GraficoBarras.update()
+                        }
+                    })
+    
+                    var datos = new FormData()
+                    datos.append("id_area", Area)
+                    datos.append("tipoOperacion", "GraficoPie_Por_Pilar")
+                   
+                       $.ajax({
+                         url: 'ajax/ajaxEstandar.php',
+                         type: 'POST',
+                         data: datos,
+                         dataType: 'json',
+                         processData: false,
+                         contentType: false,
+                         success: function(respuesta) {
+                        GraficoPilarSeguridad.data.datasets[0].data = [parseInt(respuesta.seguridad_entrenados),parseInt(respuesta.seguridad_creados)]                       
+                        GraficoPilarSeguridad.update()
+                            
+                        GraficoPilarProduccion.data.datasets[0].data = [parseInt(respuesta.produccion_entrenados),parseInt(respuesta.produccion_creados)]                       
+                        GraficoPilarProduccion.update()
+      
+                        GraficoPilarCalidad.data.datasets[0].data = [parseInt(respuesta.calidad_entrenados),parseInt(respuesta.calidad_creados)]                       
+                        GraficoPilarCalidad.update()
+    
+                        GraficoPilar5S.data.datasets[0].data = [parseInt(respuesta.s5_entrenados),parseInt(respuesta.s5_creados)]                       
+                        GraficoPilar5S.update()
+                         }
+                     })
+    
+    }
+
+    // This will get the first returned node in the jQuery collection.
+/*     new Chart(areaChartCanvas, {
+      type: 'line',
+      data: areaChartData,
+      options: areaChartOptions
     })
+ */
+    //-------------
+    //- LINE CHART -
+    //--------------
+   // var lineChartCanvas = $('#lineChart').get(0).getContext('2d')
+var selectElement = document.querySelector('select[name="areas"]');
+
+// Obtener el valor seleccionado
+var selectedValue = selectElement.value; 
+   CargarInformacionGraficos(selectedValue)
+
+   var donutChartCanvas = $('#donutChart').get(0).getContext('2d')
+   GraficoTest = new Chart(donutChartCanvas, {
+      type: 'doughnut',
+      data: {
+        labels: ['Entrenados', 'Creados'],
+        datasets: [
+            {
+                data: [entrenados, creados],
+                backgroundColor: ['#D85E05', '#1C245A'],
+            }
+        ]
+      },
+      options: {
+        plugins: {
+          legend:{
+            display:false
+          },
+          // Change options for ALL labels of THIS CHART
+
+      }
+    },
+    plugins:[ChartDataLabels],
+    options:{
+      plugins:{
+   
+        datalabels: {
+          anchor: 'end',
+          backgroundColor: function(context) {
+            return context.dataset.backgroundColor;
+          },
+          borderColor: 'white',
+          borderRadius: 0,
+          borderWidth: 2,
+          color: 'white',
+          font: {
+            weight: 'bold'
+          },
+          formatter: Math.round,
+          padding: 6
+        }
+        
+      }
+ 
+    }
+    
+   })
   })
 
 
