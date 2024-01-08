@@ -25,11 +25,14 @@ if (isset($_FILES['archivo_excel']['name'])) {
 
     foreach ($requiredColumns as $cellCoordinate => $requiredHeader) {
         $cell = $worksheet->getCell($cellCoordinate);
-        $header = strtolower($cell->getValue());
+        $header = trim(strtolower($cell->getValue()));
     
+      //  echo "encabezado: ".$header;
         if ($header !== $requiredHeader) {
+
+          //  echo " columna exc: ".$header." requerido: ".$requiredHeader;
                // Si ocurre un error, establece un código de estado HTTP personalizado (por ejemplo, 500 para errores internos del servidor).
-             http_response_code(500);
+            http_response_code(500);
             echo json_encode(['error' => "Error en formato excel, la columna $requiredHeader debe estar en la celda $cellCoordinate."]);
             exit;
         }
