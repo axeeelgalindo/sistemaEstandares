@@ -204,6 +204,7 @@ $.ajax({
 				$('#formu-editar-personas input[name="nombre"]').val(valor.nombre)
 				$('#formu-editar-personas input[name="apellido"]').val(valor.apellido)
 				$('#formu-editar-personas select[name="area"]').val(valor.area)
+
 			}
 		})
 	})

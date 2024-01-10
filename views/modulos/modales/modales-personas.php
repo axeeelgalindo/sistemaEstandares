@@ -257,6 +257,7 @@
             </div>
             <div class="modal-footer justify-content-between">
             <input type="hidden" name="id_personas">
+
                 <input type="hidden" name="tipoOperacion" value="actualizarPersonas">
               <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
               <button type="submit" class="btn btn-primary">Guardar</button>
