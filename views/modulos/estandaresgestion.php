@@ -55,6 +55,8 @@
                 
                           
                   <?php
+
+                  
                     $tabla = ModeloEstandar::listarEstandaresCargadosMdl();
                     foreach ($tabla as $key => $value) {
                     echo '
