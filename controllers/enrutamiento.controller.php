@@ -11,6 +11,7 @@ static	public function enrutamiento() {
 		 $ruta == "nivelesusuario" || 
 		 $ruta == "areas" || 
 		 $ruta == "reportes" || 
+		 $ruta == "unidades" || 
          $ruta == "salir" 
 		) {
 			include "views/modulos/".$ruta.".php";
