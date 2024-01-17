@@ -52,7 +52,7 @@
 /// Url actual
 let url = window.location.href;
 /// Elementos de li
-const tabs = ["dashboard", "personas","estandareseditar","estandaresgestion","usuarios","areas","reportes","nivelesusuario","usuarioajustes"];
+const tabs = ["dashboard", "personas","estandareseditar","estandaresgestion","usuarios","areas","reportes","nivelesusuario","usuarioajustes","unidades"];
 tabs.forEach(e => {
     /// Agregar .php y ver si lo contiene en la url
     if (url.indexOf(e ) !== -1) {
@@ -133,6 +133,8 @@ function ExpandirMenu(id) {
 <script type="text/javascript" src="views/dist/js/usuario.js"></script>
 <script type="text/javascript" src="views/dist/js/nivelusuario.js"></script>
 <script type="text/javascript" src="views/dist/js/estandar.js"></script>
+<script type="text/javascript" src="views/dist/js/unidades.js"></script>
+
 <script src="dist/js/pages/dashboard3.js"></script>
 <script src="plugins/sweetalert/sweetalert.js"></script>
 <!-- Toastr -->

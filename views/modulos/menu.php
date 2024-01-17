@@ -56,7 +56,7 @@
         echo' 
           <li class="nav-item">
             <a href="personas" class="nav-link"  id="tab-personas">
-            <i class="nav-icon fas fa-users"></i>
+            <i class="fas fa-users nav-icon"></i>
               <p>
                 Personas
               </p>
@@ -122,6 +122,17 @@
               </p>
             </a>
           </li>';}
+          if($value["menu"]=="unidades" && $value["estado"] != 3)
+          {
+          echo' 
+        <li class="nav-item" >
+          <a href="unidades" class="nav-link" id="tab-unidades">
+          <i class="fas fa-building nav-icon"></i>
+            <p>
+               Unidades
+            </p>
+          </a>
+        </li>';}
             if($value["menu"]=="usuarioajustes" && $value["estado"] != 3)
                 {
             echo' 
@@ -140,7 +151,7 @@
           <li class="nav-item" >
             <a href="reportes" class="nav-link" id="tab-reportes">
             <i class="fa-solid fa-file-arrow-down nav-icon"></i>
-              <p>
+             <p>
                 Reportes
               </p>
             </a>
@@ -170,8 +181,7 @@
                     </p>
                   </a>
                   <ul class="nav nav-treeview">';
-          
-
+        
             if($usuarios != 3){
               echo'
             <li class="nav-item" >
@@ -197,7 +207,7 @@
           } ?>
 
           <li class="nav-item" >
-            <a href="salir" class="nav-link" id="tab-areas">
+            <a href="salir" class="nav-link">
 
             <i class="fa-solid fa-share-from-square nav-icon"></i>
               <p>
