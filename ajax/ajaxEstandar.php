@@ -66,6 +66,12 @@ public function validarPersonal(){
 $respuesta = ModeloEstandar::ValidarPersonalMdl($datos,$id_estandar);
 echo json_encode($respuesta);
 }
+public function revertirPersonal(){
+	$datos = $this->datos;
+	$id_estandar = $this->id_estandar;
+   $respuesta = ModeloEstandar::RevertirPersonalMdl($datos,$id_estandar);
+   echo json_encode($respuesta);
+   }
 public function CargarEstandares(){
    $respuesta = ModeloEstandar::listarEstandaresCargadosMdl();
    echo json_encode($respuesta);
@@ -151,6 +157,12 @@ if ($tipoOperacion == "ValidarPersonal") {
 	$ValidarPersonal -> datos = $_POST["datos"];
 	$ValidarPersonal -> id_estandar = $_POST["id_estandar"];
 	$ValidarPersonal -> validarPersonal();
+}
+if ($tipoOperacion == "RevertirPersonal") {
+	$revertirPersonal = new ajaxEstandar();
+	$revertirPersonal -> datos = $_POST["datos"];
+	$revertirPersonal -> id_estandar = $_POST["id_estandar"];
+	$revertirPersonal -> revertirPersonal();
 }
 if ($tipoOperacion == "CargarEstandares") {
 	$CargarEstandares = new ajaxEstandar();

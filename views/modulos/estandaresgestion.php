@@ -81,13 +81,11 @@
                       <button class="btn btn-sm btn-default btnVerEstandar" Url="' . $value["url_pdf"] . '" data-toggle="modal" data-target="#modal-ver-estandar">
             <i class="far fa-solid fa-eye"> </i> 
             </button>   
-                          <button class="btn btn-sm btn-primary btnSubirEstandar" IdProceso="' . $value["id"] . '" data-toggle="modal" data-target="#modal-cargar-personas-estandar">
-                          <i class="fas fa-barcode"></i> Entrenar
+                          <button class="btn btn-sm btn-primary btnSubirEstandar" IdProceso="'.$value["id"].'" data-toggle="modal" data-target="#modal-cargar-personas-estandar">
+                          <i class="fas fa-rocket"></i> Entrenar
                           </button>
-                          <button class="btn btn-success btn-sm btnEstandarValidado" IdProceso="' . $value["id"] . '"  data-toggle="modal" data-target="#modal-cargados-personas-estandar"   >
-                              <i class="fas fa-pencil-alt">
-                              </i> Entrenados
-                          
+                          <button class="btn btn-success btn-sm btnEstandarValidado" IdProceso="'.$value["id"].'"  data-toggle="modal" data-target="#modal-cargados-personas-estandar"   >
+                          <i class="fas fa-user-check"></i> Entrenados               
                           </button>
                       </td>
                   </tr>     

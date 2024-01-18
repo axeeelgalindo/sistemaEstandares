@@ -190,7 +190,7 @@
           </div>
           <div class="modal-footer justify-content-between">
             <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-            <button type="button" class="btn btn-success" id="btnValidar"><i class="far fa-solid fa-check"></i> Guardar</button>
+            <button type="button" class="btn btn-danger" id="btnRevertir"><i class="fas fa-user-times"></i> Revertir Entrenamiento</button>
           </div>
         </form>
       </div>
@@ -337,30 +337,48 @@
   <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
-  <script>
-    $(document).ready(function() {
-      var miTabla = $('#TablaPersonal').DataTable();
+     <script>
+        $(document).ready(function() {
+                var miTabla = $('#TablaPersonal').DataTable();
+                var miTablaValidado = $('#TablaPersonalValidado').DataTable();         
 
-      // Agregar la casilla "Seleccionar Todo" en la parte superior de la tabla
-      $('#TablaPersonal thead th:first').html('<input type="checkbox" id="seleccionarTodo">');
-
-      // Manejar el evento "change" del checkbox "Seleccionar Todo"
-      $('#seleccionarTodo').on('change', function() {
-        var seleccionarTodo = this.checked;
+                // Agregar la casilla "Seleccionar Todo" en la parte superior de la tabla
+                $('#TablaPersonal thead th:first').html('<input type="checkbox" id="seleccionarTodo">');
+                $('#TablaPersonalValidado thead th:first').html('<input type="checkbox" id="seleccionarTodoValidado">');
+            
+                // Manejar el evento "change" del checkbox "Seleccionar Todo"
+                $('#seleccionarTodo').on('change', function() {
+                    var seleccionarTodo = this.checked;
 
         // Obtener las filas visibles después del filtro
         var filasFiltradas = miTabla.rows({
           search: 'applied'
         });
 
-        // Cambiar el estado de las casillas de verificación en las filas filtradas
-        filasFiltradas.nodes().to$().find(':checkbox.seleccionar').prop('checked', seleccionarTodo);
-      });
+                    // Cambiar el estado de las casillas de verificación en las filas filtradas
+                    filasFiltradas.nodes().to$().find(':checkbox.seleccionar').prop('checked', seleccionarTodo);
+                });
+                      // Manejar el evento "change" del checkbox "Seleccionar Todo"
+                $('#seleccionarTodoValidado').on('change', function() {
+                    var seleccionarTodoValidado = this.checked;
 
-      // Manejar el clic en las filas
-      $('#TablaPersonal tbody').on('click', 'tr', function() {
-        var checkbox = $(':checkbox.seleccionar', this);
-        checkbox.prop('checked', !checkbox.prop('checked'));
-      });
-    });
-  </script>
+                    // Obtener las filas visibles después del filtro
+                    var filasFiltradasValidado = miTablaValidado.rows({ search: 'applied' });
+
+                    // Cambiar el estado de las casillas de verificación en las filas filtradas
+                    filasFiltradasValidado.nodes().to$().find(':checkbox.seleccionar').prop('checked', seleccionarTodoValidado);
+                });
+
+                 // Manejar el clic en las filas
+            $('#TablaPersonal tbody').on('click', 'tr', function() {
+                var checkbox = $(':checkbox.seleccionar', this);
+                checkbox.prop('checked', !checkbox.prop('checked'));
+            });
+
+              // Manejar el clic en las filas
+              $('#TablaPersonalValidado tbody').on('click', 'tr', function() {
+                var checkbox = $(':checkbox.seleccionar', this);
+                checkbox.prop('checked', !checkbox.prop('checked'));
+            });
+            });         
+     </script>
