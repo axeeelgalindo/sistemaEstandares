@@ -1,6 +1,7 @@
 <?php
 class Conexion {
 	static public function Conectar() {
+
 	//	$serverName = "DESKTOP-2R85171\SQLEXPRESS"; // Reemplaza con el nombre del servidor SQL Server
 		$serverName = "192.168.0.128"; // Reemplaza con el nombre del servidor SQL Server
 		$databaseName = "db_estandares"; // Reemplaza con el nombre de tu base de datos
