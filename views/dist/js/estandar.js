@@ -290,6 +290,78 @@ $(document).on("click", ".btnSubirEstandar", function(){
 
 });
 
+
+  // Manejar el clic en el botón "Validar y Enviar"
+  $(document).on("click", "#btnRevertir", function(){ 
+    var miTabla = $('#TablaPersonalValidado').DataTable();
+    var datosAEnviar = []; // Arreglo para almacenar los datos seleccionados
+    var idEstandar1 = $('#modal-cargados-personas-estandar input[name="id_estandar"]').val()
+    // Limpiar el arreglo de datos a enviar antes de recopilar los datos nuevamente
+    datosAEnviar = [];
+    // Recopilar los datos de las filas seleccionadas
+    miTabla.rows().nodes().to$().filter(':has(:checked)').each(function() {
+        var fila = $(this);
+        var rut = fila.find('td:eq(2)').text();
+        datosAEnviar.push({ rut: rut});
+    });
+
+    // Realizar validaciones de los datos si es necesario
+
+      // Agregar los datos y el parámetro adicional al objeto de datos
+      var datosParaEnviar = {
+        datos: datosAEnviar
+    };
+    Swal.fire({
+      title: '¿Estás seguro de revertir los entrenamientos?',
+      text: "Los cambios no son reversibles!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Si, Revertir!'
+    }).then((result) => {
+      if (result.value) {
+        // Enviar los datos al servidor a través de una solicitud AJAX
+        $.ajax({
+          url: 'ajax/ajaxEstandar.php',
+        type: 'POST',
+        data: { datos: datosParaEnviar,tipoOperacion: "RevertirPersonal",id_estandar:idEstandar1 },
+        dataType: 'json',
+        success: function(respuesta) {
+       
+            if(respuesta == "ok"){
+               Swal.fire(
+                'Excelente!',
+                'Reversión realizada con exito!',
+                'success'
+              ).then((result) => {
+                                    if (result.value) {
+                                      CargarPersonalValidado(idEstandar1);
+                                        CargarEstandares()
+                                    }
+                                  })  
+            }else{
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Error al revertir personal',
+                    icon: 'error'
+                });
+            }
+           
+        }
+    });
+      }
+    })
+
+
+
+
+
+
+
+
+});
+
 function CargarPersonal(IdProceso){
   //  var IdProceso = $(".btnSubirEstandar").attr("IdProceso")
     $('#modal-cargar-personas-estandar input[name="id_estandar"]').val(IdProceso)
@@ -367,9 +439,9 @@ function CargarEstandares(){
                  '<button class="btn btn-sm btn-default btnVerEstandar" Url="'+item.url_pdf+'" data-toggle="modal" data-target="#modal-ver-estandar">\
                  <i class="far fa-solid fa-eye"> </i>\
                  </button> <button class="btn btn-sm btn-primary btnSubirEstandar" IdProceso="'+ item.id +'" data-toggle="modal" data-target="#modal-cargar-personas-estandar">\
-                 <i class="fas fa-barcode"></i> Entrenar\
+                 <i class="fas fa-rocket"></i> Entrenar\
                  </button>\
-                 <button class="btn btn-success btn-sm btnEstandarValidado" IdProceso="'+item.id +'" data-toggle="modal" data-target="#modal-cargados-personas-estandar"><i class="fas fa-pencil-alt"></i>Entrenados</button>'                                              
+                 <button class="btn btn-success btn-sm btnEstandarValidado" IdProceso="'+item.id +'" data-toggle="modal" data-target="#modal-cargados-personas-estandar"><i class="fas fa-user-check"></i>Entrenados</button>'                                              
             ])
                 // Aplicar una clase a la celda específica
                 nuevaFila.nodes().to$().find('td:eq(5)').addClass('project_progress');
