@@ -27,7 +27,7 @@
                 <button class="col-md-2 col-sm-12 btn btn-sm btn-secondary" data-toggle="modal" data-target="#modal-insertar-nuevo-personas2" >
                                         <i class="far fa-edit"></i> + Agregar Personas
                                     </button>
-                                    <button class="col-md-2 col-sm-12 btn btn-sm btn-primary" style="background: #1C245A;" data-toggle="modal" data-target="#modal-insertar-nuevo-personas">
+                                    <button class="col-md-2 col-sm-12 btn btn-sm btn-primary btnAgregarPersonaExcel" style="background: #1C245A;">
                                         <i class="far fa-file-excel"></i> Cargar Archivo Excel
                                     </button>
               </div>
