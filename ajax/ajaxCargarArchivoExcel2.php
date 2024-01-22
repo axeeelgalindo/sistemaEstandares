@@ -100,7 +100,13 @@ if (isset($_FILES['archivo_excel']['name'])) {
         if ($firstRowFound) {
             $filasTotalCargadas = [];
                 $conn = Conexion::Conectar();
-                $sql = "EXEC InsertarDatosExcel_Iterativo @rut = ?, @nombre = ?, @apellido = ?, @area = ?";
+                if($_POST["tipoOperacion"] == "insertarPersonas"){
+                    $sql = "EXEC InsertarDatosExcel_Iterativo @rut = ?, @nombre = ?, @apellido = ?, @area = ?";
+                }elseif ($_POST["tipoOperacion"] == "desactivarPersonas"){
+                    $sql = "EXEC DesactivarDatosExcel_Iterativo @rut = ?, @nombre = ?, @apellido = ?, @area = ?";
+                }elseif ($_POST["tipoOperacion"] == "activarPersonas"){
+                    $sql = "EXEC ActivarDatosExcel_Iterativo @rut = ?, @nombre = ?, @apellido = ?, @area = ?";
+                }
                 $params = $rowData;
         
                 $stmt = $conn->prepare($sql);
@@ -113,30 +119,24 @@ if (isset($_FILES['archivo_excel']['name'])) {
                 $stmt->execute();	
                 $result = $stmt->fetch(PDO::FETCH_ASSOC);  
                 $RegisterRows ++;
-               // var_dump($result);
-                    if ($result["resultado"] == 2) {
-                        $erroredRows++; //Area no existe
 
-                        $filasFallasTotal['rut'] = $rowData[0];
-                        $filasFallasTotal['nombre'] = $rowData[1];
-                        $filasFallasTotal['apellido'] = $rowData[2];
-                        $filasFallasTotal['area'] = $rowData[3];
-                        $filasFallasTotal['error'] = 'area no existe';
-
-                        $filasFallasGeneral[] = $filasFallasTotal;
-
-                    } else if($result["resultado"] == 1) {
-                        $insertedRows++; //Ok
-                    }else if($result["resultado"] == 3) {
-                        $erroredRows++; //Rut ya fue ingresado
-                        $filasFallasTotal['rut'] = $rowData[0];
-                        $filasFallasTotal['nombre'] = $rowData[1];
-                        $filasFallasTotal['apellido'] = $rowData[2];
-                        $filasFallasTotal['area'] = $rowData[3];
-                        $filasFallasTotal['error'] = 'rut ya existe';
-                        $filasFallasGeneral[] = $filasFallasTotal;
-
-                    }               
+                if($result["resultado"] != 1){
+                    $erroredRows++;
+                    $filasFallasTotal['rut'] = $rowData[0];
+                    $filasFallasTotal['nombre'] = $rowData[1];
+                    $filasFallasTotal['apellido'] = $rowData[2];
+                    $filasFallasTotal['area'] = $rowData[3];
+                    if($result["resultado"] == 2){  $filasFallasTotal['error'] = 'area no existe';
+                    }else if($result["resultado"] == 3) { $filasFallasTotal['error'] = 'rut ya existe';
+                    }else if($result["resultado"] == 4){ $filasFallasTotal['error'] = 'rut no existe';
+                    }else if($result["resultado"] == 5){ $filasFallasTotal['error'] = 'persona en estado desactivado';
+                    }else if($result["resultado"] == 6){ $filasFallasTotal['error'] = 'persona en estado activado';
+                    }
+                    $filasFallasGeneral[] = $filasFallasTotal;
+                }else{
+                    $insertedRows++; //Ok
+                }
+                
                     // Actualiza los datos de progreso
                     $responseData['progress'] = ($RegisterRows / $TotalFilas) * 100;
                     $responseData['insertedRows'] = $insertedRows;

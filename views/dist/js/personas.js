@@ -5,10 +5,12 @@ $(document).on("submit", "#excelForm", function (e) {
 
 	e.preventDefault();
 var xhr = new XMLHttpRequest();
-var responses = []; // Arreglo para almacenar las respuestas
-var cont = false;
+
 xhr.open('POST', 'ajax/ajaxCargarArchivoExcel2.php', true);
-var formData = new FormData(document.getElementById('excelForm'));
+
+
+//var formData = new FormData(document.getElementById('excelForm'));
+var formData = new FormData(this);
 xhr.onreadystatechange = function() {
   if (xhr.readyState === XMLHttpRequest.LOADING) {
 // Divide la respuesta en líneas asumiendo que cada línea contiene un registro JSON
@@ -61,23 +63,37 @@ var ultimoRegistro = registros[registros.length - 1];
 		if(cont > 0 && TotalIngresadosCorrectamente > 0 ){
            		Swal.fire(
 			'Excelente!',
-			'Se registraron correctamente '+TotalIngresadosCorrectamente+' personas',
+			'Se realizaron cambios correctamente en '+TotalIngresadosCorrectamente+' personas',
 			'info'
 		  )  
+
+		  Swal.fire(
+			'Excelente!',
+			'Se realizaron cambios correctamente en '+TotalIngresadosCorrectamente+' personas',
+			'success'
+		  ).then((result) => {
+								if (result.value) {
+								  window.location = "personas"
+								}
+							  })
 		}else if(cont > 0){
 			Swal.fire(
 				'Error!',
 				'Existen errores en datos excel',
 				'error'
 			  )  
-
 		}
 		else{
-			Swal.fire(
+		  
+			  Swal.fire(
 				'Excelente!',
-				'Se registraron correctamente '+TotalIngresadosCorrectamente+' personas',
+				'Se realizaron cambios correctamente en '+TotalIngresadosCorrectamente+' personas',
 				'success'
-			  )  
+			  ).then((result) => {
+									if (result.value) {
+									  window.location = "personas"
+									}
+								  })
 		}
 
     }else {
@@ -96,41 +112,7 @@ var ultimoRegistro = registros[registros.length - 1];
 
 xhr.send(formData);
 
-   // Prevenir la acción predeterminada del formulario
-/*    e.preventDefault();
-
-   // Obtener el formulario y el archivo Excel seleccionado
-   var form = this;
-   var formData = new FormData(form);
-
-   // Enviar el archivo al servidor y procesarlo
-		$.ajax({
-			url: 'ajax/ajaxCargarArchivoExcel2.php',
-			type: 'POST',
-			data: formData,
-			processData: false, // Evitar la serialización del formData
-			contentType: false, // Evitar la configuración de tipo de contenido
-			success: function (data) {
-			console.log(data)
-			console.log(data.progress)
-			if (data.progress !== undefined) {
-				console.log("porcentaje cargado :" +data.progress)
-					// Actualizar la barra de progreso y los contadores en la página
-					$('#progress-bar').css('width', data.progress + '%');
-					$('#total-inserted').text('Filas ingresadas: ' + data.insertedRows);
-					$('#total-errored').text('Filas erróneas: ' + data.erroredRows);
-				}
-			},
-			error: function () {
-				Swal.fire({
-					title: 'Error',
-					text: 'Ocurrió un error al procesar la solicitud.',
-					icon: 'error'
-				});
-			}
-		}); */
 	})
-
 
 $(document).on("submit", "#insertarPersona", function (e) {
 		e.preventDefault();
@@ -342,6 +324,47 @@ $.ajax({
 		  }
 		})
 	})
+
+		var onBtnClicked = (btnId) => {
+			Swal.close();
+			var modalElement = document.getElementById("modal-insertar-nuevo-personas");
+
+			if (btnId == "agregar") 
+			{
+				$('#excelForm input[name="tipoOperacion"]').val("insertarPersonas")
+				$('#excelForm .titulo').text("Cargar archivo Excel - Agregar Personal");
+				$('#excelForm .TextoRutValidar').text("Al cargar el documento se validará que rut NO exista en el sistema, ademas que el campo area exista en el sistema.");
+				// Abre el modal
+				$(modalElement).modal('show');
+			}else if(btnId == "desactivar"){
+				$('#excelForm input[name="tipoOperacion"]').val("desactivarPersonas")
+				$('#excelForm .titulo').text("Cargar archivo Excel - Desactivar Personal");
+				$('#excelForm .TextoRutValidar').text("Al cargar el documento se validará que rut exista en el sistema, ademas que el campo area exista en el sistema.");		
+					// Abre el modal
+				$(modalElement).modal('show');
+			}else if(btnId == "activar"){
+				$('#excelForm input[name="tipoOperacion"]').val("activarPersonas")
+				$('#excelForm .titulo').text("Cargar archivo Excel - Activar Personal");
+				$('#excelForm .TextoRutValidar').text("Al cargar el documento se validará que rut exista en el sistema, ademas que el campo area exista en el sistema.");
+				$(modalElement).modal('show');
+			}			
+		  };
+
+	$(document).on("click", ".btnAgregarPersonaExcel", function(){
+			Swal.fire({
+			  icon: "warning",
+			  showConfirmButton: false,
+			  showCloseButton: true,
+			  html: `
+				 <h3>Seleccione una acción</h3>
+				<div>
+				  <button class="btn btn-primary col-12 my-2" onclick="onBtnClicked('agregar')"><i class="fa-solid fa-user-plus"></i> Agregar Personal</button>
+				  <button class="btn btn-danger col-12 my-2" onclick="onBtnClicked('desactivar')"><i class="fa-solid fa-user-slash"></i>Desactivar Personal</button>
+				  <button class="btn btn-success col-12 my-2" onclick="onBtnClicked('activar')"><i class="fa-solid fa-user-check"></i> Activar Personal</button>
+				  <button class="btn btn-secondary col-12 my-2" onclick="onBtnClicked('cancel')">Cancelar</button>
+				</div>`
+			});  
+		})
 
 	function validarRut() {
 		var rut = document.getElementById('rut').value;	

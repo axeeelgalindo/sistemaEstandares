@@ -136,7 +136,7 @@ function ExpandirMenu(id) {
 <script type="text/javascript" src="views/dist/js/unidades.js"></script>
 
 <script src="dist/js/pages/dashboard3.js"></script>
-<script src="plugins/sweetalert/sweetalert.js"></script>
+<script src="plugins/sweetalert2/sweetalert2.all.min.js"></script>
 <!-- Toastr -->
 <script src="plugins/toastr/toastr.min.js"></script>
 <script src="plugins/datatables/jquery.dataTables.min.js"></script>

@@ -6,7 +6,7 @@
     <a href="dashboard" class="brand-link d-block" style="display: flex;
     justify-content: center; 
     align-items: center;">
-      <img src="dist/img/logoaquachile.png" alt="AdminLTE Logo" class="brand-text elevation-5" style="opacity: .8;width:170px;margin-left : 5%;">
+      <img src="dist/img/logoaquachile.png" alt="AdminLTE Logo" class="brand-text" style="opacity: .8;width:170px;margin-left : 15%;">
     </a>
     <!-- Sidebar -->
     <div class="sidebar">
