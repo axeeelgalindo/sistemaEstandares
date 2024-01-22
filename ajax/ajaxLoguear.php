@@ -10,10 +10,12 @@ Class ajaxPesaje {
                             "password"=>$this->password           		            			            												
                         );  
             $respuesta = ModeloLogin::mdlValidarLogin($datos);
+          //  var_dump($respuesta);
             if($respuesta["result"] == 1){
                
 				$_SESSION["autenticar"] = "ok";
 				$_SESSION["nombre"] = $this->email;
+				$_SESSION["nivel_usuario"] = $respuesta["nivel_usuario"];
              }
            echo ($respuesta["result"]);
 
