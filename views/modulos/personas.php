@@ -46,7 +46,10 @@
                        Apellido
                       </th>
                       <th >
-                       Área
+                       Área base
+                      </th>
+                      <th >
+                       Área secundaria
                       </th>
                       <th >
                        Estado
@@ -69,6 +72,7 @@
                     <td>'.nl2br($value["nombre"]).'</td>
                     <td>'.nl2br($value["apellido"]).'</td>
                     <td>'.nl2br($value["area"]).'</td>
+                    <td>'.nl2br($value["area secundaria"]).'</td>
                     <td>'.nl2br($value["Estado"]).'</td>
                     <td>'.nl2br($value["fecha_integracion"]).'</td>      
 

@@ -7,6 +7,7 @@ Class ajaxPersonas {
 			            "nombre"=>$this->nombre,
 			            "apellido"=>$this->apellido,
 			            "area"=>$this->area,
+			            "area_secundaria"=>$this->area_secundaria,
 					);
    $respuesta = ModeloPersonas::CrearPersonasMdl($datos);
     echo json_encode($respuesta);
@@ -17,7 +18,8 @@ Class ajaxPersonas {
     $datos = array("rut"=>$respuesta["rut"],		
                     "nombre"=>$respuesta["nombre"],
 					"apellido"=>$respuesta["apellido"],
-					"area"=>$respuesta["area"],);
+					"area"=>$respuesta["area"],
+					"area_secundaria"=>$respuesta["area_secundaria"],);
 
     echo json_encode($datos);
 }
@@ -27,7 +29,8 @@ public function actualizarPersonas(){
 	               //  "rut"=>$this->rut,
                     "nombre"=>$this->nombre,
                     "apellido"=>$this->apellido,            
-                    "area"=>$this->area          
+                    "area"=>$this->area,
+                    "area_secundaria"=>$this->area_secundaria    
                     );
     $respuesta = ModeloPersonas::ActualizarPersonasMdl($datos);
     echo json_encode($respuesta);
@@ -46,6 +49,7 @@ if($tipoOperacion == "insertarPersonas") {
 	$crearNuevoPersonas -> nombre = $_POST["nombre"];
 	$crearNuevoPersonas -> apellido = $_POST["apellido"];
 	$crearNuevoPersonas -> area = $_POST["area"];
+	$crearNuevoPersonas -> area_secundaria = $_POST["areaSecundaria"];
 	$crearNuevoPersonas ->crearPersonas();
 }
 if ($tipoOperacion == "editarPersonas") {
@@ -60,6 +64,7 @@ if ($tipoOperacion == "actualizarPersonas") {
 	$actualizarPersonas -> nombre = $_POST["nombre"];
 	$actualizarPersonas -> apellido = $_POST["apellido"];
 	$actualizarPersonas -> area = $_POST["area"];
+	$actualizarPersonas -> area_secundaria = $_POST["areaSecundaria"];
 	$actualizarPersonas -> actualizarPersonas();
 }
 if ($tipoOperacion == "eliminarPersonas") {

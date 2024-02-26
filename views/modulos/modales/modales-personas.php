@@ -46,8 +46,22 @@
                     <input type="text" class="form-control" name="apellido" id="apellido" placeholder="Ingrese apellido" required>
                 </div>
                 <div class="form-group">
-                        <label>Área:</label>
+                        <label>Área Base:</label>
                         <select class="form-control" name="area" required>
+
+                                    <?php
+                                    $tabla2 = ModeloArea::listarAreaMdl();
+                                    echo '<option value="" selected>Seleccione Área</option>';
+                                    foreach ($tabla2 as $key => $value) { 
+                                    echo '<option value="'.$value["id"].'">'.$value["nombre"].'</option>';
+                                    }
+                                    echo '</select>';
+
+                                    ?>
+              </div>
+              <div class="form-group">
+                        <label>Área Secundaria:</label>
+                        <select class="form-control" name="areaSecundaria" required>
 
                                     <?php
                                     $tabla2 = ModeloArea::listarAreaMdl();
@@ -143,13 +157,14 @@
                       <li>A1: nombre de columna "rut"</li>
                       <li>B1: nombre de columna "nombre"</li>
                       <li>C1: nombre de columna "apellido"</li>
-                      <li>D1: nombre de columna "area"</li>
+                      <li>D1: nombre de columna "area base"</li>
+                      <li>E1: nombre de columna "area secundaria"</li>
                     </ul>
                   </li>
                   <li>El rut debe ir sin puntos y con guion verificador. Ejemplo: 19345235-3</li>
-                  <li>En la columna "area" debe ingresar solo areas existentes en el sistema</li>
+                  <li>En la columna "area base" o "area secundaria" debe ingresar solo áreas existentes en el sistema, la columna "area secundaria" no será obligación ingresar datos.</li>
                   <li class="TextoRutValidar"></li>
-                  <li>Al finalizar la carga del archivo excel en la parte inferior se mostrará si existe algun error en la integración de la fila</li>
+                  <li>Al finalizar la carga del archivo excel en la parte inferior se mostrará si existe algún error en la integración de la fila</li>
                 </ul>
                         </div>
                     </div>
@@ -203,10 +218,6 @@
         </div>
         <!-- /.modal-dialog -->
       </div>
-
-
-
-
            <!-- Modal para editar personas -->
 
      <div class="modal fade" id="modal-editar-personas" style="overflow-y: scroll;">
@@ -249,8 +260,22 @@
                     <input type="text" class="form-control" name="apellido" id="apellido" placeholder="Ingrese apellido" required>
                 </div>
                 <div class="form-group">
-                        <label>Área:</label>
+                        <label>Área Base:</label>
                         <select class="form-control" name="area" required>
+
+                                    <?php
+                                    $tabla2 = ModeloArea::listarAreaMdl();
+                                    echo '<option value="" selected>Seleccione Área</option>';
+                                    foreach ($tabla2 as $key => $value) { 
+                                    echo '<option value="'.$value["id"].'">'.$value["nombre"].'</option>';
+                                    }
+                                    echo '</select>';
+
+                                    ?>
+              </div>
+              <div class="form-group">
+                        <label>Área Secundaria:</label>
+                        <select class="form-control" name="areaSecundaria" required>
 
                                     <?php
                                     $tabla2 = ModeloArea::listarAreaMdl();

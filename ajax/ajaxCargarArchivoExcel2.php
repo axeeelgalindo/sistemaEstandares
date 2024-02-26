@@ -18,7 +18,8 @@ if (isset($_FILES['archivo_excel']['name'])) {
         'A1' => 'rut',
         'B1' => 'nombre',
         'C1' => 'apellido',
-        'D1' => 'area'
+        'D1' => 'area base',
+        'E1' => 'area secundaria',
     ];
     $filasAreaNoExiste = [];
     $filasRutExistente = [];
@@ -50,14 +51,15 @@ if (isset($_FILES['archivo_excel']['name'])) {
         'rut' => '',
         'nombre' => '',
         'apellido' => '',
-        'area' => '',
+        'area base' => '',
+        'area secundaria' => '',
         'error' => ''
     ];
 
     $TotalFilas = 0;
     for ($rowIndex = 2; $rowIndex <= $highestRow; $rowIndex++) {
         $rowData = [];
-        for ($colIndex = 1; $colIndex <= 4; $colIndex++) { // Recorrer de la columna A a la Z
+        for ($colIndex = 1; $colIndex <= 5; $colIndex++) { // Recorrer de la columna A a la Z
             $cell = $worksheet->getCellByColumnAndRow($colIndex, $rowIndex);
             $rowData[] = $cell->getValue();
         }
@@ -82,7 +84,7 @@ if (isset($_FILES['archivo_excel']['name'])) {
             continue;
         }
         $rowData = [];
-        for ($colIndex = 1; $colIndex <= 4; $colIndex++) { // Recorrer de la columna A a la Z
+        for ($colIndex = 1; $colIndex <= 5; $colIndex++) { // Recorrer de la columna A a la Z
             $cell = $worksheet->getCellByColumnAndRow($colIndex, $rowIndex);
             $rowData[] = $cell->getValue();
         }
@@ -101,11 +103,11 @@ if (isset($_FILES['archivo_excel']['name'])) {
             $filasTotalCargadas = [];
                 $conn = Conexion::Conectar();
                 if($_POST["tipoOperacion"] == "insertarPersonas"){
-                    $sql = "EXEC InsertarDatosExcel_Iterativo @rut = ?, @nombre = ?, @apellido = ?, @area = ?";
+                    $sql = "EXEC InsertarDatosExcel_Iterativo @rut = ?, @nombre = ?, @apellido = ?, @area_base = ?, @area_secundaria = ?";
                 }elseif ($_POST["tipoOperacion"] == "desactivarPersonas"){
-                    $sql = "EXEC DesactivarDatosExcel_Iterativo @rut = ?, @nombre = ?, @apellido = ?, @area = ?";
+                    $sql = "EXEC DesactivarDatosExcel_Iterativo @rut = ?, @nombre = ?, @apellido = ?, @area_base = ?, @area_secundaria = ?";
                 }elseif ($_POST["tipoOperacion"] == "activarPersonas"){
-                    $sql = "EXEC ActivarDatosExcel_Iterativo @rut = ?, @nombre = ?, @apellido = ?, @area = ?";
+                    $sql = "EXEC ActivarDatosExcel_Iterativo @rut = ?, @nombre = ?, @apellido = ?, @area_base = ?, @area_secundaria = ?";
                 }
                 $params = $rowData;
         
@@ -115,6 +117,8 @@ if (isset($_FILES['archivo_excel']['name'])) {
                 $stmt->bindParam(2, $params[1], PDO::PARAM_STR);
                 $stmt->bindParam(3, $params[2], PDO::PARAM_STR);
                 $stmt->bindParam(4, $params[3], PDO::PARAM_STR);
+                $stmt->bindParam(5, $params[4], PDO::PARAM_STR);
+
                  // Ejecuta el procedimiento almacenado
                 $stmt->execute();	
                 $result = $stmt->fetch(PDO::FETCH_ASSOC);  
@@ -125,12 +129,15 @@ if (isset($_FILES['archivo_excel']['name'])) {
                     $filasFallasTotal['rut'] = $rowData[0];
                     $filasFallasTotal['nombre'] = $rowData[1];
                     $filasFallasTotal['apellido'] = $rowData[2];
-                    $filasFallasTotal['area'] = $rowData[3];
-                    if($result["resultado"] == 2){  $filasFallasTotal['error'] = 'area no existe';
+                    $filasFallasTotal['area base'] = $rowData[3];
+                    $filasFallasTotal['area secundaria'] = $rowData[4];
+
+                    if($result["resultado"] == 2){  $filasFallasTotal['error'] = 'area base no existe';
                     }else if($result["resultado"] == 3) { $filasFallasTotal['error'] = 'rut ya existe';
                     }else if($result["resultado"] == 4){ $filasFallasTotal['error'] = 'rut no existe';
                     }else if($result["resultado"] == 5){ $filasFallasTotal['error'] = 'persona en estado desactivado';
                     }else if($result["resultado"] == 6){ $filasFallasTotal['error'] = 'persona en estado activado';
+                    }else if($result["resultado"] == 7){ $filasFallasTotal['error'] = 'area secundaria no existe';
                     }
                     $filasFallasGeneral[] = $filasFallasTotal;
                 }else{
