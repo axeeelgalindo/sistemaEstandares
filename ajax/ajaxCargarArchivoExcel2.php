@@ -108,6 +108,8 @@ if (isset($_FILES['archivo_excel']['name'])) {
                     $sql = "EXEC DesactivarDatosExcel_Iterativo @rut = ?, @nombre = ?, @apellido = ?, @area_base = ?, @area_secundaria = ?";
                 }elseif ($_POST["tipoOperacion"] == "activarPersonas"){
                     $sql = "EXEC ActivarDatosExcel_Iterativo @rut = ?, @nombre = ?, @apellido = ?, @area_base = ?, @area_secundaria = ?";
+                }elseif ($_POST["tipoOperacion"] == "cambiarArea"){
+                    $sql = "EXEC ModificarAreaDatosExcel_Iterativo @rut = ?, @nombre = ?, @apellido = ?, @area_base = ?, @area_secundaria = ?";
                 }
                 $params = $rowData;
         

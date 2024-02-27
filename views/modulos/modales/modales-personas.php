@@ -275,7 +275,7 @@
               </div>
               <div class="form-group">
                         <label>Área Secundaria:</label>
-                        <select class="form-control" name="areaSecundaria" required>
+                        <select class="form-control" name="areaSecundaria" >
 
                                     <?php
                                     $tabla2 = ModeloArea::listarAreaMdl();
