@@ -1,4 +1,4 @@
-Sistema de capación por áreas dentro de planta. 
+Sistema de capacitación por áreas dentro de planta. 
 - Login
 - Manejo de niveles de usuarios
 - Creación de personal
