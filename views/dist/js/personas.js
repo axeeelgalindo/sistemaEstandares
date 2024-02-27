@@ -8,7 +8,6 @@ var xhr = new XMLHttpRequest();
 
 xhr.open('POST', 'ajax/ajaxCargarArchivoExcel2.php', true);
 
-
 //var formData = new FormData(document.getElementById('excelForm'));
 var formData = new FormData(this);
 xhr.onreadystatechange = function() {
@@ -67,7 +66,7 @@ var ultimoRegistro = registros[registros.length - 1];
 			'info'
 		  )  
 
-		  Swal.fire(
+/* 		  Swal.fire(
 			'Excelente!',
 			'Se realizaron cambios correctamente en '+TotalIngresadosCorrectamente+' personas',
 			'success'
@@ -75,7 +74,7 @@ var ultimoRegistro = registros[registros.length - 1];
 								if (result.value) {
 								  window.location = "personas"
 								}
-							  })
+							  }) */
 		}else if(cont > 0){
 			Swal.fire(
 				'Error!',
@@ -186,7 +185,7 @@ $.ajax({
 				$('#formu-editar-personas input[name="nombre"]').val(valor.nombre)
 				$('#formu-editar-personas input[name="apellido"]').val(valor.apellido)
 				$('#formu-editar-personas select[name="area"]').val(valor.area)
-
+				$('#formu-editar-personas select[name="areaSecundaria"]').val(valor.area_secundaria)
 			}
 		})
 	})
@@ -347,7 +346,12 @@ $.ajax({
 				$('#excelForm .titulo').text("Cargar archivo Excel - Activar Personal");
 				$('#excelForm .TextoRutValidar').text("Al cargar el documento se validará que rut exista en el sistema, ademas que el campo area exista en el sistema.");
 				$(modalElement).modal('show');
-			}			
+			}else if(btnId == "cambiararea"){
+				$('#excelForm input[name="tipoOperacion"]').val("cambiarArea")
+				$('#excelForm .titulo').text("Cargar archivo Excel - Modificar Área");
+				$('#excelForm .TextoRutValidar').text("Al cargar el documento se validará que rut exista en el sistema, ademas que el campo area exista en el sistema.");
+				$(modalElement).modal('show');
+			}				
 		  };
 
 	$(document).on("click", ".btnAgregarPersonaExcel", function(){
@@ -356,12 +360,15 @@ $.ajax({
 			  showConfirmButton: false,
 			  showCloseButton: true,
 			  html: `
+			<div class="custom-modal">
 				 <h3>Seleccione una acción</h3>
-				<div>
+				<div >
 				  <button class="btn btn-primary col-12 my-2" onclick="onBtnClicked('agregar')"><i class="fa-solid fa-user-plus"></i> Agregar Personal</button>
+				  <button class="btn btn-primary col-12 my-2" onclick="onBtnClicked('cambiararea')"><i class="fa-solid fa-user-gear"></i> Modificar Área</button>
 				  <button class="btn btn-danger col-12 my-2" onclick="onBtnClicked('desactivar')"><i class="fa-solid fa-user-slash"></i>Desactivar Personal</button>
 				  <button class="btn btn-success col-12 my-2" onclick="onBtnClicked('activar')"><i class="fa-solid fa-user-check"></i> Activar Personal</button>
 				  <button class="btn btn-secondary col-12 my-2" onclick="onBtnClicked('cancel')">Cancelar</button>
+				</div>
 				</div>`
 			});  
 		})
