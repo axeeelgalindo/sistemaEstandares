@@ -125,7 +125,10 @@
           if($value["menu"]=="unidades" && $value["estado"] != 3)
           {
           echo' 
-        <li class="nav-item" >
+        <li class="nav-item" style="
+           background: #49494980;
+            cursor: not-allowed; pointer-events: none;
+        ">
           <a href="unidades" class="nav-link" id="tab-unidades">
           <i class="fas fa-building nav-icon"></i>
             <p>
