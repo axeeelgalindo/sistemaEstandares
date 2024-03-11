@@ -364,7 +364,7 @@ $.ajax({
 				 <h3>Seleccione una acción</h3>
 				<div >
 				  <button class="btn btn-primary col-12 my-2" onclick="onBtnClicked('agregar')"><i class="fa-solid fa-user-plus"></i> Agregar Personal</button>
-				  <button class="btn btn-primary col-12 my-2" onclick="onBtnClicked('cambiararea')"><i class="fa-solid fa-user-gear"></i> Modificar Área</button>
+				  <button class="btn btn-primary col-12 my-2" onclick="onBtnClicked('cambiararea')" disabled><i class="fa-solid fa-user-gear"></i> Modificar Área</button>
 				  <button class="btn btn-danger col-12 my-2" onclick="onBtnClicked('desactivar')"><i class="fa-solid fa-user-slash"></i>Desactivar Personal</button>
 				  <button class="btn btn-success col-12 my-2" onclick="onBtnClicked('activar')"><i class="fa-solid fa-user-check"></i> Activar Personal</button>
 				  <button class="btn btn-secondary col-12 my-2" onclick="onBtnClicked('cancel')">Cancelar</button>

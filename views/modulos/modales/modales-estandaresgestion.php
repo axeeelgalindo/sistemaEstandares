@@ -168,6 +168,7 @@
                                 <th></th>
                                 <th>Nombre</th>
                                 <th>Rut</th>
+<th>Fecha Entrenamiento</th>
                               </tr>
                             </thead>
                             <tbody>

@@ -487,7 +487,8 @@ function CargarPersonalValidado(IdProceso) {
         miTabla.row.add([
           '<input type="checkbox" class="seleccionar">',
           item.Nombre + " " + item.Apellido,
-          item.Rut
+          item.Rut,
+          item.FechaEntrenamiento
         ]).draw();
       });
 
