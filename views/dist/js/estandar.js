@@ -435,6 +435,7 @@ function CargarEstandares() {
           item.tipo,
           item.nombre,
           item.area,
+          item.fecha_inicio,
           item.total_personas + '/' + item.total_personas_entrenadas,
           '<div class="progress progress-sm">\
                 <div class="progress-bar bg-green" role="progressbar" aria-valuenow="'+ item.porcentaje_entrenado + '" aria-valuemin="0" aria-valuemax="100" style="width: ' + item.porcentaje_entrenado + '%">\
