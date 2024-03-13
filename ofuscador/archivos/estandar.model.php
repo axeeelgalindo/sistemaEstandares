@@ -443,12 +443,78 @@ Class ModeloEstandar {
                 die("Error en la consulta: " . $e->getMessage());
             }
         }
+        static public function GraficosBarrasAreasPersonasMdl($id_area) {
+            try {
+                $conn = Conexion::Conectar();
+        
+                // Define el nombre del procedimiento almacenado y los parámetros
+                $sql = "EXEC Estandares_Graficos_Barras_Areas_Personas @id_area = :id_area";
+                
+                // Prepara la consulta
+                $stmt = $conn->prepare($sql);
+                $stmt->bindParam(":id_area", $id_area, PDO::PARAM_INT);
+                            
+                // Ejecuta el procedimiento almacenado
+                $stmt->execute();
+                
+                // Recupera el resultado
+                $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                
+                return $result;
+            } catch (PDOException $e) {
+                die("Error en la consulta: " . $e->getMessage());
+            }
+        }
+        static public function GraficosBarrasAreasPersonasTotalMdl($id_area) {
+            try {
+                $conn = Conexion::Conectar();
+        
+                // Define el nombre del procedimiento almacenado y los parámetros
+                $sql = "EXEC Estandares_Graficos_Barras_Areas_Personas_Total @id_area = :id_area";
+                
+                // Prepara la consulta
+                $stmt = $conn->prepare($sql);
+                $stmt->bindParam(":id_area", $id_area, PDO::PARAM_INT);
+                            
+                // Ejecuta el procedimiento almacenado
+                $stmt->execute();
+                
+                // Recupera el resultado
+                $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                
+                return $result;
+            } catch (PDOException $e) {
+                die("Error en la consulta: " . $e->getMessage());
+            }
+        }
         static public function GraficoPiePorPilarMdl($id_area) {
             try {
                 $conn = Conexion::Conectar();
         
                 // Define el nombre del procedimiento almacenado y los parámetros
                 $sql = "EXEC Estandares_Graficos_Pie_Pilar @id_area = :id_area";
+                
+                // Prepara la consulta
+                $stmt = $conn->prepare($sql);
+                $stmt->bindParam(":id_area", $id_area, PDO::PARAM_INT); 
+                // Ejecuta el procedimiento almacenado
+                $stmt->execute();
+                
+                // Recupera el resultado
+                $result = $stmt->fetch(PDO::FETCH_ASSOC);
+                
+                return $result;
+            } catch (PDOException $e) {
+                die("Error en la consulta: " . $e->getMessage());
+            }
+        }
+
+        static public function GraficoAnualPersonasMdl($id_area) {
+            try {
+                $conn = Conexion::Conectar();
+        
+                // Define el nombre del procedimiento almacenado y los parámetros
+                $sql = "EXEC Estandares_Graficos_Barras_Personas @id_area = :id_area";
                 
                 // Prepara la consulta
                 $stmt = $conn->prepare($sql);
