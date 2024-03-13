@@ -681,8 +681,8 @@ $(function () {
     labels: TotalArea,
     datasets: [
       {
-        label: 'Personas',
-        backgroundColor: '#0ac730',
+        label: 'Personas Entrenadas',
+        backgroundColor: '#D85E05',
         borderColor: 'rgba(60,141,188,0.8)',
         pointRadius: false,
         pointColor: '#3b8bba',
@@ -692,8 +692,8 @@ $(function () {
         data: PersonasPorMesesArea
       },
       {
-        label: 'Personas Totales',
-        backgroundColor: '#f5023f',
+        label: 'Personas Creadas',
+        backgroundColor: '#1C245A',
         borderColor: 'rgba(210, 214, 222, 1)',
         pointRadius: false,
         pointColor: 'rgba(210, 214, 222, 1)',
@@ -901,11 +901,11 @@ $(function () {
   GraficoPilarSeguridad2 = new Chart(pieChartCanvasSeguridad2, {
     type: 'pie',
     data: {
-      labels: ['Personas', 'Personas Totales'],
+      labels: ['Personas Entrenadas', 'Personas Creadas'],
       datasets: [
         {
           data: [SeguridadPersonas, SeguridadPersonasTotales],
-          backgroundColor: ['#0ac730', '#f5023f'],
+          backgroundColor: ['#D85E05', '#1C245A'],
         }
       ]
     },
@@ -937,11 +937,11 @@ $(function () {
   GraficoPilarCalidad2 = new Chart(pieChartCanvasCalidad2, {
     type: 'pie',
     data: {
-      labels: ['Personas', 'Personas Totales'],
+      labels: ['Personas Entrenadas', 'Personas Creadas'],
       datasets: [
         {
           data: [CalidadPersonas, CalidadPersonasTotales],
-          backgroundColor: ['#0ac730', '#f5023f'],
+          backgroundColor: ['#D85E05', '#1C245A'],
         }
       ]
     },
@@ -976,11 +976,11 @@ $(function () {
   GraficoPilarProduccion2 = new Chart(pieChartCanvasProduccion2, {
     type: 'pie',
     data: {
-      labels: ['Personas', 'Personas Totales'],
+      labels: ['Personas Entrenadas', 'Personas Creadas'],
       datasets: [
         {
           data: [ProduccionPersonas, ProduccionPersonasTotales],
-          backgroundColor: ['#0ac730', '#f5023f'],
+          backgroundColor: ['#D85E05', '#1C245A'],
         }
       ]
     },
@@ -1016,11 +1016,11 @@ $(function () {
   GraficoPilar5S2 = new Chart(pieChartCanvas5S2, {
     type: 'pie',
     data: {
-      labels: ['Personas', 'Personas Totales'],
+      labels: ['Personas Entrenadas', 'Personas Creadas'],
       datasets: [
         {
           data: [S5Personas, S5PersonasTotales],
-          backgroundColor: ['#0ac730', '#f5023f'],
+          backgroundColor: ['#D85E05', '#1C245A'],
         }
       ]
     },
@@ -1087,8 +1087,8 @@ $(function () {
     labels: mesesDelAnio,
     datasets: [
       {
-        label: 'Personas',
-        backgroundColor: '#0ac730',
+        label: 'Personas Entrenadas',
+        backgroundColor: '#D85E05',
         borderColor: 'rgba(60,141,188,0.8)',
         pointRadius: false,
         pointColor: '#3b8bba',
@@ -1098,8 +1098,8 @@ $(function () {
         data: PersonasPorMeses
       },
       {
-        label: 'Personas Totales',
-        backgroundColor: '#f5023f', 
+        label: 'Personas Creadas',
+        backgroundColor: '#1C245A', 
         borderColor: 'rgba(210, 214, 222, 1)',
         pointRadius: false,
         pointColor: 'rgba(210, 214, 222, 1)',
@@ -1129,7 +1129,7 @@ $(function () {
     options: {
       plugins: {
         datalabels: {
-          color: '#000000'
+          color: '#ffffff'
         },
       }
     }
@@ -1151,7 +1151,7 @@ $(function () {
     options: {
       plugins: {
         datalabels: {
-          color: '#000000'
+          color: '#ffffff'
         },
       }
     }
@@ -1538,11 +1538,11 @@ $(function () {
   GraficoTestP = new Chart(donutChartCanvas2, {
     type: 'doughnut',
     data: {
-      labels: ['Personas', 'Personas Total'],
+      labels: ['Personas Entrenadas', 'Personas Creadas'],
       datasets: [
         {
           data: [personas, personasTotal],
-          backgroundColor: ['#0ac730','#f5023f'],
+          backgroundColor: ['#D85E05','#1C245A'],
         }
       ]
     },
