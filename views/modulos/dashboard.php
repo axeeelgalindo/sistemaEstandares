@@ -207,7 +207,7 @@
                   <!-- DONUT CHART -->
                   <div class="card card-secondary">
                     <div class="card-header">
-                      <h3 class="card-title">Creados vs Personas</h3>
+                      <h3 class="card-title">Personas Totales vs Personas Entrenadas</h3>
 
                       <div class="card-tools">
                         <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -247,7 +247,7 @@
                   <!-- BAR CHART -->
                   <div class="card card-secondary">
                     <div class="card-header">
-                      <h3 class="card-title">Creados vs Personas por Área</h3>
+                      <h3 class="card-title">Personas Totales vs Personas Entrenadas por Área</h3>
                       <div class="card-tools">
                         <button type="button" class="btn btn-tool" data-card-widget="collapse">
                           <i class="fas fa-minus"></i>
@@ -286,7 +286,7 @@
                   <!-- STACKED BAR CHART -->
                   <div class="card card-secondary">
                     <div class="card-header">
-                      <h3 class="card-title">Creados vs Personas Anual</h3>
+                      <h3 class="card-title">Personas Totales vs Personas Entrenadas Anual</h3>
 
                       <div class="card-tools">
                         <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -309,7 +309,7 @@
                   <!-- PIE CHART -->
                   <div class="card card-secondary">
                     <div class="card-header">
-                      <h3 class="card-title">Creados vs Personas por pilar</h3>
+                      <h3 class="card-title">Personas Totales vs Personas Entrenadas por pilar</h3>
 
                       <div class="card-tools">
                         <button type="button" class="btn btn-tool" data-card-widget="collapse">
