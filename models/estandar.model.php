@@ -315,28 +315,60 @@ class ModeloEstandar
         } catch (PDOException $e) {
             die("Error en la consulta: " . $e->getMessage());
         }
-    }
-    static public function PersonalValidadoMdl($id_proceso)
-    {
-        try {
-            $conn = Conexion::Conectar();
+    }      
+  
+    static public function RevertirPersonalMdl($datos,$id_estandar) {
 
-            // Define el nombre del procedimiento almacenado y los parámetros
-            $sql = "EXEC Estandar_PersonalValidado @id_proceso = :id_proceso";
-            // Prepara la consulta
-            $stmt = $conn->prepare($sql);
-            // Asocia los valores a los parámetros
-            $stmt->bindParam(":id_proceso", $id_proceso, PDO::PARAM_INT);
-            // Ejecuta el procedimiento almacenado
-            $stmt->execute();
+            try {
+                $conn = Conexion::Conectar();
+               // Recorre los datos y realiza la inserción en SQL Server
 
-            // Recupera el resultado
-            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+               if (isset($datos["datos"])) {
+                foreach ($datos["datos"] as $item) {
+                    if (isset($item["rut"])) {
 
-            return $result;
-        } catch (PDOException $e) {
-            die("Error en la consulta: " . $e->getMessage());
+                        // Define el nombre del procedimiento almacenado y los parámetros
+                        $sql = "EXEC Estandar_Revertir_Personal @rut = :rut, @id_estandar_proceso = :id_estandar";			
+                        // Prepara la consulta
+                        $stmt = $conn->prepare($sql);		
+                        // Asocia los valores a los parámetros
+                        $stmt->bindParam(":id_estandar", $id_estandar, PDO::PARAM_INT);
+                        $stmt->bindParam(":rut", $item["rut"], PDO::PARAM_STR);
+                        // Ejecuta el procedimiento almacenado
+                        $stmt->execute();
+                    }
+                }
+            }
+                // Cierra la conexión a la base de datos
+                $conn = null;
+
+                // Envía una respuesta al cliente (puede ser un mensaje de éxito)
+                return "ok";
+            } catch (PDOException $e) {
+                die("Error en la consulta: " . $e->getMessage());
+            }
         }
+  
+        static public function PersonalValidadoMdl($id_proceso) {
+            try {
+                $conn = Conexion::Conectar();
+        
+                // Define el nombre del procedimiento almacenado y los parámetros
+                $sql = "EXEC Estandar_PersonalValidado @id_proceso = :id_proceso";			
+                // Prepara la consulta
+                $stmt = $conn->prepare($sql);		
+                // Asocia los valores a los parámetros
+                $stmt->bindParam(":id_proceso", $id_proceso, PDO::PARAM_INT);
+                // Ejecuta el procedimiento almacenado
+                $stmt->execute();
+                
+                // Recupera el resultado
+                $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                
+                return $result;
+            } catch (PDOException $e) {
+                die("Error en la consulta: " . $e->getMessage());
+            }     
     }
 
     static public function GraficosCreadosEntrenadosMdl()

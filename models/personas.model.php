@@ -27,7 +27,7 @@ Class ModeloPersonas {
 			$conn = Conexion::Conectar();
 	
 			// Define el nombre del procedimiento almacenado y los parámetros
-			$sql = "EXEC Persona_Crear @rut = :rut, @nombre = :nombre, @apellido = :apellido, @area = :area";			
+			$sql = "EXEC Persona_Crear @rut = :rut, @nombre = :nombre, @apellido = :apellido, @area = :area, @area_secundaria = :area_secundaria";			
 			// Prepara la consulta
 			$stmt = $conn->prepare($sql);		
 			// Asocia los valores a los parámetros
@@ -35,6 +35,7 @@ Class ModeloPersonas {
 			$stmt->bindParam(":nombre", $datos["nombre"], PDO::PARAM_STR);
 			$stmt->bindParam(":apellido", $datos["apellido"], PDO::PARAM_STR);
 			$stmt->bindParam(":area", $datos["area"], PDO::PARAM_INT);
+			$stmt->bindParam(":area_secundaria", $datos["area_secundaria"], PDO::PARAM_INT);
 
 			// Ejecuta el procedimiento almacenado
 			$stmt->execute();
@@ -76,7 +77,7 @@ Class ModeloPersonas {
 			$conn = Conexion::Conectar();
 	
 			// Define el nombre del procedimiento almacenado y los parámetros
-			$sql = "EXEC Persona_Actualizar @rut = :rut, @nombre = :nombre, @apellido = :apellido, @area = :area";			
+			$sql = "EXEC Persona_Actualizar @rut = :rut, @nombre = :nombre, @apellido = :apellido, @area = :area, @area_secundaria = :area_secundaria";			
 			// Prepara la consulta
 			$stmt = $conn->prepare($sql);		
 			// Asocia los valores a los parámetros
@@ -84,6 +85,7 @@ Class ModeloPersonas {
 			$stmt->bindParam(":nombre", $datos["nombre"], PDO::PARAM_STR);
 			$stmt->bindParam(":apellido", $datos["apellido"], PDO::PARAM_STR);
 			$stmt->bindParam(":area", $datos["area"], PDO::PARAM_INT);
+			$stmt->bindParam(":area_secundaria", $datos["area_secundaria"], PDO::PARAM_INT);
 
 			// Ejecuta el procedimiento almacenado
 			$stmt->execute();

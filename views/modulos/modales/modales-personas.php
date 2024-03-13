@@ -46,8 +46,22 @@
                     <input type="text" class="form-control" name="apellido" id="apellido" placeholder="Ingrese apellido" required>
                 </div>
                 <div class="form-group">
-                        <label>Área:</label>
+                        <label>Área Base:</label>
                         <select class="form-control" name="area" required>
+
+                                    <?php
+                                    $tabla2 = ModeloArea::listarAreaMdl();
+                                    echo '<option value="" selected>Seleccione Área</option>';
+                                    foreach ($tabla2 as $key => $value) { 
+                                    echo '<option value="'.$value["id"].'">'.$value["nombre"].'</option>';
+                                    }
+                                    echo '</select>';
+
+                                    ?>
+              </div>
+              <div class="form-group">
+                        <label>Área Secundaria:</label>
+                        <select class="form-control" name="areaSecundaria" required>
 
                                     <?php
                                     $tabla2 = ModeloArea::listarAreaMdl();
@@ -82,7 +96,26 @@
       </div>
 
     
-    
+     <div class="modal fade" id="modal-main" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalToggleLabel">Modal 1</h1>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+      </div>
+      <div class="modal-body">
+        Seleccione que acción desea realizar.
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" data-bs-target="#exampleModalToggle2" data-bs-toggle="modal">Ingresar personal</button>
+        <button class="btn btn-danger" data-bs-target="#exampleModalToggle2" data-bs-toggle="modal">Desactivar personal</button>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
     <!-- Modal para ingresar excel -->
 
      <div class="modal fade" id="modal-insertar-nuevo-personas" style="overflow-y: scroll;">
@@ -91,7 +124,7 @@
           <form id="excelForm" enctype="multipart/form-data">
 
             <div class="modal-header">
-              <h4 class="modal-title">Cargar archivo Excel</h4>
+              <h4 class="modal-title titulo"></h4>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
@@ -124,25 +157,22 @@
                       <li>A1: nombre de columna "rut"</li>
                       <li>B1: nombre de columna "nombre"</li>
                       <li>C1: nombre de columna "apellido"</li>
-                      <li>D1: nombre de columna "area"</li>
+                      <li>D1: nombre de columna "area base"</li>
+                      <li>E1: nombre de columna "area secundaria"</li>
                     </ul>
                   </li>
                   <li>El rut debe ir sin puntos y con guion verificador. Ejemplo: 19345235-3</li>
-                  <li>En la columna "area" debe ingresar solo areas existentes en el sistema</li>
-                  <li>Al cargar el documento se validará que rut no exista en el sistema, ademas que el campo area exista en el sistema.</li>
-                  <li>Al finalizar la carga del archivo excel en la parte inferior se mostrará si existe algun error en la integración de la fila</li>
-
+                  <li>En la columna "area base" o "area secundaria" debe ingresar solo áreas existentes en el sistema, la columna "area secundaria" no será obligación ingresar datos.</li>
+                  <li class="TextoRutValidar"></li>
+                  <li>Al finalizar la carga del archivo excel en la parte inferior se mostrará si existe algún error en la integración de la fila</li>
                 </ul>
                         </div>
                     </div>
                     </div>
                     <label for="exampleInputEmail1">Agregue archivo Excel (Formato .XLSX):</label>
                     <div class="col-12" id="accordion1">
-                 
-
                 </div>
                     <input type="file" class="form-control" name="archivo_excel" id="archivo_excel" accept=".xlsx" required >
-
                   </div>
                   <div class="progress">
                     <div class="progress-bar progress-bar-striped progress-bar-animated" id="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
@@ -169,7 +199,7 @@
                 </div>
                 </div>
                 <!-- /.card-body -->
-                <input type="hidden" name="tipoOperacion" value="insertarPersonas">
+                <input type="hidden" name="tipoOperacion" value="">
             </div>
             <!-- /.card -->
           <!--/.col (right) -->
@@ -180,7 +210,7 @@
             </div>
             <div class="modal-footer justify-content-between">
               <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-              <button type="submit" class="btn btn-primary">Agregar</button>
+              <button type="submit" class="btn btn-primary">Guardar</button>
             </div>
     </form>
           </div>
@@ -188,8 +218,6 @@
         </div>
         <!-- /.modal-dialog -->
       </div>
-
-
            <!-- Modal para editar personas -->
 
      <div class="modal fade" id="modal-editar-personas" style="overflow-y: scroll;">
@@ -232,8 +260,22 @@
                     <input type="text" class="form-control" name="apellido" id="apellido" placeholder="Ingrese apellido" required>
                 </div>
                 <div class="form-group">
-                        <label>Área:</label>
+                        <label>Área Base:</label>
                         <select class="form-control" name="area" required>
+
+                                    <?php
+                                    $tabla2 = ModeloArea::listarAreaMdl();
+                                    echo '<option value="" selected>Seleccione Área</option>';
+                                    foreach ($tabla2 as $key => $value) { 
+                                    echo '<option value="'.$value["id"].'">'.$value["nombre"].'</option>';
+                                    }
+                                    echo '</select>';
+
+                                    ?>
+              </div>
+              <div class="form-group">
+                        <label>Área Secundaria:</label>
+                        <select class="form-control" name="areaSecundaria" >
 
                                     <?php
                                     $tabla2 = ModeloArea::listarAreaMdl();

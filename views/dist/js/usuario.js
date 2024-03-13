@@ -41,7 +41,14 @@ $(document).on("submit", "#insertarUsuario", function (e) {
                                             window.location = "usuarios"
                                             }
                                         })
+                }  else if (respuesta.resultado == 3) {
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Limites de usuarios para este nivel ya ah sido superado',
+                        icon: 'error'
+                    });
                 } 
+
             },
             error: function () {
                 Swal.fire({
@@ -119,7 +126,14 @@ $("#editarUsuario").submit(function (e) {
                                           window.location = "usuarios"
                                         }
                                       })
+            }  else if (respuesta.resultado == 4) {
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Limites de usuarios para este nivel ya ah sido superado',
+                    icon: 'error'
+                });
             } 
+
         },
         error: function () {
             Swal.fire({

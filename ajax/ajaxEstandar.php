@@ -68,30 +68,33 @@ class ajaxEstandar
 		echo json_encode($respuesta);
 	}
 
-	public function validarPersonal()
-	{
-		$datos = $this->datos;
-		$id_estandar = $this->id_estandar;
-		$respuesta = ModeloEstandar::ValidarPersonalMdl($datos, $id_estandar);
-		echo json_encode($respuesta);
-	}
-	public function CargarEstandares()
-	{
-		$respuesta = ModeloEstandar::listarEstandaresCargadosMdl();
-		echo json_encode($respuesta);
-	}
-	public function GraficosCreadosEntrenados()
-	{
-		$respuesta = ModeloEstandar::GraficosCreadosEntrenadosMdl();
-		echo json_encode($respuesta);
-	}
 	public function GraficosCreadosPersonas()
 	{
 		$respuesta = ModeloEstandar::GraficosCreadosPersonasMdl();
 		echo json_encode($respuesta);
 	}
-	public function GraficosBarrasEntrenados()
-	{
+
+public function validarPersonal(){
+ $datos = $this->datos;
+ $id_estandar = $this->id_estandar;
+$respuesta = ModeloEstandar::ValidarPersonalMdl($datos,$id_estandar);
+echo json_encode($respuesta);
+}
+public function revertirPersonal(){
+	$datos = $this->datos;
+	$id_estandar = $this->id_estandar;
+   $respuesta = ModeloEstandar::RevertirPersonalMdl($datos,$id_estandar);
+   echo json_encode($respuesta);
+   }
+public function CargarEstandares(){
+   $respuesta = ModeloEstandar::listarEstandaresCargadosMdl();
+   echo json_encode($respuesta);
+   }
+   public function GraficosCreadosEntrenados(){
+	$respuesta = ModeloEstandar::GraficosCreadosEntrenadosMdl();
+	echo json_encode($respuesta);
+	}
+	public function GraficosBarrasEntrenados(){
 		$id_area = $this->id_area;
 		$respuesta = ModeloEstandar::GraficosBarrasEntrenadosMdl($id_area);
 		echo json_encode($respuesta);
@@ -206,6 +209,12 @@ if ($tipoOperacion == "ValidarPersonal") {
 	$ValidarPersonal->datos = $_POST["datos"];
 	$ValidarPersonal->id_estandar = $_POST["id_estandar"];
 	$ValidarPersonal->validarPersonal();
+}
+if ($tipoOperacion == "RevertirPersonal") {
+	$revertirPersonal = new ajaxEstandar();
+	$revertirPersonal -> datos = $_POST["datos"];
+	$revertirPersonal -> id_estandar = $_POST["id_estandar"];
+	$revertirPersonal -> revertirPersonal();
 }
 if ($tipoOperacion == "CargarEstandares") {
 	$CargarEstandares = new ajaxEstandar();

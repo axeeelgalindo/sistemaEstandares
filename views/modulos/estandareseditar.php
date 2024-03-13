@@ -68,12 +68,14 @@
                     <i class="far fa-solid fa-eye"></i> 
                     </button> <button class="btn btn-sm btn-info btnEditarEstandar" IdEstandar="'.$value["id"].'" data-toggle="modal" data-target="#modal-editar-estandar">
                                         <i class="far fa-edit"></i> 
-                                    </button>
-                        <button class="btn btn-sm btn-danger btnEliminarEstandar"  IdEstandar="'.$value["id"].'"  rutaImagen="'.$value["url_pdf"].'">
+                                    </button>';
+                      if($_SESSION["nivel_usuario"] == 1)
+                         {
+                        echo' <button class="btn btn-sm btn-danger btnEliminarEstandar"  IdEstandar="'.$value["id"].'"  rutaImagen="'.$value["url_pdf"].'">
                                         <i class="far fa-trash-alt"></i> 
-                        </button>
-                
-                        </td>
+                        </button>';
+                         }
+                        echo'</td>
                     </tr>
          
             ';

@@ -6,7 +6,7 @@
     <a href="dashboard" class="brand-link d-block" style="display: flex;
     justify-content: center; 
     align-items: center;">
-      <img src="dist/img/logoaquachile.png" alt="AdminLTE Logo" class="brand-text elevation-5" style="opacity: .8;width:170px;margin-left : 5%;">
+      <img src="dist/img/logoaquachile.png" alt="AdminLTE Logo" class="brand-text" style="opacity: .8;width:170px;margin-left : 15%;">
     </a>
     <!-- Sidebar -->
     <div class="sidebar">
@@ -125,7 +125,10 @@
           if($value["menu"]=="unidades" && $value["estado"] != 3)
           {
           echo' 
-        <li class="nav-item" >
+        <li class="nav-item" style="
+           background: #49494980;
+            cursor: not-allowed; pointer-events: none;
+        ">
           <a href="unidades" class="nav-link" id="tab-unidades">
           <i class="fas fa-building nav-icon"></i>
             <p>

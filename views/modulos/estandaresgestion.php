@@ -24,9 +24,9 @@
   <div class="card">
     <div class="card-header">
       <h2 class="col-10  card-title">Listado de estandares</h2>
-      <button class="btn btn-sm btn-primary btnFiltrar col-2" data-toggle="modal" data-target="#modal-cargados-filtrar">
+  <!--     <button class="btn btn-sm btn-primary btnFiltrar col-2" data-toggle="modal" data-target="#modal-cargados-filtrar">
         <i class="fas fa-filter">Filtrar</i>
-      </button>
+      </button> -->
     </div>
     <div class="card-body ">
       <table id="example1" class="table table-striped projects">
@@ -38,11 +38,14 @@
             <th style="width: 20%">
               Tipo de Estandar
             </th>
-            <th style="width: 20%">
+            <th style="width: 10%">
               Nombre Estandar
             </th>
-            <th style="width: 20%">
+            <th style="width: 10%">
               Area
+            </th>
+   <th style="width: 10%">
+              Fecha Entrenamiento
             </th>
             <th>
               Total Personas / Entrenadas
@@ -66,6 +69,7 @@
             <td>' . nl2br($value["tipo"]) . '</td>
             <td> ' . nl2br($value["nombre"]) . '</td>
             <td>' . nl2br($value["area"]) . '</td>
+                   <td>' . nl2br($value["fecha_inicio"]) . '</td>
             <td>' . nl2br($value["total_personas"]) . '/' . nl2br($value["total_personas_entrenadas"]) . ' </td>
                       <td class="project_progress">
                           <div class="progress progress-sm">
@@ -81,13 +85,11 @@
                       <button class="btn btn-sm btn-default btnVerEstandar" Url="' . $value["url_pdf"] . '" data-toggle="modal" data-target="#modal-ver-estandar">
             <i class="far fa-solid fa-eye"> </i> 
             </button>   
-                          <button class="btn btn-sm btn-primary btnSubirEstandar" IdProceso="' . $value["id"] . '" data-toggle="modal" data-target="#modal-cargar-personas-estandar">
-                          <i class="fas fa-barcode"></i> Entrenar
+                          <button class="btn btn-sm btn-primary btnSubirEstandar" IdProceso="'.$value["id"].'" data-toggle="modal" data-target="#modal-cargar-personas-estandar">
+                          <i class="fas fa-rocket"></i> Entrenar
                           </button>
-                          <button class="btn btn-success btn-sm btnEstandarValidado" IdProceso="' . $value["id"] . '"  data-toggle="modal" data-target="#modal-cargados-personas-estandar"   >
-                              <i class="fas fa-pencil-alt">
-                              </i> Entrenados
-                          
+                          <button class="btn btn-success btn-sm btnEstandarValidado" IdProceso="'.$value["id"].'"  data-toggle="modal" data-target="#modal-cargados-personas-estandar"   >
+                          <i class="fas fa-user-check"></i> Entrenados               
                           </button>
                       </td>
                   </tr>     

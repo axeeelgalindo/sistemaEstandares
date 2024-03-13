@@ -27,7 +27,7 @@
                 <button class="col-md-2 col-sm-12 btn btn-sm btn-secondary" data-toggle="modal" data-target="#modal-insertar-nuevo-personas2" >
                                         <i class="far fa-edit"></i> + Agregar Personas
                                     </button>
-                                    <button class="col-md-2 col-sm-12 btn btn-sm btn-primary" style="background: #1C245A;" data-toggle="modal" data-target="#modal-insertar-nuevo-personas">
+                                    <button class="col-md-2 col-sm-12 btn btn-sm btn-primary btnAgregarPersonaExcel" style="background: #1C245A;">
                                         <i class="far fa-file-excel"></i> Cargar Archivo Excel
                                     </button>
               </div>
@@ -46,7 +46,10 @@
                        Apellido
                       </th>
                       <th >
-                       Área
+                       Área base
+                      </th>
+                      <th >
+                       Área secundaria
                       </th>
                       <th >
                        Estado
@@ -69,6 +72,7 @@
                     <td>'.nl2br($value["nombre"]).'</td>
                     <td>'.nl2br($value["apellido"]).'</td>
                     <td>'.nl2br($value["area"]).'</td>
+                    <td>'.nl2br($value["area secundaria"]).'</td>
                     <td>'.nl2br($value["Estado"]).'</td>
                     <td>'.nl2br($value["fecha_integracion"]).'</td>      
 
