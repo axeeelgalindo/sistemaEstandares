@@ -619,6 +619,27 @@ class ModeloEstandar
             die("Error en la consulta: " . $e->getMessage());
         }
     }
+    static public function GraficoAnualPersonasCreadasMdl($id_area) {
+        try {
+            $conn = Conexion::Conectar();
+    
+            // Define el nombre del procedimiento almacenado y los parámetros
+            $sql = "EXEC Estandares_Graficos_Barras_Personas_Creados @id_area = :id_area";
+            
+            // Prepara la consulta
+            $stmt = $conn->prepare($sql);
+            $stmt->bindParam(":id_area", $id_area, PDO::PARAM_INT); 
+            // Ejecuta el procedimiento almacenado
+            $stmt->execute();
+            
+            // Recupera el resultado
+            $result = $stmt->fetchall(PDO::FETCH_ASSOC);
+            
+            return $result;
+        } catch (PDOException $e) {
+            die("Error en la consulta: " . $e->getMessage());
+        }
+    }
     
     static public function GraficoAnualTotalPersonasMdl($id_area) {
         try {
@@ -649,6 +670,30 @@ class ModeloEstandar
 
             // Define el nombre del procedimiento almacenado y los parámetros
             $sql = "EXEC Estandares_Graficos_Barras_Areas_Personas @id_area = :id_area";
+
+            // Prepara la consulta
+            $stmt = $conn->prepare($sql);
+            $stmt->bindParam(":id_area", $id_area, PDO::PARAM_INT);
+
+            // Ejecuta el procedimiento almacenado
+            $stmt->execute();
+
+            // Recupera el resultado
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            return $result;
+        } catch (PDOException $e) {
+            die("Error en la consulta: " . $e->getMessage());
+        }
+    }
+
+    static public function GraficoBarraAreaPersonasIniciadas($id_area)
+    {
+        try {
+            $conn = Conexion::Conectar();
+
+            // Define el nombre del procedimiento almacenado y los parámetros
+            $sql = "EXEC Estandares_Graficos_Barras_Areas_Personas_Iniciadas @id_area = :id_area";
 
             // Prepara la consulta
             $stmt = $conn->prepare($sql);

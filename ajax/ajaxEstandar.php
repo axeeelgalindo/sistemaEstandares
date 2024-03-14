@@ -138,6 +138,12 @@ public function CargarEstandares(){
 		$respuesta = ModeloEstandar::GraficoAnualPersonasMdl($id_area);
 		echo json_encode($respuesta);
 	}
+	public function GraficoAnualPersonasCreadas()
+	{
+		$id_area = $this->id_area;
+		$respuesta = ModeloEstandar::GraficoAnualPersonasCreadasMdl($id_area);
+		echo json_encode($respuesta);
+	}
 	public function GraficoAnualTotalPersonas()
 	{
 		$id_area = $this->id_area;
@@ -148,6 +154,12 @@ public function CargarEstandares(){
 	{
 		$id_area = $this->id_area;
 		$respuesta = ModeloEstandar::GraficosBarrasAreasPersonasMdl($id_area);
+		echo json_encode($respuesta);
+	}
+	public function GraficoBarraAreaPersonasIniciadas()
+	{
+		$id_area = $this->id_area;
+		$respuesta = ModeloEstandar::GraficoBarraAreaPersonasIniciadas($id_area);
 		echo json_encode($respuesta);
 	}
 	public function GraficoBarraTotalAreaPersonas()
@@ -268,6 +280,11 @@ if ($tipoOperacion == "GraficoBarraAnual_Personas") {
 	$GraficoAnualPersonas->id_area = $_POST["id_area"];
 	$GraficoAnualPersonas->GraficoAnualPersonas();
 }
+if ($tipoOperacion == "GraficoBarraAnual_PersonasCreadas") {
+	$GraficoAnualPersonas = new ajaxEstandar();
+	$GraficoAnualPersonas->id_area = $_POST["id_area"];
+	$GraficoAnualPersonas->GraficoAnualPersonasCreadas();
+}
 if ($tipoOperacion == "GraficoBarraAnualTotal_Personas") {
 	$GraficoAnualPersonas = new ajaxEstandar();
 	$GraficoAnualPersonas->id_area = $_POST["id_area"];
@@ -277,6 +294,11 @@ if ($tipoOperacion == "GraficoBarraArea_Personas") {
 	$GraficoAnualPersonas = new ajaxEstandar();
 	$GraficoAnualPersonas->id_area = $_POST["id_area"];
 	$GraficoAnualPersonas->GraficoBarraAreaPersonas();
+}
+if ($tipoOperacion == "GraficoBarraTotalAreaIniciadas_Personas") {
+	$GraficoAnualPersonas = new ajaxEstandar();
+	$GraficoAnualPersonas->id_area = $_POST["id_area"];
+	$GraficoAnualPersonas->GraficoBarraAreaPersonasIniciadas();
 }
 if ($tipoOperacion == "GraficoBarraTotalArea_Personas") {
 	$GraficoAnualPersonas = new ajaxEstandar();
