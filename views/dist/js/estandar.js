@@ -296,67 +296,67 @@ $(document).on("click", "#btnValidar", function () {
 );
 
 
-  // Manejar el clic en el botón "Validar y Enviar"
-  $(document).on("click", "#btnRevertir", function(){ 
-    var miTabla = $('#TablaPersonalValidado').DataTable();
-    var datosAEnviar = []; // Arreglo para almacenar los datos seleccionados
-    var idEstandar1 = $('#modal-cargados-personas-estandar input[name="id_estandar"]').val()
-    // Limpiar el arreglo de datos a enviar antes de recopilar los datos nuevamente
-    datosAEnviar = [];
-    // Recopilar los datos de las filas seleccionadas
-    miTabla.rows().nodes().to$().filter(':has(:checked)').each(function() {
-        var fila = $(this);
-        var rut = fila.find('td:eq(2)').text();
-        datosAEnviar.push({ rut: rut});
-    });
+// Manejar el clic en el botón "Validar y Enviar"
+$(document).on("click", "#btnRevertir", function () {
+  var miTabla = $('#TablaPersonalValidado').DataTable();
+  var datosAEnviar = []; // Arreglo para almacenar los datos seleccionados
+  var idEstandar1 = $('#modal-cargados-personas-estandar input[name="id_estandar"]').val()
+  // Limpiar el arreglo de datos a enviar antes de recopilar los datos nuevamente
+  datosAEnviar = [];
+  // Recopilar los datos de las filas seleccionadas
+  miTabla.rows().nodes().to$().filter(':has(:checked)').each(function () {
+    var fila = $(this);
+    var rut = fila.find('td:eq(2)').text();
+    datosAEnviar.push({ rut: rut });
+  });
 
-    // Realizar validaciones de los datos si es necesario
+  // Realizar validaciones de los datos si es necesario
 
-      // Agregar los datos y el parámetro adicional al objeto de datos
-      var datosParaEnviar = {
-        datos: datosAEnviar
-    };
-    Swal.fire({
-      title: '¿Estás seguro de revertir los entrenamientos?',
-      text: "Los cambios no son reversibles!",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Si, Revertir!'
-    }).then((result) => {
-      if (result.value) {
-        // Enviar los datos al servidor a través de una solicitud AJAX
-        $.ajax({
-          url: 'ajax/ajaxEstandar.php',
+  // Agregar los datos y el parámetro adicional al objeto de datos
+  var datosParaEnviar = {
+    datos: datosAEnviar
+  };
+  Swal.fire({
+    title: '¿Estás seguro de revertir los entrenamientos?',
+    text: "Los cambios no son reversibles!",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Si, Revertir!'
+  }).then((result) => {
+    if (result.value) {
+      // Enviar los datos al servidor a través de una solicitud AJAX
+      $.ajax({
+        url: 'ajax/ajaxEstandar.php',
         type: 'POST',
-        data: { datos: datosParaEnviar,tipoOperacion: "RevertirPersonal",id_estandar:idEstandar1 },
+        data: { datos: datosParaEnviar, tipoOperacion: "RevertirPersonal", id_estandar: idEstandar1 },
         dataType: 'json',
-        success: function(respuesta) {
-       
-            if(respuesta == "ok"){
-               Swal.fire(
-                'Excelente!',
-                'Reversión realizada con exito!',
-                'success'
-              ).then((result) => {
-                                    if (result.value) {
-                                      CargarPersonalValidado(idEstandar1);
-                                        CargarEstandares()
-                                    }
-                                  })  
-            }else{
-                Swal.fire({
-                    title: 'Error',
-                    text: 'Error al revertir personal',
-                    icon: 'error'
-                });
-            }
-           
+        success: function (respuesta) {
+
+          if (respuesta == "ok") {
+            Swal.fire(
+              'Excelente!',
+              'Reversión realizada con exito!',
+              'success'
+            ).then((result) => {
+              if (result.value) {
+                CargarPersonalValidado(idEstandar1);
+                CargarEstandares()
+              }
+            })
+          } else {
+            Swal.fire({
+              title: 'Error',
+              text: 'Error al revertir personal',
+              icon: 'error'
+            });
+          }
+
         }
-    });
-      }
-    })
+      });
+    }
+  })
 
 
 
@@ -438,15 +438,15 @@ function CargarEstandares() {
             </small>' ,
           '<button class="btn btn-sm btn-default btnVerEstandar" Url="' + item.url_pdf + '" data-toggle="modal" data-target="#modal-ver-estandar">\
                  <i class="far fa-solid fa-eye"> </i>\
-                 </button> <button class="btn btn-sm btn-primary btnSubirEstandar" IdProceso="'+ item.id +'" data-toggle="modal" data-target="#modal-cargar-personas-estandar">\
+                 </button> <button class="btn btn-sm btn-primary btnSubirEstandar" IdProceso="'+ item.id + '" data-toggle="modal" data-target="#modal-cargar-personas-estandar">\
                  <i class="fas fa-rocket"></i> Entrenar\
                  </button>\
-                 <button class="btn btn-success btn-sm btnEstandarValidado" IdProceso="'+item.id +'" data-toggle="modal" data-target="#modal-cargados-personas-estandar"><i class="fas fa-user-check"></i>Entrenados</button>'                                              
-            ])
-                // Aplicar una clase a la celda específica
-                nuevaFila.nodes().to$().find('td:eq(5)').addClass('project_progress');
-                nuevaFila.nodes().to$().find('td:eq(6)').addClass('project-state');
-                nuevaFila.nodes().to$().find('td:eq(7)').addClass('project-actions text-right');
+                 <button class="btn btn-success btn-sm btnEstandarValidado" IdProceso="'+ item.id + '" data-toggle="modal" data-target="#modal-cargados-personas-estandar"><i class="fas fa-user-check"></i>Entrenados</button>'
+        ])
+        // Aplicar una clase a la celda específica
+        nuevaFila.nodes().to$().find('td:eq(5)').addClass('project_progress');
+        nuevaFila.nodes().to$().find('td:eq(6)').addClass('project-state');
+        nuevaFila.nodes().to$().find('td:eq(7)').addClass('project-actions text-right');
       });
       miTabla.draw();
     }
@@ -503,6 +503,10 @@ let creados
 let entrenados
 let porcentaje
 let porcentajeP
+let porcentajeP1
+let porcentajeP2
+let porcentajeP3
+let porcentajeP4
 let personas
 let personasTotal
 var donutChartCanvas
@@ -593,11 +597,11 @@ $.ajax({
     if (personasTotal == 0) {
       porcentajeP = 0
     } else {
-      console.log("Personas: ", personas, " Total: ", personasTotal)
-      porcentajeP = (personas)*100 / personasTotal;
+      porcentajeP = (personas) * 100 / personasTotal;
     }
 
     $('#PorcentajeEntrenado2').text(porcentajeP.toFixed(2) + ' %');
+    $('#HorasEntrenado').text(personas/2);
   }
 })
 
@@ -605,16 +609,15 @@ var datosPersonas = new FormData();
 datosPersonas.append("tipoOperacion", "GraficoPersonasCreados_Entrenados");
 
 $.ajax({
-    url: 'ajax/ajaxPersonas.php',
-    type: 'POST',
-    data: datosPersonas,
-    dataType: 'json',
-    processData: false,
-    contentType: false,
-    success: function (respuesta) {
-        console.log(respuesta);
-        // Process personas data here
-    }
+  url: 'ajax/ajaxPersonas.php',
+  type: 'POST',
+  data: datosPersonas,
+  dataType: 'json',
+  processData: false,
+  contentType: false,
+  success: function (respuesta) {
+    // Process personas data here
+  }
 });
 
 $(function () {
@@ -660,21 +663,21 @@ $(function () {
   const fechaActual = new Date();
 
   // Iniciar desde enero (mes 0) del año actual
-  fechaActual.setMonth(fechaActual.getMonth()-11);
+  fechaActual.setMonth(fechaActual.getMonth() - 11);
 
   // Obtener los 12 meses del año y agregarlos al array
   for (let i = 0; i < 12; i++) {
     const mesYAnio = fechaActual.toLocaleString('default', { year: '2-digit', month: 'short' });
     mesesDelAnio.push(mesYAnio);
-    
+
     //Avanzar al mes siguiente
     fechaActual.setMonth(fechaActual.getMonth() + 1);
 
     // Una vez enero es alcanzado, seguir al siguiente mes
     if (fechaActual.getMonth() === 0) {
-        fechaActual.setFullYear(fechaActual.getFullYear());
+      fechaActual.setFullYear(fechaActual.getFullYear());
     }
-}
+  }
   TotalArea.push("Total Área")
   var areaChartDataAreas = {
     labels: TotalArea,
@@ -728,8 +731,8 @@ $(function () {
     labels: TotalArea,
     datasets: [
       {
-        label: 'Personas',
-        backgroundColor: '#0ac730',
+        label: 'Personas Entrenadas',
+        backgroundColor: '#D85E05',
         borderColor: 'rgba(60,141,188,0.8)',
         pointRadius: false,
         pointColor: '#3b8bba',
@@ -739,8 +742,8 @@ $(function () {
         data: PersonasPorMesesArea
       },
       {
-        label: 'Personas Totales',
-        backgroundColor: '#f5023f',
+        label: 'Personas Creadas',
+        backgroundColor: '#1C245A',
         borderColor: 'rgba(210, 214, 222, 1)',
         pointRadius: false,
         pointColor: 'rgba(210, 214, 222, 1)',
@@ -749,6 +752,17 @@ $(function () {
         pointHighlightStroke: 'rgba(220,220,220,1)',
         data: PersonasTotalPorMesesArea
       },
+      {
+        label: 'Horas Entrenadas',
+        backgroundColor: '#ffb005',
+        borderColor: 'rgba(210, 214, 222, 1)',
+        pointRadius: false,
+        pointColor: 'rgba(210, 214, 222, 1)',
+        pointStrokeColor: '#c1c7d1',
+        pointHighlightFill: '#fff',
+        pointHighlightStroke: 'rgba(220,220,220,1)',
+        data: PersonasPorMesesArea
+      },
     ]
   }
 
@@ -756,8 +770,10 @@ $(function () {
   var barChartDataAreaP = $.extend(true, {}, areaChartDataAreasP)
   var temp0P = areaChartDataAreasP.datasets[0]
   var temp1P = areaChartDataAreasP.datasets[1]
+  var temp2P = areaChartDataAreasP.datasets[2]
   barChartDataAreaP.datasets[0] = temp1P
   barChartDataAreaP.datasets[1] = temp0P
+  barChartDataAreaP.datasets[2] = temp2P
 
   GraficoAreaP = new Chart(barChartCanvas2P, {
     type: 'bar',
@@ -948,11 +964,11 @@ $(function () {
   GraficoPilarSeguridad2 = new Chart(pieChartCanvasSeguridad2, {
     type: 'pie',
     data: {
-      labels: ['Personas', 'Personas Totales'],
+      labels: ['Personas Entrenadas', 'Personas Creadas'],
       datasets: [
         {
           data: [SeguridadPersonas, SeguridadPersonasTotales],
-          backgroundColor: ['#0ac730', '#f5023f'],
+          backgroundColor: ['#D85E05', '#1C245A'],
         }
       ]
     },
@@ -981,14 +997,15 @@ $(function () {
       }
     }
   });
+
   GraficoPilarCalidad2 = new Chart(pieChartCanvasCalidad2, {
     type: 'pie',
     data: {
-      labels: ['Personas', 'Personas Totales'],
+      labels: ['Personas Entrenadas', 'Personas Creadas'],
       datasets: [
         {
           data: [CalidadPersonas, CalidadPersonasTotales],
-          backgroundColor: ['#0ac730', '#f5023f'],
+          backgroundColor: ['#D85E05', '#1C245A'],
         }
       ]
     },
@@ -1023,11 +1040,11 @@ $(function () {
   GraficoPilarProduccion2 = new Chart(pieChartCanvasProduccion2, {
     type: 'pie',
     data: {
-      labels: ['Personas', 'Personas Totales'],
+      labels: ['Personas Entrenadas', 'Personas Creadas'],
       datasets: [
         {
           data: [ProduccionPersonas, ProduccionPersonasTotales],
-          backgroundColor: ['#0ac730', '#f5023f'],
+          backgroundColor: ['#D85E05', '#1C245A'],
         }
       ]
     },
@@ -1063,11 +1080,11 @@ $(function () {
   GraficoPilar5S2 = new Chart(pieChartCanvas5S2, {
     type: 'pie',
     data: {
-      labels: ['Personas', 'Personas Totales'],
+      labels: ['Personas Entrenadas', 'Personas Creadas'],
       datasets: [
         {
           data: [S5Personas, S5PersonasTotales],
-          backgroundColor: ['#0ac730', '#f5023f'],
+          backgroundColor: ['#D85E05', '#1C245A'],
         }
       ]
     },
@@ -1134,8 +1151,8 @@ $(function () {
     labels: mesesDelAnio,
     datasets: [
       {
-        label: 'Personas',
-        backgroundColor: '#0ac730',
+        label: 'Personas Entrenadas',
+        backgroundColor: '#D85E05',
         borderColor: 'rgba(60,141,188,0.8)',
         pointRadius: false,
         pointColor: '#3b8bba',
@@ -1145,8 +1162,19 @@ $(function () {
         data: PersonasPorMeses
       },
       {
-        label: 'Personas Totales',
-        backgroundColor: '#f5023f', 
+        label: 'Personas Creadas',
+        backgroundColor: '#1C245A',
+        borderColor: 'rgba(210, 214, 222, 1)',
+        pointRadius: false,
+        pointColor: 'rgba(210, 214, 222, 1)',
+        pointStrokeColor: '#c1c7d1',
+        pointHighlightFill: '#fff',
+        pointHighlightStroke: 'rgba(220,220,220,1)',
+        data: CreadosPorMeses
+      },
+      {
+        label: 'Horas Entrenadas',
+        backgroundColor: '#ffb005',
         borderColor: 'rgba(210, 214, 222, 1)',
         pointRadius: false,
         pointColor: 'rgba(210, 214, 222, 1)',
@@ -1176,7 +1204,7 @@ $(function () {
     options: {
       plugins: {
         datalabels: {
-          color: '#000000'
+          color: '#ffffff'
         },
       }
     }
@@ -1186,8 +1214,10 @@ $(function () {
   var barChartDataP = $.extend(true, {}, areaChartDataP)
   var temp2 = areaChartDataP.datasets[0]
   var temp3 = areaChartDataP.datasets[1]
+  var temp4 = areaChartDataP.datasets[2]
   barChartDataP.datasets[0] = temp3
   barChartDataP.datasets[1] = temp2
+  barChartDataP.datasets[2] = temp4
 
   GraficoBarrasP = new Chart(barChartCanvasP, {
     type: 'bar',
@@ -1198,7 +1228,7 @@ $(function () {
     options: {
       plugins: {
         datalabels: {
-          color: '#000000'
+          color: '#ffffff'
         },
       }
     }
@@ -1238,7 +1268,7 @@ $(function () {
     // Process the data and update the graph accordingly
     // Example: Update the chart data with the received data
 
-}
+  }
 
   function CargarInformacionGraficos(area) {
 
@@ -1261,6 +1291,7 @@ $(function () {
     GraficoBarras.update()
     GraficoBarrasP.data.datasets[0].data = []
     GraficoBarrasP.data.datasets[1].data = []
+    GraficoBarrasP.data.datasets[2].data = []
     GraficoBarrasP.update()
     GraficoPilarSeguridad2.data.datasets[0].data = [0, 0]
     GraficoPilarSeguridad2.update()
@@ -1290,7 +1321,6 @@ $(function () {
 
         for (let i = 0; i < respuesta.length; i++) {
           CreadosPorMesesArea.push(respuesta[i]["CantidadRegistrosCreadosAreas"])
-          console.log(respuesta[i], "PRUEBA4: ", i)
         }
 
         GraficoArea.data.datasets[0].data = CreadosPorMesesArea
@@ -1315,7 +1345,6 @@ $(function () {
 
         for (let i = 0; i < respuesta.length; i++) {
           EntrenadosPorMesesArea.push(respuesta[i]["CantidadRegistrosEntrenadosAreas"])
-          console.log(respuesta[i], "PRUEBA3: ", i)
         }
         GraficoArea.data.datasets[1].data = EntrenadosPorMesesArea
         GraficoArea.update()
@@ -1339,9 +1368,14 @@ $(function () {
 
         for (let i = 0; i < respuesta.length; i++) {
           PersonasPorMesesArea.push(respuesta[i]["CantidadRegistrosEntrenadosAreas"])
-          console.log(respuesta[i], "PRUEBA1: ", i)
+        }
+        datos = PersonasPorMesesArea
+        horas = []
+        for (let i = 0; i < datos.length; i++) {
+          horas[i] = datos[i] / 2
         }
         GraficoAreaP.data.datasets[1].data = PersonasPorMesesArea
+        GraficoAreaP.data.datasets[2].data = horas
         GraficoAreaP.update()
       }
     })
@@ -1361,7 +1395,6 @@ $(function () {
 
         for (let i = 0; i < respuesta.length; i++) {
           PersonasTotalPorMesesArea.push(respuesta[i]["PersonasEntrenadasArea"])
-          console.log(respuesta[i], "PRUEBA2: ", i)
         }
         GraficoAreaP.data.datasets[0].data = PersonasTotalPorMesesArea
         GraficoAreaP.update()
@@ -1381,7 +1414,6 @@ $(function () {
       processData: false,
       contentType: false,
       success: function (respuesta) {
-        console.log(respuesta)
         EntrenadosPorMeses = []
 
         for (let i = 0; i < respuesta.length; i++) {
@@ -1405,7 +1437,6 @@ $(function () {
       processData: false,
       contentType: false,
       success: function (respuesta) {
-        console.log(respuesta)
         CreadosPorMeses = []
         for (let i = 0; i < respuesta.length; i++) {
           CreadosPorMeses.push(respuesta[i]["CantidadRegistrosCreados"])
@@ -1421,10 +1452,14 @@ $(function () {
     datospersonas.append("id_area", Area)
     datospersonas.append("tipoOperacion", "GraficoBarraAnual_Personas")
 
+    var datoshoras = new FormData()
+    datoshoras.append("id_area", Area)
+    datoshoras.append("tipoOperacion", "GraficoBarraAnual_Personas")
+
     var datospersonastotal = new FormData()
     datospersonastotal.append("id_area", Area)
     datospersonastotal.append("tipoOperacion", "GraficoBarraAnualTotal_Personas")
-    
+
     $.ajax({
       url: 'ajax/ajaxEstandar.php',
       type: 'POST',
@@ -1435,7 +1470,7 @@ $(function () {
       success: function (respuesta) {
         console.log(respuesta)
         PersonasTotalPorMeses = []
-        
+
         for (let i = 0; i < respuesta.length; i++) {
           PersonasTotalPorMeses.push(respuesta[i]["CantidadRegistrosEntrenados"])
         }
@@ -1452,13 +1487,23 @@ $(function () {
       processData: false,
       contentType: false,
       success: function (respuesta) {
-        console.log(respuesta)
         PersonasPorMeses = []
-        
+
         for (let i = 0; i < respuesta.length; i++) {
           PersonasPorMeses.push(respuesta[i]["CantidadRegistrosEntrenados"])
         }
+
+        let datos = PersonasPorMeses
+        let horas = []
+
+        for (let i = 0; i < datos.length; i++) {
+          horas[i] = datos[i] / 2
+        }
+
+        console.log("Datos: " + PersonasPorMeses)
+        console.log("Horas: " + horas)
         GraficoBarrasP.data.datasets[1].data = PersonasPorMeses
+        GraficoBarrasP.data.datasets[2].data = horas
         GraficoBarrasP.update()
       }
     })
@@ -1474,6 +1519,7 @@ $(function () {
       dataType: 'json',
       processData: false,
       contentType: false,
+      
       success: function (respuesta) {
         GraficoPilarSeguridad.data.datasets[0].data = [parseInt(respuesta.seguridad_entrenados), parseInt(respuesta.seguridad_creados)]
         GraficoPilarSeguridad.update()
@@ -1500,20 +1546,39 @@ $(function () {
       dataType: 'json',
       processData: false,
       contentType: false,
+
       success: function (respuesta) {
+
         GraficoPilarSeguridad2.data.datasets[0].data = [parseInt(respuesta.seguridad_personas), parseInt(respuesta.seguridad_personasTotales)]
         GraficoPilarSeguridad2.update()
-
+        Dato1 = parseInt(respuesta.seguridad_personas)
+        Hora1 = Dato1/2
+        
         GraficoPilarProduccion2.data.datasets[0].data = [parseInt(respuesta.produccion_personas), parseInt(respuesta.produccion_personasTotales)]
         GraficoPilarProduccion2.update()
+        Dato2 = parseInt(respuesta.produccion_personas)
+        Hora2 = Dato2/2
 
         GraficoPilarCalidad2.data.datasets[0].data = [parseInt(respuesta.calidad_personas), parseInt(respuesta.calidad_personasTotales)]
         GraficoPilarCalidad2.update()
+        Dato3 = parseInt(respuesta.calidad_personas)
+        Hora3 = Dato3/2
 
         GraficoPilar5S2.data.datasets[0].data = [parseInt(respuesta.s5_personas), parseInt(respuesta.s5_personasTotales)]
         GraficoPilar5S2.update()
+        Dato4 = parseInt(respuesta.s5_personas)
+        Hora4 = Dato4/2
+
+        console.log("JADAFKJDLKJ " + Dato3, Hora3)
+
+        $('#HorasEntrenado1').text(Hora1);
+        $('#HorasEntrenado3').text(Hora2);
+        $('#HorasEntrenado2').text(Hora3);
+        $('#HorasEntrenado4').text(Hora4);
       }
+
     })
+
   }
 
   // This will get the first returned node in the jQuery collection.
@@ -1531,7 +1596,7 @@ $(function () {
   // Obtener el valor seleccionado
   var selectedValue = selectElement.value;
   CargarInformacionGraficos(selectedValue)
-// Before conversion
+  // Before conversion
 
 
 
@@ -1539,11 +1604,11 @@ $(function () {
   GraficoTestP = new Chart(donutChartCanvas2, {
     type: 'doughnut',
     data: {
-      labels: ['Personas', 'Personas Total'],
+      labels: ['Personas Entrenadas', 'Personas Creadas'],
       datasets: [
         {
           data: [personas, personasTotal],
-          backgroundColor: ['#0ac730','#f5023f'],
+          backgroundColor: ['#D85E05', '#1C245A'],
         }
       ]
     },
@@ -1581,6 +1646,7 @@ $(function () {
     }
 
   })
+
 })
 
 

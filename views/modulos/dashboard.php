@@ -64,9 +64,7 @@
                           <div class="icon">
                             <i class="ion ion-stats-bars"></i>
                           </div>
-
                         </div>
-
                       </div>
 
                     </div>
@@ -200,14 +198,10 @@
             <div class="container-fluid">
               <div class="row">
                 <div class="col-md-6">
-
-                  <!-- /.card -->
-                  <!-- /.card -->
-
                   <!-- DONUT CHART -->
                   <div class="card card-secondary">
                     <div class="card-header">
-                      <h3 class="card-title">Creados vs Personas</h3>
+                      <h3 class="card-title">Personas Totales vs Personas Entrenadas</h3>
 
                       <div class="card-tools">
                         <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -233,9 +227,13 @@
                             <div class="icon">
                               <i class="ion ion-stats-bars"></i>
                             </div>
-
                           </div>
-
+                          <div class="small-box bg-default">
+                            <div class="inner">
+                              <h3 style="color:red;" id="HorasEntrenado"></h3>
+                              <p>Horas entrenadas</p>
+                            </div>
+                          </div>
                         </div>
 
                       </div>
@@ -247,7 +245,7 @@
                   <!-- BAR CHART -->
                   <div class="card card-secondary">
                     <div class="card-header">
-                      <h3 class="card-title">Creados vs Personas por Área</h3>
+                      <h3 class="card-title">Personas Totales vs Personas Entrenadas por Área</h3>
                       <div class="card-tools">
                         <button type="button" class="btn btn-tool" data-card-widget="collapse">
                           <i class="fas fa-minus"></i>
@@ -286,7 +284,7 @@
                   <!-- STACKED BAR CHART -->
                   <div class="card card-secondary">
                     <div class="card-header">
-                      <h3 class="card-title">Creados vs Personas Anual</h3>
+                      <h3 class="card-title">Personas Totales vs Personas Entrenadas Anual</h3>
 
                       <div class="card-tools">
                         <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -309,7 +307,7 @@
                   <!-- PIE CHART -->
                   <div class="card card-secondary">
                     <div class="card-header">
-                      <h3 class="card-title">Creados vs Personas por pilar</h3>
+                      <h3 class="card-title">Personas Totales vs Personas Entrenadas por pilar</h3>
 
                       <div class="card-tools">
                         <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -326,43 +324,53 @@
                           <div class="small-box bg-default">
                             <canvas id="pieChart5" style="min-height: 150px; height: 150px; max-height: 150px; max-width: 100%;"></canvas>
                           </div>
-
+                          <h5 style="color:red;">
+                            <p style="font-size: 16px" ;>Horas entrenadas: <b id="HorasEntrenado1">TEST</b></p>
+                          </h5>
                         </div>
                         <div class=" col-md-6">
                           <div class="small-box bg-default">
                             <canvas id="pieChart6" style="min-height: 150px; height: 150px; max-height: 150px; max-width: 100%;"></canvas>
                           </div>
+                          <h5 style="color:red;">
+                            <p style="font-size: 16px" ;>Horas entrenadas: <b id="HorasEntrenado2">TEST</b></p>
+                          </h5>
                         </div>
 
                         <div class=" col-md-6">
                           <div class="small-box bg-default">
-
                             <canvas id="pieChart7" style="min-height: 150px; height: 150px; max-height: 150px; max-width: 100%;"></canvas>
                           </div>
+                          <h5 style="color:red;">
+                            <p style="font-size: 16px" ;>Horas entrenadas: <b id="HorasEntrenado3">TEST</b></p>
+                          </h5>
                         </div>
 
                         <div class=" col-md-6">
                           <div class="small-box bg-default">
-
                             <canvas id="pieChart8" style="min-height: 150px; height: 150px; max-height: 150px; max-width: 100%;"></canvas>
                           </div>
+                          <h5 style="color:red;">
+                            <p style="font-size: 16px" ;>Horas entrenadas: <b id="HorasEntrenado4">TEST</b></p>
+                          </h5>
                         </div>
-
                       </div>
-                    </div>
-                    <!-- /.card-body -->
-                  </div>
-                  <!-- /.card -->
 
+                    </div>
+                  </div>
+                  <!-- /.card-body -->
                 </div>
-                <!-- /.col (RIGHT) -->
+                <!-- /.card -->
+
               </div>
-              <!-- /.row -->
-            </div><!-- /.container-fluid -->
-            <!-- /.container-fluid -->
-          </div>
+              <!-- /.col (RIGHT) -->
+            </div>
+            <!-- /.row -->
+          </div><!-- /.container-fluid -->
+          <!-- /.container-fluid -->
         </div>
       </div>
     </div>
   </div>
+</div>
 </div>
