@@ -64,9 +64,7 @@
                           <div class="icon">
                             <i class="ion ion-stats-bars"></i>
                           </div>
-
                         </div>
-
                       </div>
 
                     </div>
@@ -200,10 +198,6 @@
             <div class="container-fluid">
               <div class="row">
                 <div class="col-md-6">
-
-                  <!-- /.card -->
-                  <!-- /.card -->
-
                   <!-- DONUT CHART -->
                   <div class="card card-secondary">
                     <div class="card-header">
@@ -233,9 +227,13 @@
                             <div class="icon">
                               <i class="ion ion-stats-bars"></i>
                             </div>
-
                           </div>
-
+                          <div class="small-box bg-default">
+                            <div class="inner">
+                              <h3 style="color:red;" id="HorasEntrenado"></h3>
+                              <p>Horas entrenadas</p>
+                            </div>
+                          </div>
                         </div>
 
                       </div>
@@ -326,43 +324,53 @@
                           <div class="small-box bg-default">
                             <canvas id="pieChart5" style="min-height: 150px; height: 150px; max-height: 150px; max-width: 100%;"></canvas>
                           </div>
-
+                          <h5 style="color:red;">
+                            <p style="font-size: 16px" ;>Horas entrenadas: <b id="HorasEntrenado1">TEST</b></p>
+                          </h5>
                         </div>
                         <div class=" col-md-6">
                           <div class="small-box bg-default">
                             <canvas id="pieChart6" style="min-height: 150px; height: 150px; max-height: 150px; max-width: 100%;"></canvas>
                           </div>
+                          <h5 style="color:red;">
+                            <p style="font-size: 16px" ;>Horas entrenadas: <b id="HorasEntrenado2">TEST</b></p>
+                          </h5>
                         </div>
 
                         <div class=" col-md-6">
                           <div class="small-box bg-default">
-
                             <canvas id="pieChart7" style="min-height: 150px; height: 150px; max-height: 150px; max-width: 100%;"></canvas>
                           </div>
+                          <h5 style="color:red;">
+                            <p style="font-size: 16px" ;>Horas entrenadas: <b id="HorasEntrenado3">TEST</b></p>
+                          </h5>
                         </div>
 
                         <div class=" col-md-6">
                           <div class="small-box bg-default">
-
                             <canvas id="pieChart8" style="min-height: 150px; height: 150px; max-height: 150px; max-width: 100%;"></canvas>
                           </div>
+                          <h5 style="color:red;">
+                            <p style="font-size: 16px" ;>Horas entrenadas: <b id="HorasEntrenado4">TEST</b></p>
+                          </h5>
                         </div>
-
                       </div>
-                    </div>
-                    <!-- /.card-body -->
-                  </div>
-                  <!-- /.card -->
 
+                    </div>
+                  </div>
+                  <!-- /.card-body -->
                 </div>
-                <!-- /.col (RIGHT) -->
+                <!-- /.card -->
+
               </div>
-              <!-- /.row -->
-            </div><!-- /.container-fluid -->
-            <!-- /.container-fluid -->
-          </div>
+              <!-- /.col (RIGHT) -->
+            </div>
+            <!-- /.row -->
+          </div><!-- /.container-fluid -->
+          <!-- /.container-fluid -->
         </div>
       </div>
     </div>
   </div>
+</div>
 </div>
