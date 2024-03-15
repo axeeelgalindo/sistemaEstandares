@@ -1401,7 +1401,8 @@ $(function () {
         datos = PersonasPorMesesArea
         horas = []
         for (let i = 0; i < datos.length; i++) {
-          horas[i] = datos[i] / 2
+          horas[i] = datos[i] / 6
+          horas[i] = number.toFixed(2)
         }
         GraficoAreaP.data.datasets[2].data = PersonasPorMesesArea
         GraficoAreaP.data.datasets[3].data = horas
@@ -1572,7 +1573,8 @@ $(function () {
         let horas = []
 
         for (let i = 0; i < datos.length; i++) {
-          horas[i] = datos[i] / 2
+          horas[i] = datos[i] / 6
+          horas[i] = number.toFixed(2)
         }
 
         console.log("Datos: " + PersonasPorMeses)
