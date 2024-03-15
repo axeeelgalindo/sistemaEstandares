@@ -201,7 +201,7 @@
                   <!-- DONUT CHART -->
                   <div class="card card-secondary">
                     <div class="card-header">
-                      <h3 class="card-title">Personas Totales vs Personas Entrenadas</h3>
+                      <h3 class="card-title">Entrenamientos Disponibles vs Entrenamientos Ejecutados</h3>
 
                       <div class="card-tools">
                         <button type="button" class="btn btn-tool" data-card-widget="collapse">
