@@ -565,7 +565,8 @@ $.ajax({
   success: function (respuesta) {
     console.log(respuesta)
 
-    GraficoTest.data.datasets[0].data = [parseInt(respuesta.total_estandares_creados), parseInt(respuesta.total_estandares_entrenados)]
+    //GraficoTest.data.datasets[0].data = [parseInt(respuesta.total_estandares_creados), parseInt(respuesta.total_estandares_entrenados)]
+    GraficoTest.data.datasets[0].data = [parseInt(respuesta.total_estandares_entrenados), parseInt(respuesta.total_estandares_creados)]
     GraficoTest.update()
 
     creados = parseInt(respuesta.total_estandares_creados)
@@ -803,6 +804,8 @@ $(function () {
       }
     }
   })
+
+
 
   //-------------
   //- PIE CHART -
@@ -1172,9 +1175,10 @@ $(function () {
       pointRadius: false,
       pointColor: '#3b8bba',
       pointStrokeColor: 'rgba(60,141,188,1)',
-      pointHighlightFill: '#fff',
+      pointHighlightFill: 'black',
       pointHighlightStroke: 'rgba(60,141,188,1)',
-      data: PersonasPorMeses
+      data: PersonasPorMeses,
+      type:'line'
     },
       {
         label: 'Personas Creadas',
@@ -1208,6 +1212,7 @@ $(function () {
         pointHighlightFill: '#fff',
         pointHighlightStroke: 'rgba(220,220,220,1)',
         data: CreadosPorMeses
+     
       },
     ]
   }
@@ -1254,11 +1259,12 @@ $(function () {
     options: {
       plugins: {
         datalabels: {
-          color: '#ffffff'
+          color: 'white'
         },
       }
     }
   })
+
 
   var barChartOptions = {
     responsive: true,
