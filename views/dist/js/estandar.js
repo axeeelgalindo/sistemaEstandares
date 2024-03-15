@@ -1681,7 +1681,7 @@ $(function () {
   GraficoTestP = new Chart(donutChartCanvas2, {
     type: 'doughnut',
     data: {
-      labels: ['Personas Entrenadas', 'Personas Creadas'],
+      labels: ['Entrenamientos Disponibles', 'Entrenamientos Ejecutados'],
       datasets: [
         {
           data: [personas, personasTotal],
