@@ -755,7 +755,7 @@ $(function () {
         data: PersonasPorMesesArea
       },
       {
-        label: 'Personas Iniciadas',
+        label: 'Personas en Entrenamiento',
         backgroundColor: '#0021f7',
         borderColor: 'rgba(210, 214, 222, 1)',
         pointRadius: false,
@@ -1156,7 +1156,7 @@ $(function () {
     labels: mesesDelAnio,
     datasets: [
       {
-      label: 'Personas Iniciadas',
+      label: 'Personas en Entrenamiento',
       backgroundColor: '#0021f7',
       borderColor: 'rgba(60,141,188,0.8)',
       pointRadius: false,
