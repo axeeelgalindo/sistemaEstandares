@@ -654,6 +654,7 @@ $(function () {
   var EntrenadosPorMesesArea = [];
   var PersonasPorMesesArea = [];
   var PersonasTotalPorMesesArea = [];
+  var PersonasIniciadasPorMesesArea = [];
 
   var EntrenadosPorMeses = [];
   var CreadosPorMeses = [];
@@ -763,6 +764,17 @@ $(function () {
         pointHighlightStroke: 'rgba(220,220,220,1)',
         data: PersonasPorMesesArea
       },
+      {
+        label: 'Personas Iniciadas',
+        backgroundColor: '#0021f7',
+        borderColor: 'rgba(210, 214, 222, 1)',
+        pointRadius: false,
+        pointColor: 'rgba(210, 214, 222, 1)',
+        pointStrokeColor: '#c1c7d1',
+        pointHighlightFill: '#fff',
+        pointHighlightStroke: 'rgba(220,220,220,1)',
+        data: PersonasIniciadasPorMesesArea
+      }
     ]
   }
 
@@ -771,9 +783,12 @@ $(function () {
   var temp0P = areaChartDataAreasP.datasets[0]
   var temp1P = areaChartDataAreasP.datasets[1]
   var temp2P = areaChartDataAreasP.datasets[2]
+  var temp3P = areaChartDataAreasP.datasets[3]
   barChartDataAreaP.datasets[0] = temp1P
-  barChartDataAreaP.datasets[1] = temp0P
-  barChartDataAreaP.datasets[2] = temp2P
+  barChartDataAreaP.datasets[1] = temp3P
+  barChartDataAreaP.datasets[2] = temp0P
+  barChartDataAreaP.datasets[3] = temp2P
+  
 
   GraficoAreaP = new Chart(barChartCanvas2P, {
     type: 'bar',
@@ -1151,8 +1166,19 @@ $(function () {
     labels: mesesDelAnio,
     datasets: [
       {
-        label: 'Personas Entrenadas',
-        backgroundColor: '#D85E05',
+      label: 'Personas Iniciadas',
+      backgroundColor: '#0021f7',
+      borderColor: 'rgba(60,141,188,0.8)',
+      pointRadius: false,
+      pointColor: '#3b8bba',
+      pointStrokeColor: 'rgba(60,141,188,1)',
+      pointHighlightFill: '#fff',
+      pointHighlightStroke: 'rgba(60,141,188,1)',
+      data: PersonasPorMeses
+    },
+      {
+        label: 'Personas Creadas',
+        backgroundColor: '#0b165f',
         borderColor: 'rgba(60,141,188,0.8)',
         pointRadius: false,
         pointColor: '#3b8bba',
@@ -1162,8 +1188,8 @@ $(function () {
         data: PersonasPorMeses
       },
       {
-        label: 'Personas Creadas',
-        backgroundColor: '#1C245A',
+        label: 'Personas Entrenadas',
+        backgroundColor: '#D85E05',
         borderColor: 'rgba(210, 214, 222, 1)',
         pointRadius: false,
         pointColor: 'rgba(210, 214, 222, 1)',
@@ -1277,6 +1303,8 @@ $(function () {
     GraficoArea.update()
     GraficoAreaP.data.datasets[0].data = []
     GraficoAreaP.data.datasets[1].data = []
+    GraficoAreaP.data.datasets[2].data = []
+    GraficoAreaP.data.datasets[3].data = []
     GraficoAreaP.update()
     GraficoPilarSeguridad.data.datasets[0].data = [0, 0]
     GraficoPilarSeguridad.update()
@@ -1292,6 +1320,7 @@ $(function () {
     GraficoBarrasP.data.datasets[0].data = []
     GraficoBarrasP.data.datasets[1].data = []
     GraficoBarrasP.data.datasets[2].data = []
+    GraficoBarrasP.data.datasets[3].data = []
     GraficoBarrasP.update()
     GraficoPilarSeguridad2.data.datasets[0].data = [0, 0]
     GraficoPilarSeguridad2.update()
@@ -1374,8 +1403,30 @@ $(function () {
         for (let i = 0; i < datos.length; i++) {
           horas[i] = datos[i] / 2
         }
-        GraficoAreaP.data.datasets[1].data = PersonasPorMesesArea
-        GraficoAreaP.data.datasets[2].data = horas
+        GraficoAreaP.data.datasets[2].data = PersonasPorMesesArea
+        GraficoAreaP.data.datasets[3].data = horas
+        GraficoAreaP.update()
+      }
+    })
+
+    var datos2PI = new FormData()
+    datos2PI.append("id_area", Area)
+    datos2PI.append("tipoOperacion", "GraficoBarraTotalAreaIniciadas_Personas")
+    $.ajax({
+      url: 'ajax/ajaxEstandar.php',
+      type: 'POST',
+      data: datos2PI,
+      dataType: 'json',
+      processData: false,
+      contentType: false,
+      success: function (respuesta) {
+        PersonasIniciadasPorMesesArea = []
+
+        for (let i = 0; i < respuesta.length; i++) {
+          PersonasIniciadasPorMesesArea.push(respuesta[i]["PersonasEntrenadasArea"])
+          console.log("INICIADAS: " + PersonasIniciadasPorMesesArea)
+        }
+        GraficoAreaP.data.datasets[1].data = PersonasIniciadasPorMesesArea
         GraficoAreaP.update()
       }
     })
@@ -1400,6 +1451,7 @@ $(function () {
         GraficoAreaP.update()
       }
     })
+
 
     // barChart
     var datosentrenados = new FormData()
@@ -1448,6 +1500,10 @@ $(function () {
     })
 
     // barChart3
+    var datospersonascreadas = new FormData()
+    datospersonascreadas.append("id_area", Area)
+    datospersonascreadas.append("tipoOperacion", "GraficoBarraAnual_PersonasCreadas")
+
     var datospersonas = new FormData()
     datospersonas.append("id_area", Area)
     datospersonas.append("tipoOperacion", "GraficoBarraAnual_Personas")
@@ -1463,7 +1519,7 @@ $(function () {
     $.ajax({
       url: 'ajax/ajaxEstandar.php',
       type: 'POST',
-      data: datospersonastotal,
+      data: datospersonascreadas,
       dataType: 'json',
       processData: false,
       contentType: false,
@@ -1475,6 +1531,25 @@ $(function () {
           PersonasTotalPorMeses.push(respuesta[i]["CantidadRegistrosEntrenados"])
         }
         GraficoBarrasP.data.datasets[0].data = PersonasTotalPorMeses
+        GraficoBarrasP.update()
+      }
+    })
+
+    $.ajax({
+      url: 'ajax/ajaxEstandar.php',
+      type: 'POST',
+      data: datospersonastotal,
+      dataType: 'json',
+      processData: false,
+      contentType: false,
+      success: function (respuesta) {
+        console.log(respuesta)
+        PersonasTotalPorMeses = []
+
+        for (let i = 0; i < respuesta.length; i++) {
+          PersonasTotalPorMeses.push(respuesta[i]["CantidadRegistrosEntrenados"])
+        }
+        GraficoBarrasP.data.datasets[1].data = PersonasTotalPorMeses
         GraficoBarrasP.update()
       }
     })
@@ -1502,8 +1577,8 @@ $(function () {
 
         console.log("Datos: " + PersonasPorMeses)
         console.log("Horas: " + horas)
-        GraficoBarrasP.data.datasets[1].data = PersonasPorMeses
-        GraficoBarrasP.data.datasets[2].data = horas
+        GraficoBarrasP.data.datasets[2].data = PersonasPorMeses
+        GraficoBarrasP.data.datasets[3].data = horas
         GraficoBarrasP.update()
       }
     })
