@@ -756,13 +756,13 @@ $(function () {
       },
       {
         label: 'Personas en Entrenamiento',
-        backgroundColor: '#0021f7',
-        borderColor: 'rgba(210, 214, 222, 1)',
+        backgroundColor: '#1C245A',
+        borderColor: '#1C245A',
         pointRadius: false,
-        pointColor: 'rgba(210, 214, 222, 1)',
+        pointColor: '#1C245A',
         pointStrokeColor: '#c1c7d1',
         pointHighlightFill: '#fff',
-        pointHighlightStroke: 'rgba(220,220,220,1)',
+        pointHighlightStroke: '1C245A',
         data: PersonasIniciadasPorMesesArea
       }
     ]
@@ -1157,15 +1157,14 @@ $(function () {
     datasets: [
       {
       label: 'Personas en Entrenamiento',
-      backgroundColor: '#0021f7',
-      borderColor: 'rgba(60,141,188,0.8)',
+      backgroundColor: '#1C245A',
+      borderColor: '#1C245A',
       pointRadius: false,
-      pointColor: '#3b8bba',
-      pointStrokeColor: 'rgba(60,141,188,1)',
+      pointColor: '#1C245A',
+      pointStrokeColor: '#1C245A',
       pointHighlightFill: 'black',
-      pointHighlightStroke: 'rgba(60,141,188,1)',
-      data: PersonasPorMeses,
-      type:'line'
+      pointHighlightStroke: '#1C245A',
+      data: PersonasPorMeses
     },
       {
         label: 'Personas Entrenadas',
@@ -1180,14 +1179,15 @@ $(function () {
       },
       {
         label: 'Horas Entrenadas',
-        backgroundColor: '#ffb005',
-        borderColor: 'rgba(210, 214, 222, 1)',
-        pointRadius: false,
-        pointColor: 'rgba(210, 214, 222, 1)',
-        pointStrokeColor: '#c1c7d1',
+        backgroundColor: '#ffc107',
+        borderColor: '#ffc107',
+        pointRadius: true,
+        pointColor: '#ffc107',
+        pointStrokeColor: '#ffc107',
         pointHighlightFill: '#fff',
         pointHighlightStroke: 'rgba(220,220,220,1)',
-        data: CreadosPorMeses
+        data: CreadosPorMeses,
+        type:'line'
      
       },
     ]
