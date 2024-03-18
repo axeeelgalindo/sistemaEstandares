@@ -510,6 +510,7 @@ let porcentajeP4
 let personas
 let personasTotal
 var donutChartCanvas
+var donutChart2Canvas
 
 donutChartCanvas = $('#donutChart').get(0).getContext('2d')
 GraficoTest = new Chart(donutChartCanvas, {
@@ -542,6 +543,50 @@ GraficoTest = new Chart(donutChartCanvas, {
         formatter: Math.round,
         padding: 6
       }
+    }
+  }
+})
+
+donutChartCanvas2 = $('#donutChart2').get(0).getContext('2d')
+GraficoTestP = new Chart(donutChartCanvas2, {
+  type: 'doughnut',
+  data: {
+    labels: ['Entrenamientos Disponibles', 'Entrenamientos Ejecutados'],
+    datasets: [
+      {
+        data: [personas, personasTotal],
+        backgroundColor: ['#D85E05', '#1C245A'],
+      }
+    ]
+  },
+  options: {
+    plugins: {
+      legend: {
+        display: false
+      },
+      // Change options for ALL labels of THIS CHART
+
+    }
+  },
+  plugins: [ChartDataLabels],
+  options: {
+    plugins: {
+
+      datalabels: {
+        anchor: 'end',
+        backgroundColor: function (context) {
+          return context.dataset.backgroundColor;
+        },
+        borderColor: 'white',
+        borderRadius: 0,
+        borderWidth: 2,
+        color: 'white',
+        font: {
+          weight: 'bold'
+        },
+        formatter: Math.round,
+        padding: 6
+      }
 
     }
 
@@ -549,8 +594,12 @@ GraficoTest = new Chart(donutChartCanvas, {
 
 })
 
+
 GraficoTest.data.datasets[0].data = [0, 0]
 GraficoTest.update()
+
+GraficoTestP.data.datasets[0].data = [0, 0]
+GraficoTestP.update()
 
 var datos = new FormData()
 datos.append("tipoOperacion", "GraficoCreados_Entrenados")
@@ -593,6 +642,10 @@ $.ajax({
   contentType: false,
   success: function (respuesta) {
     console.log(respuesta)
+
+    GraficoTestP.data.datasets[0].data = [parseInt(respuesta.total_estandares_personas_total), parseInt(respuesta.total_estandares_personas)]
+    GraficoTestP.update()
+
     personas = parseInt(respuesta.total_estandares_personas_total)
     personasTotal = parseInt(respuesta.total_estandares_personas)
     if (personasTotal == 0) {
@@ -1658,52 +1711,7 @@ $(function () {
 
 
 
-  var donutChartCanvas2 = $('#donutChart2').get(0).getContext('2d')
-  GraficoTestP = new Chart(donutChartCanvas2, {
-    type: 'doughnut',
-    data: {
-      labels: ['Entrenamientos Disponibles', 'Entrenamientos Ejecutados'],
-      datasets: [
-        {
-          data: [personas, personasTotal],
-          backgroundColor: ['#D85E05', '#1C245A'],
-        }
-      ]
-    },
-    options: {
-      plugins: {
-        legend: {
-          display: false
-        },
-        // Change options for ALL labels of THIS CHART
 
-      }
-    },
-    plugins: [ChartDataLabels],
-    options: {
-      plugins: {
-
-        datalabels: {
-          anchor: 'end',
-          backgroundColor: function (context) {
-            return context.dataset.backgroundColor;
-          },
-          borderColor: 'white',
-          borderRadius: 0,
-          borderWidth: 2,
-          color: 'white',
-          font: {
-            weight: 'bold'
-          },
-          formatter: Math.round,
-          padding: 6
-        }
-
-      }
-
-    }
-
-  })
 
 })
 
