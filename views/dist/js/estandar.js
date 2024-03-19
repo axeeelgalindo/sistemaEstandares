@@ -1229,7 +1229,10 @@ $(function () {
       pointStrokeColor: '#1C245A',
       pointHighlightFill: 'black',
       pointHighlightStroke: '#1C245A',
-      data: PersonasPorMeses
+      data: PersonasPorMeses,
+      type: 'bar',
+      stack: 'combined'
+
     },
       {
         label: 'Personas Entrenadas',
@@ -1240,7 +1243,9 @@ $(function () {
         pointStrokeColor: '#c1c7d1',
         pointHighlightFill: '#fff',
         pointHighlightStroke: 'rgba(220,220,220,1)',
-        data: CreadosPorMeses
+        data: CreadosPorMeses,
+        stack: 'combined',
+        type: 'bar'
       },
       {
         label: 'Horas Entrenadas',
@@ -1249,11 +1254,13 @@ $(function () {
         pointRadius: true,
         pointColor: '#ffc107',
         pointStrokeColor: '#ffc107',
-        pointHighlightFill: '#fff',
+        pointHighlightFill: 'black',
         pointHighlightStroke: 'rgba(220,220,220,1)',
         data: CreadosPorMeses,
-        type:'line'
-     
+        stack: 'combined'    ,
+        datalabels: {
+          color: 'black' // Establecer el color de las datalabels para este dataset
+      }
       },
     ]
   }
@@ -1292,16 +1299,19 @@ $(function () {
   barChartDataP.datasets[2] = temp4
 
   GraficoBarrasP = new Chart(barChartCanvasP, {
-    type: 'bar',
+    type: 'line',
     data: barChartDataP,
-    options: barChartOptions,
-
     plugins: [ChartDataLabels],
     options: {
       plugins: {
         datalabels: {
-          color: 'white'
+          color: '#ffffff'
         },
+             scales: {
+          y: {
+            stacked: true
+          }
+        }
       }
     }
   })
@@ -1317,7 +1327,7 @@ $(function () {
       },
       datalabels: {
         display: true,
-        color: 'black', // Color de las etiquetas
+        color: 'white', // Color de las etiquetas
         anchor: 'end',  // Posición de las etiquetas (puedes ajustarla según tus preferencias)
         align: 'end',   // Alineación de las etiquetas (puedes ajustarla según tus preferencias)
         formatter: function (value, context) {
