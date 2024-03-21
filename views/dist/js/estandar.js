@@ -1372,6 +1372,35 @@ $(function () {
     }
   }
 
+  const actions = [
+    {
+      name: 'Add Data',
+      handler(GraficoBarrasP) {
+        const data = GraficoBarrasP.data;
+        if (data.datasets.length > 0) {
+          data.labels = Utils.months({count: data.labels.length + 1});
+  
+          for (let index = 0; index < data.datasets.length; ++index) {
+            data.datasets[index].data.push(Utils.rand(-100, 100));
+          }
+  
+          GraficoBarrasP.update();
+        }
+      }
+    },
+    {
+      name: 'Remove Data',
+      handler(GraficoBarrasP) {
+        GraficoBarrasP.data.labels.splice(-1, 1); // remove the label first
+  
+        GraficoBarrasP.data.datasets.forEach(dataset => {
+          dataset.data.pop();
+        });
+  
+        GraficoBarrasP.update();
+      }
+    }
+  ];
 
   $(document).on("change", ".areas", function () {
 
