@@ -22,6 +22,50 @@ Class ModeloPersonas {
 			die("Error en la consulta: " . $e->getMessage());
 		}
     }
+
+	static public function listarPersonasActivasMdl() {
+		try {
+			$conn = Conexion::Conectar();
+	
+			// Define el nombre del procedimiento almacenado y los parámetros
+			$sql = "EXEC Listar_Personas_ACT_ONLY";
+			
+			// Prepara la consulta
+			$stmt = $conn->prepare($sql);
+						
+			// Ejecuta el procedimiento almacenado
+			$stmt->execute();
+			
+			// Recupera el resultado
+			$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+			
+			return $result;
+		} catch (PDOException $e) {
+			die("Error en la consulta: " . $e->getMessage());
+		}
+    }
+
+	static public function listarPersonasInactivasMdl() {
+		try {
+			$conn = Conexion::Conectar();
+	
+			// Define el nombre del procedimiento almacenado y los parámetros
+			$sql = "EXEC Listar_Personas_INACT";
+			
+			// Prepara la consulta
+			$stmt = $conn->prepare($sql);
+						
+			// Ejecuta el procedimiento almacenado
+			$stmt->execute();
+			
+			// Recupera el resultado
+			$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+			
+			return $result;
+		} catch (PDOException $e) {
+			die("Error en la consulta: " . $e->getMessage());
+		}
+    }
 	static public function CrearPersonasMdl($datos) {
 		try {
 			$conn = Conexion::Conectar();

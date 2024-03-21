@@ -24,9 +24,9 @@
   <div class="card">
     <div class="card-header">
       <h2 class="col-10  card-title">Listado de estandares</h2>
-  <!--     <button class="btn btn-sm btn-primary btnFiltrar col-2" data-toggle="modal" data-target="#modal-cargados-filtrar">
+      <button class="btn btn-sm btn-primary btnFiltrar col-2" data-toggle="modal" data-target="#modal-cargados-filtrar">
         <i class="fas fa-filter">Filtrar</i>
-      </button> -->
+      </button>
     </div>
     <div class="card-body ">
       <table id="example1" class="table table-striped projects">
