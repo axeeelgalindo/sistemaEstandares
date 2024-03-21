@@ -153,16 +153,11 @@
                         <div class="card-body">
                         <ul>
                   <li>Formato de columnas.
-                    <ul>
-                      <li>A1: nombre de columna "rut"</li>
-                      <li>B1: nombre de columna "nombre"</li>
-                      <li>C1: nombre de columna "apellido"</li>
-                      <li>D1: nombre de columna "area base"</li>
-                      <li>E1: nombre de columna "area secundaria"</li>
+                    <ul id="FormatLi">
                     </ul>
                   </li>
                   <li>El rut debe ir sin puntos y con guion verificador. Ejemplo: 19345235-3</li>
-                  <li>En la columna "area base" o "area secundaria" debe ingresar solo áreas existentes en el sistema, la columna "area secundaria" no será obligación ingresar datos.</li>
+                  <li class="TextoAreaValidar"></li>
                   <li class="TextoRutValidar"></li>
                   <li>Al finalizar la carga del archivo excel en la parte inferior se mostrará si existe algún error en la integración de la fila</li>
                 </ul>
