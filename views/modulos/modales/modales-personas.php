@@ -173,8 +173,24 @@
                           </div>
                           <input type="file" class="form-control" name="archivo_excel" id="archivo_excel" accept=".xlsx" required>
                         </div>
+
                         <div class="progress">
                           <div class="progress-bar progress-bar-striped progress-bar-animated" id="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
+
+                    </a>
+                    <div id="collapseTwo2" class="collapse" data-parent="#accordion1">
+                        <div class="card-body">
+                        <ul>
+                  <li>Formato de columnas.
+                    <ul id="FormatLi">
+                    </ul>
+                  </li>
+                  <li>El rut debe ir sin puntos y con guion verificador. Ejemplo: 19345235-3</li>
+                  <li class="TextoAreaValidar"></li>
+                  <li class="TextoRutValidar"></li>
+                  <li>Al finalizar la carga del archivo excel en la parte inferior se mostrará si existe algún error en la integración de la fila</li>
+                </ul>
+
                         </div>
                         <label id="total-inserted"></label>
                         <label id="total-errored"></label>
