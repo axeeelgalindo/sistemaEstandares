@@ -1220,6 +1220,38 @@ $(function () {
   var areaChartDataP = {
     labels: mesesDelAnio,
     datasets: [
+      
+      {
+        label: 'Horas Entrenadas',
+        backgroundColor: '#ffc1078a',
+        borderColor: '#ffc1078a',
+        pointColor: '#ffc1078a',
+        pointStrokeColor: '#ffc1078a',
+        pointHighlightFill: 'black',
+        pointHighlightStroke: 'rgba(220,220,220,1)',
+        data: CreadosPorMeses,
+        stack: 'combined'    ,
+        pointStyle: 'circle',
+        pointRadius: 3,
+        yAxisID: 'y2',
+        datalabels: {
+/*         anchor: 'end', // Ancla el cuadro y el texto en el extremo derecho del punto del gráfico
+        align: 'start', // Alinea el cuadro y el texto para comenzar desde el punto
+        offset: 8, // Desplazamiento horizontal del cuadro con el texto */
+          backgroundColor: function (context) {
+            return context.dataset.backgroundColor;
+          },
+          borderColor: 'white',
+          borderRadius: 0,
+          borderWidth: 1,
+          color: 'black',
+          font: {
+            weight: 'bold'
+          },
+          formatter: Math.round,
+          padding: 1
+      }
+      },
       {
       label: 'Personas en Entrenamiento',
       backgroundColor: '#1C245A',
@@ -1231,8 +1263,8 @@ $(function () {
       pointHighlightStroke: '#1C245A',
       data: PersonasPorMeses,
       type: 'bar',
-      stack: 'combined'
-
+      stack: 'combined',
+      yAxisID: 'y'
     },
       {
         label: 'Personas Entrenadas',
@@ -1245,23 +1277,9 @@ $(function () {
         pointHighlightStroke: 'rgba(220,220,220,1)',
         data: CreadosPorMeses,
         stack: 'combined',
-        type: 'bar'
-      },
-      {
-        label: 'Horas Entrenadas',
-        backgroundColor: '#ffc107',
-        borderColor: '#ffc107',
-        pointRadius: true,
-        pointColor: '#ffc107',
-        pointStrokeColor: '#ffc107',
-        pointHighlightFill: 'black',
-        pointHighlightStroke: 'rgba(220,220,220,1)',
-        data: CreadosPorMeses,
-        stack: 'combined'    ,
-        datalabels: {
-          color: 'black' // Establecer el color de las datalabels para este dataset
+        type: 'bar',
+        yAxisID: 'y'
       }
-      },
     ]
   }
   //-------------
@@ -1310,6 +1328,20 @@ $(function () {
              scales: {
           y: {
             stacked: true
+          }
+        }
+      },
+      scales: {
+        y: {
+          type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+          position: 'left'
+        },
+        y2: {
+          type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+          position: 'right',
+          reverse: false,
+          grid: {
+            drawOnChartArea: false // only want the grid lines for one axis to show up
           }
         }
       }
@@ -1606,7 +1638,7 @@ $(function () {
         for (let i = 0; i < respuesta.length; i++) {
           PersonasTotalPorMeses.push(respuesta[i]["CantidadRegistrosEntrenados"])
         }
-        GraficoBarrasP.data.datasets[0].data = PersonasTotalPorMeses
+        GraficoBarrasP.data.datasets[1].data = PersonasTotalPorMeses
         GraficoBarrasP.update()
       }
     })
@@ -1635,8 +1667,8 @@ $(function () {
 
         console.log("ADFDSFSDFGDatos: " + PersonasPorMeses)
         console.log("Horas: " + horas)
-        GraficoBarrasP.data.datasets[1].data = PersonasPorMeses
-        GraficoBarrasP.data.datasets[2].data = horas
+        GraficoBarrasP.data.datasets[2].data = PersonasPorMeses
+        GraficoBarrasP.data.datasets[0].data = horas
         GraficoBarrasP.update()
       }
     })
