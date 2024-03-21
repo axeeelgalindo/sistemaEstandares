@@ -313,7 +313,7 @@
   <div class="modal fade" id="modal-activos-filtrar" style="overflow-y: scroll;">
     <div class="modal-dialog modal-xl">
       <div class="modal-content">
-        <form id="filtrarPersonas" enctype="multipart/form-data">
+        <form id="editarPersonas" enctype="multipart/form-data">
 
           <div class="modal-header">
             <h4 class="modal-title">Filtrar por áreas</h4>
@@ -360,7 +360,8 @@
 
           <div class="modal-footer justify-content-between">
             <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-            <button type="button" class="btn btn-success" data-dismiss="modal" id="applyFilter2"><i class="far fa-solid fa-check"></i> Filtrar</button>
+            <button type="button" class="btn btn-success" data-dismiss="modal" id="applyFilter1x"><i class="far fa-solid fa-check"></i> Filtrar</button>
+            <button type="button" class="btn btn-success" id="applyFilter2"><i class="far fa-solid fa-check"></i> Filtrar</button>
           </div>
         </form>
       </div>
