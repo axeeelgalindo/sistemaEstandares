@@ -327,29 +327,47 @@ $.ajax({
 		var onBtnClicked = (btnId) => {
 			Swal.close();
 			var modalElement = document.getElementById("modal-insertar-nuevo-personas");
-
+			$("#FormatLi").empty()
+			$('#excelForm .TextoAreaValidar').text("") 
+			if(btnId == "agregar" || btnId == "cambiararea"){
+				$('#FormatLi').append('<li>A1: nombre de columna "rut"')
+				$('#FormatLi').append('<li>B1: nombre de columna "nombre"')
+				$('#FormatLi').append('<li>C1: nombre de columna "apellido"')
+				$('#FormatLi').append('<li>D1: nombre de columna "area base"')
+				$('#FormatLi').append('<li>E1: nombre de columna "area secundaria"')
+			}else{
+				$('#FormatLi').append('<li>A1: nombre de columna "rut"')
+			}
 			if (btnId == "agregar") 
 			{
 				$('#excelForm input[name="tipoOperacion"]').val("insertarPersonas")
 				$('#excelForm .titulo').text("Cargar archivo Excel - Agregar Personal");
 				$('#excelForm .TextoRutValidar').text("Al cargar el documento se validará que rut NO exista en el sistema, ademas que el campo area exista en el sistema.");
+			    $('#excelForm .TextoAreaValidar').text('En la columna "area base" o "area secundaria" debe ingresar solo áreas existentes en el sistema, la columna "area secundaria" no será obligación ingresar datos') 
+				$('#excelForm .TextoAreaValidar').show()
 				// Abre el modal
 				$(modalElement).modal('show');
 			}else if(btnId == "desactivar"){
 				$('#excelForm input[name="tipoOperacion"]').val("desactivarPersonas")
 				$('#excelForm .titulo').text("Cargar archivo Excel - Desactivar Personal");
-				$('#excelForm .TextoRutValidar').text("Al cargar el documento se validará que rut exista en el sistema, ademas que el campo area exista en el sistema.");		
+				$('#excelForm .TextoRutValidar').text("Al cargar el documento se validará que rut exista en el sistema");	
+				$('#excelForm .TextoAreaValidar').hide()
+
 					// Abre el modal
 				$(modalElement).modal('show');
 			}else if(btnId == "activar"){
 				$('#excelForm input[name="tipoOperacion"]').val("activarPersonas")
 				$('#excelForm .titulo').text("Cargar archivo Excel - Activar Personal");
-				$('#excelForm .TextoRutValidar').text("Al cargar el documento se validará que rut exista en el sistema, ademas que el campo area exista en el sistema.");
+				$('#excelForm .TextoRutValidar').text("Al cargar el documento se validará que rut exista en el sistema");
 				$(modalElement).modal('show');
+				$('#excelForm .TextoAreaValidar').hide()
 			}else if(btnId == "cambiararea"){
 				$('#excelForm input[name="tipoOperacion"]').val("cambiarArea")
 				$('#excelForm .titulo').text("Cargar archivo Excel - Modificar Área");
 				$('#excelForm .TextoRutValidar').text("Al cargar el documento se validará que rut exista en el sistema, ademas que el campo area exista en el sistema.");
+			    $('#excelForm .TextoAreaValidar').text('En la columna "area base" o "area secundaria" debe ingresar solo áreas existentes en el sistema, la columna "area secundaria" no será obligación ingresar datos') 
+				$('#excelForm .TextoAreaValidar').show()
+				
 				$(modalElement).modal('show');
 			}				
 		  };

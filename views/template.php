@@ -120,7 +120,10 @@ function ExpandirMenu(id) {
 <script src="plugins/summernote/summernote-bs4.min.js"></script>
 <!-- overlayScrollbars -->
 <script src="plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
- <script src="plugins/chart.js/Chart2.min.js"></script>
+ <!-- <script src="plugins/chart.js/Chart2.min.js"></script> -->
+ <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>-->
+  <script src="plugins/chart.js/Chart4.min.js"></script>
+
 <!--<script src="plugins/chart.js/plugin.js"></script> -->
 
 <!--<script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.0/dist/chart.min.js"></script>-->
