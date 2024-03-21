@@ -213,6 +213,11 @@
         </div>
         <!-- /.modal-dialog -->
       </div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+
            <!-- Modal para editar personas -->
 
      <div class="modal fade" id="modal-editar-personas" style="overflow-y: scroll;">
@@ -305,4 +310,5 @@
         </div>
         <!-- /.modal-dialog -->
       </div>
+
 
