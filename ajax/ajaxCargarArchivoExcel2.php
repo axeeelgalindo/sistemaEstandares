@@ -14,13 +14,36 @@ if (isset($_FILES['archivo_excel']['name'])) {
     $RegisterRows = 0;
 
     $erroredRows = 0;
-    $requiredColumns = [
-        'A1' => 'rut',
-        'B1' => 'nombre',
-        'C1' => 'apellido',
-        'D1' => 'area base',
-        'E1' => 'area secundaria',
+    $totalColumn = 0;
+
+    if($_POST["tipoOperacion"] == "insertarPersonas" || $_POST["tipoOperacion"] == "cambiarArea"){       
+        $requiredColumns = [
+            'A1' => 'rut',
+            'B1' => 'nombre',
+            'C1' => 'apellido',
+            'D1' => 'area base',
+            'E1' => 'area secundaria',
     ];
+        $filasFallasTotal = [
+            'rut' => '',
+            'nombre' => '',
+            'apellido' => '',
+            'area base' => '',
+            'area secundaria' => '',
+            'error' => ''
+        ];
+        $totalColumn = 5;
+    }else{
+        $requiredColumns = [
+            'A1' => 'rut',
+        ];
+        $filasFallasTotal = [
+            'rut' => '',
+            'error' => ''
+        ];
+        $totalColumn = 1;
+    }
+
     $filasAreaNoExiste = [];
     $filasRutExistente = [];
 
@@ -47,19 +70,12 @@ if (isset($_FILES['archivo_excel']['name'])) {
     ];
 
     $filasFallasGeneral = [];
-    $filasFallasTotal = [
-        'rut' => '',
-        'nombre' => '',
-        'apellido' => '',
-        'area base' => '',
-        'area secundaria' => '',
-        'error' => ''
-    ];
+
 
     $TotalFilas = 0;
     for ($rowIndex = 2; $rowIndex <= $highestRow; $rowIndex++) {
         $rowData = [];
-        for ($colIndex = 1; $colIndex <= 5; $colIndex++) { // Recorrer de la columna A a la Z
+        for ($colIndex = 1; $colIndex <= $totalColumn; $colIndex++) { // Recorrer de la columna A a la Z
             $cell = $worksheet->getCellByColumnAndRow($colIndex, $rowIndex);
             $rowData[] = $cell->getValue();
         }
@@ -84,7 +100,7 @@ if (isset($_FILES['archivo_excel']['name'])) {
             continue;
         }
         $rowData = [];
-        for ($colIndex = 1; $colIndex <= 5; $colIndex++) { // Recorrer de la columna A a la Z
+        for ($colIndex = 1; $colIndex <= $totalColumn; $colIndex++) { // Recorrer de la columna A a la Z
             $cell = $worksheet->getCellByColumnAndRow($colIndex, $rowIndex);
             $rowData[] = $cell->getValue();
         }
@@ -105,9 +121,9 @@ if (isset($_FILES['archivo_excel']['name'])) {
                 if($_POST["tipoOperacion"] == "insertarPersonas"){
                     $sql = "EXEC InsertarDatosExcel_Iterativo @rut = ?, @nombre = ?, @apellido = ?, @area_base = ?, @area_secundaria = ?";
                 }elseif ($_POST["tipoOperacion"] == "desactivarPersonas"){
-                    $sql = "EXEC DesactivarDatosExcel_Iterativo @rut = ?, @nombre = ?, @apellido = ?, @area_base = ?, @area_secundaria = ?";
+                    $sql = "EXEC DesactivarDatosExcel_Iterativo @rut = ?";
                 }elseif ($_POST["tipoOperacion"] == "activarPersonas"){
-                    $sql = "EXEC ActivarDatosExcel_Iterativo @rut = ?, @nombre = ?, @apellido = ?, @area_base = ?, @area_secundaria = ?";
+                    $sql = "EXEC ActivarDatosExcel_Iterativo @rut = ?";
                 }elseif ($_POST["tipoOperacion"] == "cambiarArea"){
                     $sql = "EXEC ModificarAreaDatosExcel_Iterativo @rut = ?, @nombre = ?, @apellido = ?, @area_base = ?, @area_secundaria = ?";
                 }
@@ -116,10 +132,12 @@ if (isset($_FILES['archivo_excel']['name'])) {
                 $stmt = $conn->prepare($sql);
         
                 $stmt->bindParam(1, $params[0], PDO::PARAM_STR);
-                $stmt->bindParam(2, $params[1], PDO::PARAM_STR);
-                $stmt->bindParam(3, $params[2], PDO::PARAM_STR);
-                $stmt->bindParam(4, $params[3], PDO::PARAM_STR);
-                $stmt->bindParam(5, $params[4], PDO::PARAM_STR);
+                if($_POST["tipoOperacion"] == "insertarPersonas" || $_POST["tipoOperacion"] == "cambiarArea" ){
+                    $stmt->bindParam(2, $params[1], PDO::PARAM_STR);
+                    $stmt->bindParam(3, $params[2], PDO::PARAM_STR);
+                    $stmt->bindParam(4, $params[3], PDO::PARAM_STR);
+                    $stmt->bindParam(5, $params[4], PDO::PARAM_STR);
+                }
 
                  // Ejecuta el procedimiento almacenado
                 $stmt->execute();	
@@ -129,11 +147,12 @@ if (isset($_FILES['archivo_excel']['name'])) {
                 if($result["resultado"] != 1){
                     $erroredRows++;
                     $filasFallasTotal['rut'] = $rowData[0];
-                    $filasFallasTotal['nombre'] = $rowData[1];
-                    $filasFallasTotal['apellido'] = $rowData[2];
-                    $filasFallasTotal['area base'] = $rowData[3];
-                    $filasFallasTotal['area secundaria'] = $rowData[4];
-
+                    if($_POST["tipoOperacion"] == "insertarPersonas" || $_POST["tipoOperacion"] == "cambiarArea" ){
+                        $filasFallasTotal['nombre'] = $rowData[1];
+                        $filasFallasTotal['apellido'] = $rowData[2];
+                        $filasFallasTotal['area base'] = $rowData[3];
+                        $filasFallasTotal['area secundaria'] = $rowData[4];
+                    }
                     if($result["resultado"] == 2){  $filasFallasTotal['error'] = 'area base no existe';
                     }else if($result["resultado"] == 3) { $filasFallasTotal['error'] = 'rut ya existe';
                     }else if($result["resultado"] == 4){ $filasFallasTotal['error'] = 'rut no existe';
