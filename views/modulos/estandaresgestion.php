@@ -126,7 +126,8 @@
 
       // Inicializa la tabla
       $('#example1').DataTable({
-        "paging": false,
+        "paging": true,
+        "pageLength": 25, 
         "ordering": true,
         "info": false,
         "searching": true
