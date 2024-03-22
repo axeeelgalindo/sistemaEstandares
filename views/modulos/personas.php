@@ -76,11 +76,7 @@
               </thead>
               <tbody>
                 <?php
-                $tabla1 = ModeloPersonas::listarPersonasMdl();
-                $tabla2 = ModeloPersonas::listarPersonasActivasMdl();
-                $tabla3 = ModeloPersonas::listarPersonasInactivasMdl();
-
-                $tabla = $tabla1;
+                $tabla = ModeloPersonas::listarPersonasMdl();
 
                 foreach ($tabla as $key => $value) {
                   echo '
@@ -132,56 +128,22 @@
 <!-- /.content -->
 
 <script>
-  // Define sample table data
-  var tabla1 = <?php echo json_encode(ModeloPersonas::listarPersonasMdl()); ?>;
-  var tabla2 = <?php echo json_encode(ModeloPersonas::listarPersonasActivasMdl()); ?>;
-  var tabla3 = <?php echo json_encode(ModeloPersonas::listarPersonasInactivasMdl()); ?>;
-  $(document).ready(function() {
-    $('#example1').DataTable({
-        "paging": true, // Enable pagination
-        "pageLength": 25 // Set number of items per page
-    });
-});
-function updateTable(option) {
-    var tableBody = document.getElementById('example1').getElementsByTagName('tbody')[0];
-    tableBody.innerHTML = ''; // Clear existing table content
-  
-    var data;
-    if (option === 'Todos') {
-      data = tabla1;
-    } else if (option === 'Activos') {
-      data = tabla2;
-    } else if (option === 'Inactivos') {
-      data = tabla3;
+  // Function to update table based on selected option
+  // Function to update table based on selected option
+  function updateTable(option) {
+    var table = $('#example1').DataTable();
+    if ($.fn.DataTable.isDataTable('#example1')) {
+      table.destroy();
     }
-    
+    $('#example1').DataTable({
+      "responsive": true, "lengthChange": false, "autoWidth": false,
+      "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"],
+      "pageLength": 25 // Configura el número de registros por página
+    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');;
+
+    table = $('#example1').DataTable();
     // Update table with new data
-    data.forEach(function(item) {
-      var row = document.createElement('tr');
-      row.innerHTML = `
-        <td>${item.rut}</td>
-        <td>${item.nombre}</td>
-        <td>${item.apellido}</td>
-        <td>${item.area}</td>
-        <td>${item.area_secundaria !== undefined ? item.area_secundaria : ''}</td>
-        <td>${item.Estado}</td>
-        <td>${item.fecha_integracion}</td>
-        <td>
-          <button class="btn btn-sm btn-info btnEditarPersonas" idRut="${item.rut}" data-toggle="modal" data-target="#modal-editar-personas">
-            <i class="far fa-edit"></i>
-          </button>
-          ${item.Estado === 'Activo' ? 
-            `<button class="btn btn-sm btn-danger btnEliminarPersonas" idRut="${item.rut}">
-              <i class="far fa-trash-alt"></i>
-            </button>` :
-            `<button class="btn btn-sm btn-success btnActivarPersonas" idRut="${item.rut}">
-              <i class="far fa-solid fa-check"></i>
-            </button>`
-          }
-        </td>
-      `;
-      tableBody.appendChild(row);
-    });
+    table.column(5).search(option === 'Activos' ? '^Activo$' : option === 'Inactivos' ? '^Inactivo$' : '', true, false, 'cs').draw();
+
   }
-  
 </script>
