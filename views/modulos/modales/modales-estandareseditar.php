@@ -97,7 +97,6 @@
     <div class="modal-dialog modal-l">
       <div class="modal-content">
         <form id="editarEstandar" enctype="multipart/form-data">
-
           <div class="modal-header">
             <h4 class="modal-title">Editar Estandar</h4>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -115,8 +114,6 @@
                       <!-- /.card-header -->
                       <!-- form start -->
                       <div class="card-body">
-
-
                         <div class="form-group">
                           <label for="exampleInputEmail1">Código:</label>
                           <input type="text" class="form-control" name="codigo" id="codigo" placeholder="Ingrese código" required>
@@ -128,7 +125,6 @@
                         <div class="form-group">
                           <label>Tipo:</label>
                           <select class="form-control" name="tipo" required>
-
                             <?php
                             $tabla2 = ModeloArea::listarTipoMdl();
                             echo '<option value="" selected>Seleccione Tipo de estandar</option>';
@@ -136,7 +132,6 @@
                               echo '<option value="' . $value["id"] . '">' . $value["tipo"] . '</option>';
                             }
                             echo '</select>';
-
                             ?>
                         </div>
 
@@ -167,7 +162,10 @@
                       <!-- /.card-body -->
                       <input type="hidden" name="tipoOperacion" value="actualizarEstandar">
                       <input type="hidden" name="rutaActual">
-                      <input type="hidden" name="id_estandar">
+                      <input type="hidden" name="id_estandar">`
+                      <input name="tipoOperacion" value="actualizarEstandar">
+                      <input name="rutaActual">
+                      <input name="id_estandar">`
                     </div>
                     <!-- /.card -->
                     <!--/.col (right) -->

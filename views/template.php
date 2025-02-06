@@ -8,6 +8,10 @@
   <?php 
      include 'modulos/links.php';
      ?>
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <!-- jQuery UI -->
+  <script src="plugins/jquery-ui/jquery-ui.min.js"></script>
 </head>
 <style>.password-container {
     position: relative;
@@ -51,8 +55,8 @@
   <script type="text/javascript">
 /// Url actual
 let url = window.location.href;
-/// Elementos de li
-const tabs = ["dashboard", "personas","estandareseditar","estandaresgestion","usuarios","areas","reportes","nivelesusuario","usuarioajustes","unidades"];
+/// Elementos d e li
+const tabs = ["dashboard", "personas","estandareseditar","estandaresgestion","porcentajeseditar","porcentajesvisualizar","usuarios","areas","reportes","nivelesusuario","usuarioajustes","unidades"];
 tabs.forEach(e => {
     /// Agregar .php y ver si lo contiene en la url
     if (url.indexOf(e ) !== -1) {
@@ -93,14 +97,8 @@ function ExpandirMenu(id) {
   <!-- /.control-sidebar -->
 </div>
 
-<!-- jQuery -->
-<script src="plugins/jquery/jquery.min.js"></script>
-<!-- jQuery UI 1.11.4 -->
-<script src="plugins/jquery-ui/jquery-ui.min.js"></script>
-<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
-<script>
-  $.widget.bridge('uibutton', $.ui.button)
-</script>
+<!-- Select2 -->
+<script src="plugins/select2/js/select2.full.min.js"></script>
 <!-- Bootstrap 4 -->
 <script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 <!-- ChartJS -->
@@ -120,9 +118,9 @@ function ExpandirMenu(id) {
 <script src="plugins/summernote/summernote-bs4.min.js"></script>
 <!-- overlayScrollbars -->
 <script src="plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
- <!-- <script src="plugins/chart.js/Chart2.min.js"></script> -->
- <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>-->
-  <script src="plugins/chart.js/Chart4.min.js"></script>
+<!-- <script src="plugins/chart.js/Chart2.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>-->
+<script src="plugins/chart.js/Chart4.min.js"></script>
 
 <!--<script src="plugins/chart.js/plugin.js"></script> -->
 
@@ -159,11 +157,16 @@ function ExpandirMenu(id) {
 <!-- AdminLTE for demo purposes -->
 <script>
   $(function () {
+    //Initialize Select2 Elements
+    $('.select2').select2();
+    
+    //Existing DataTables initialization
     $("#example1").DataTable({
       "responsive": true, "lengthChange": false, "autoWidth": false,
       "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"],
-      "pageLength": 25 // Configura el número de registros por página
+      "pageLength": 25
     }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+    
     $('#example2').DataTable({
       "paging": true,
       "lengthChange": false,
@@ -172,7 +175,7 @@ function ExpandirMenu(id) {
       "info": true,
       "autoWidth": false,
       "responsive": true,
-      "pageLength": 25 // Configura el número de registros por página
+      "pageLength": 25
     });
   });
 </script>

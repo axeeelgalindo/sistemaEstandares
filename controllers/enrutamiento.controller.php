@@ -6,6 +6,8 @@ static	public function enrutamiento() {
 		 $ruta == "personas" || 
 		 $ruta == "estandareseditar" || 
 		 $ruta == "estandaresgestion" || 
+		 $ruta == "porcentajeseditar" || 
+		 $ruta == "porcentajesvisualizar" || 
 		 $ruta == "usuarios" || 
 		 $ruta == "usuarioajustes" || 
 		 $ruta == "nivelesusuario" || 

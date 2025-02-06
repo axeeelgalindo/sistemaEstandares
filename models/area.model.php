@@ -1,135 +1,93 @@
 <?php
 require_once "conexion.php";
-Class ModeloArea {
-	static public function listarAreaMdl() {
-		try {
-			$conn = Conexion::Conectar();
-	
-			// Define el nombre del procedimiento almacenado y los parámetros
-			$sql = "EXEC Listar_Area";
-			
-			// Prepara la consulta
-			$stmt = $conn->prepare($sql);
-						
-			// Ejecuta el procedimiento almacenado
-			$stmt->execute();
-			
-			// Recupera el resultado
-			$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-			
-			return $result;
-		} catch (PDOException $e) {
-			die("Error en la consulta: " . $e->getMessage());
-		}
-    }
-	static public function listarTipoMdl() {
-		try {
-			$conn = Conexion::Conectar();
-	
-			// Define el nombre del procedimiento almacenado y los parámetros
-			$sql = "EXEC Listar_Tipo";
-			
-			// Prepara la consulta
-			$stmt = $conn->prepare($sql);
-						
-			// Ejecuta el procedimiento almacenado
-			$stmt->execute();
-			
-			// Recupera el resultado
-			$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-			
-			return $result;
-		} catch (PDOException $e) {
-			die("Error en la consulta: " . $e->getMessage());
-		}
+
+class ModeloArea {
+    // List all areas
+    static public function listarAreaMdl() {
+        try {
+            $conn = Conexion::Conectar();
+            $sql = "EXEC Listar_Area";
+            $stmt = $conn->prepare($sql);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            return ["error" => "Error en la consulta: " . $e->getMessage()];
+        }
     }
 
-	static public function CrearAreaMdl($datos) {
-		try {
-					$conn = Conexion::Conectar();
-			
-					// Define el nombre del procedimiento almacenado y los parámetros
-					$sql = "EXEC Area_Crear @nombre = :nombre";			
-					// Prepara la consulta
-					$stmt = $conn->prepare($sql);		
-					// Asocia los valores a los parámetros
-					$stmt->bindParam(":nombre", $datos["nombre"], PDO::PARAM_STR);
-					// Enlaza el parámetro del tipo de tabla
-					$stmt->execute();
-					
-					// Recupera el resultado
-					$result = $stmt->fetch(PDO::FETCH_ASSOC);
-					return $result;
-				} catch (PDOException $e) {
-					die("Error en la consulta: " . $e->getMessage());
-				}
-			}
-		
-	static public function EditarAreaMdl($id_area) {
-				try {
-					$conn = Conexion::Conectar();
-			
-					// Define el nombre del procedimiento almacenado y los parámetros
-					$sql = "EXEC Area_Editar_Detalle @id = :id";			
-					// Prepara la consulta
-					$stmt = $conn->prepare($sql);		
-					// Asocia los valores a los parámetros
-					$stmt->bindParam(":id", $id_area, PDO::PARAM_INT);
-					// Ejecuta el procedimiento almacenado
-					$stmt->execute();
-					
-					// Recupera el resultado
-					$result = $stmt->fetch(PDO::FETCH_ASSOC);
-					
-					return $result;
-				} catch (PDOException $e) {
-					die("Error en la consulta: " . $e->getMessage());
-				}
-			}
-			static public function ActualizarAreaMdl($datos) {	
-				try {
+    // List types
+    static public function listarTipoMdl() {
+        try {
+            $conn = Conexion::Conectar();
+            $sql = "EXEC Listar_Tipo";
+            $stmt = $conn->prepare($sql);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            return ["error" => "Error en la consulta: " . $e->getMessage()];
+        }
+    }
 
-					$conn = Conexion::Conectar();
-			
-					// Define el nombre del procedimiento almacenado y los parámetros
-					$sql = "EXEC Area_Actualizar @nombre = :nombre, @id = :id_area";			
-					// Prepara la consulta
-					$stmt = $conn->prepare($sql);		
-					// Asocia los valores a los parámetros
-					$stmt->bindParam(":id_area", $datos["id_area"], PDO::PARAM_INT);
-					$stmt->bindParam(":nombre", $datos["nombre"], PDO::PARAM_STR);
+    // Create a new area
+    static public function CrearAreaMdl($datos) {
+        try {
+            $conn = Conexion::Conectar();
+            $sql = "EXEC Area_Crear @nombre = :nombre";            
+            $stmt = $conn->prepare($sql);		
+            $stmt->bindParam(":nombre", $datos["nombre"], PDO::PARAM_STR);
+            $stmt->execute();
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            return ["error" => "Error en la consulta: " . $e->getMessage()];
+        }
+    }
+
+    // Edit an area by ID
+    static public function EditarAreaMdl($id_area) {
+        try {
+            $conn = Conexion::Conectar();
+            $sql = "EXEC Area_Editar_Detalle @id = :id";			
+            $stmt = $conn->prepare($sql);		
+            $stmt->bindParam(":id", $id_area, PDO::PARAM_INT);
+            $stmt->execute();
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            return ["error" => "Error en la consulta: " . $e->getMessage()];
+        }
+    }
+
+    // Update an existing area
+    static public function ActualizarAreaMdl($datos) {	
+        try {
+            $conn = Conexion::Conectar();
+            $sql = "EXEC Area_Actualizar @nombre = :nombre, @id = :id_area";			
+            $stmt = $conn->prepare($sql);		
+            $stmt->bindParam(":id_area", $datos["id_area"], PDO::PARAM_INT);
+            $stmt->bindParam(":nombre", $datos["nombre"], PDO::PARAM_STR);
+            $stmt->execute();	
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            return ["error" => "Error en la consulta: " . $e->getMessage()];
+        }
+    }
 
 
-					// Ejecuta el procedimiento almacenado
-					$stmt->execute();	
-					// Recupera el resultado
-					$result = $stmt->fetch(PDO::FETCH_ASSOC);
-					
-					return $result;
-				} catch (PDOException $e) {
-					die("Error en la consulta: " . $e->getMessage());
-				}
-				}
-				static public function EliminarAreaMdl($id_area) {
-					try {
-						$conn = Conexion::Conectar();
-						// Define el nombre del procedimiento almacenado y los parámetros
-						$sql = "EXEC Area_Eliminar @id = :id";			
-						// Prepara la consulta
-						$stmt = $conn->prepare($sql);		
-						// Asocia los valores a los parámetros
-						$stmt->bindParam(":id", $id_area, PDO::PARAM_INT);
-						// Ejecuta el procedimiento almacenado
-						$stmt->execute();		
-						// Recupera el resultado
-						$result = $stmt->fetch(PDO::FETCH_ASSOC);	
+    static public function EliminarAreaMdl($id_area){
+        try {
+            //Conexion a base de datos
+            $conn = Conexion::Conectar();
+            //Consulta SQL
+            $sql = "EXEC Area_Eliminar @id = id";
+            $stmt = $conn->prepare($sql);
+            $stmt->bindParam(":id", $id_area, PDO::PARAM_INT);
+            $stmt->execute();
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            return ["error" => "Error en la consulta: " . $e->getMessage()];
+        }
 
-						return $result;
-					} catch (PDOException $e) {
-						die("Error en la consulta: " . $e->getMessage());
-					}
-		
-				}
-		
+            
+            
+    }
 }
-?>
+

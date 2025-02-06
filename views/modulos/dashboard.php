@@ -23,6 +23,9 @@
       <li class="nav-item">
         <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Personas</a>
       </li>
+      <li class="nav-item">
+        <a class="nav-link" id="adquisicion-tab" data-toggle="tab" href="#adquisicion" role="tab" aria-controls="adquisicion" aria-selected="false">Adquisición</a>
+      </li>
     </ul>
     <div class="tab-content" id="myTabContent">
       <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
@@ -369,6 +372,153 @@
             <!-- /.row -->
           </div><!-- /.container-fluid -->
           <!-- /.container-fluid -->
+        </div>
+      </div>
+      <div class="tab-pane fade" id="adquisicion" role="tabpanel" aria-labelledby="adquisicion-tab">
+        <div class="content">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-md-6">
+                <!-- DONUT CHART -->
+                <div class="card card-secondary">
+                  <div class="card-header">
+                    <h3 class="card-title">Entrenados vs Estándares Adquiridos</h3>
+                    <div class="card-tools">
+                      <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                      </button>
+                      <button type="button" class="btn btn-tool" data-card-widget="remove">
+                        <i class="fas fa-times"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-lg-9 col-sm-6">
+                        <canvas id="donutChartAdquisicion" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                      </div>
+                      <div class="col-lg-3 col-sm-6">
+                        <div class="small-box bg-default">
+                          <div class="inner">
+                            <h3 style="color:red;" id="PorcentajeEntrenadoAdquisicion"></h3>
+                            <p>Entrenados</p>
+                          </div>
+                          <div class="icon">
+                            <i class="ion ion-stats-bars"></i>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+
+                <!-- BAR CHART -->
+                <div class="card card-secondary">
+                  <div class="card-header">
+                    <h3 class="card-title">Entrenados vs Estándares Adquiridos por Área</h3>
+                    <div class="card-tools">
+                      <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                      </button>
+                      <button type="button" class="btn btn-tool" data-card-widget="remove">
+                        <i class="fas fa-times"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <div class="col-6 col-sm-6">
+                      <div class="form-group">
+                        <select class="form-control areas" style="width: 60%;" name="areas">
+                          <option value="0">Todas las Áreas</option>
+                          <?php
+                          $tabla = ModeloArea::listarAreaMdl();
+                          foreach ($tabla as $key => $value) {
+                            echo '<option value=' . $value["id"] . '>' . $value["nombre"] . '</option>';
+                          } ?>
+                        </select>
+                      </div>
+                      <!-- /.form-group -->
+                    </div>
+                    <div class="chart" style="height: 285px;">
+                      <canvas id="barChartAdquisicion" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                    </div>
+                  </div>
+                  <!-- /.card-body -->
+                </div>
+
+              </div>
+              <!-- /.col (LEFT) -->
+              <div class="col-md-6">
+                <!-- LINE CHART -->
+                <div class="card card-secondary">
+                  <div class="card-header">
+                    <h3 class="card-title">Entrenados vs Estándares Adquiridos Anual</h3>
+                    <div class="card-tools">
+                      <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                      </button>
+                      <button type="button" class="btn btn-tool" data-card-widget="remove">
+                        <i class="fas fa-times"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <div class="chart">
+                      <canvas id="barChartAdquisicionAnual" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                    </div>
+                  </div>
+                  <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+
+                <!-- PIE CHART -->
+                <div class="card card-secondary">
+                  <div class="card-header">
+                    <h3 class="card-title">Entrenados vs Estándares Adquiridos por pilar</h3>
+                    <div class="card-tools">
+                      <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                      </button>
+                      <button type="button" class="btn btn-tool" data-card-widget="remove">
+                        <i class="fas fa-times"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="small-box bg-default">
+                          <canvas id="pieChartAdquisicion1" style="min-height: 150px; height: 150px; max-height: 150px; max-width: 100%;"></canvas>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="small-box bg-default">
+                          <canvas id="pieChartAdquisicion2" style="min-height: 150px; height: 150px; max-height: 150px; max-width: 100%;"></canvas>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="small-box bg-default">
+                          <canvas id="pieChartAdquisicion3" style="min-height: 150px; height: 150px; max-height: 150px; max-width: 100%;"></canvas>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="small-box bg-default">
+                          <canvas id="pieChartAdquisicion4" style="min-height: 150px; height: 150px; max-height: 150px; max-width: 100%;"></canvas>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+
+              </div>
+              <!-- /.col (RIGHT) -->
+            </div>
+            <!-- /.row -->
+          </div><!-- /.container-fluid -->
         </div>
       </div>
     </div>

@@ -1,21 +1,21 @@
 <?php
 require_once "../models/area.model.php";
-Class ajaxArea {
-	public function crearArea(){
-		$datos = array(		          
-			            "nombre"=>$this->nombre	            
-					);
-   $respuesta = ModeloArea::CrearAreaMdl($datos);
-    echo json_encode($respuesta);
-	}
-	public function editarArea(){
-    $id_area = $this->id_area;
-    $respuesta = ModeloArea::EditarAreaMdl($id_area);
-    echo json_encode($respuesta);
-}
 
-public function actualizarArea(){
-    $datos = array( 
+class ajaxArea {
+    public function crearArea() {
+        $datos = array("nombre" => $this->nombre);
+        $respuesta = ModeloArea::CrearAreaMdl($datos);
+        echo json_encode($respuesta);
+    }
+
+    public function editarArea() {
+        $id_area = $this->id_area;
+        $respuesta = ModeloArea::EditarAreaMdl($id_area);
+        echo json_encode($respuesta);
+    }
+
+    public function actualizarArea() {
+        $datos = array(
                     "id_area"=>$this->id_area,	              
                     "nombre"=>$this->nombre
                     );
@@ -27,7 +27,6 @@ public function eliminarArea(){
     $respuesta = ModeloArea::EliminarAreaMdl($id_area);
 	echo json_encode($respuesta);
 }
-
 }
 $tipoOperacion = $_POST["tipoOperacion"];
 
@@ -47,9 +46,5 @@ if ($tipoOperacion == "actualizarArea") {
 	$actualizarArea -> nombre = $_POST["nombre"];
 	$actualizarArea -> actualizarArea();
 }
-if ($tipoOperacion == "eliminarArea") {
-	$eliminarArea = new ajaxArea();
-	$eliminarArea -> id_area = $_POST["id_area"];
-	$eliminarArea -> eliminarArea();
-}
+
 ?>
