@@ -1,21 +1,24 @@
 <?php
 require_once "conexion.php";
 
-class ModeloPorcentajes {
-    
+class ModeloPorcentajes
+{
+
     // Verificar si existe un registro
-    static public function verificarExistenciaMdl($idEstandar, $idColaborador) {
+    static public function verificarExistenciaMdl($idEstandar, $rut)
+    {
         try {
             $stmt = Conexion::conectar()->prepare("SELECT id FROM porcentajes 
                 WHERE id_estandar = :id_estandar 
-                AND id_colaborador = :id_colaborador");
-            
+                AND rut = :rut");
+
             $stmt->bindParam(":id_estandar", $idEstandar, PDO::PARAM_INT);
-            $stmt->bindParam(":id_colaborador", $idColaborador, PDO::PARAM_INT);
-            
+            $stmt->bindParam(':rut', $rut, PDO::PARAM_STR);
+
+
             $stmt->execute();
             return $stmt->fetch() !== false;
-            
+
         } catch (PDOException $e) {
             error_log("Error en verificarExistenciaMdl: " . $e->getMessage());
             return false;
@@ -23,51 +26,72 @@ class ModeloPorcentajes {
             $stmt = null;
         }
     }
-    
+
     // Crear nuevo registro
-    static public function crearPorcentajeMdl($datos) {
+    static public function crearPorcentajeMdl($datos)
+    {
         try {
             $stmt = Conexion::conectar()->prepare("EXEC Porcentaje_Gestionar 
                 @id_estandar = :id_estandar,
                 @fecha = :fecha,
                 @supervisor = :supervisor,
-                @id_colaborador = :id_colaborador,
+                @rut                = :rut,
                 @turno = :turno,
                 @num_chequeos = :num_chequeos,
                 @chequeos_correctos = :chequeos_correctos,
                 @porcentaje = :porcentaje,
+                @adquirido          = :adquirido, 
                 @comentarios = :comentarios");
 
             $stmt->bindParam(":id_estandar", $datos["id_estandar"], PDO::PARAM_INT);
             $stmt->bindParam(":fecha", $datos["fecha"], PDO::PARAM_STR);
             $stmt->bindParam(":supervisor", $datos["supervisor"], PDO::PARAM_STR);
-            $stmt->bindParam(":id_colaborador", $datos["id_colaborador"], PDO::PARAM_INT);
+            $stmt->bindParam(':rut', $datos['rut'], PDO::PARAM_STR);
             $stmt->bindParam(":turno", $datos["turno"], PDO::PARAM_STR);
             $stmt->bindParam(":num_chequeos", $datos["num_chequeos"], PDO::PARAM_INT);
             $stmt->bindParam(":chequeos_correctos", $datos["chequeos_correctos"], PDO::PARAM_INT);
             $stmt->bindParam(":porcentaje", $datos["porcentaje"], PDO::PARAM_INT);
+            $stmt->bindValue(':adquirido', 1, PDO::PARAM_BOOL);
             $stmt->bindParam(":comentarios", $datos["comentarios"], PDO::PARAM_STR);
 
+            // 1) Ejecutamos
             $stmt->execute();
-            $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
-            
-            return isset($resultado['resultado']) && $resultado['resultado'] == 1;
 
+            // 2) Leemos el primer row
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            // 3) Volcamos en el log para inspección
+            error_log("SP Porcentaje_Gestionar devolvió: " . print_r($row, true));
+
+            // 4) Validamos que venga el campo 'resultado'
+            if (!isset($row['resultado'])) {
+                throw new Exception("SP Porcentaje_Gestionar no devolvió resultado");
+            }
+
+            // 5) Si fue éxito
+            if ($row['resultado'] == 1) {
+                return true;
+            }
+
+            // 6) Si falló (resultado == 0), capturamos sus detalles
+            $num = $row['ErrorNumber'] ?? 'desconocido';
+            $msg = $row['ErrorMessage'] ?? 'sin mensaje';
+            throw new Exception("SP Error #{$num}: {$msg}");
         } catch (PDOException $e) {
-            error_log("Error en crearPorcentajeMdl: " . $e->getMessage());
-            return false;
-        } finally {
-            $stmt = null;
+            // Si PDO itself falló (p.ej. sintaxis SQL, conexión, etc)
+            error_log("PDOException en crearPorcentajeMdl: " . $e->getMessage());
+            throw new Exception("PDOException: " . $e->getMessage());
         }
     }
-    
+
     // Actualizar registro existente
-    static public function actualizarPorcentajeMdl($datos) {
+    static public function actualizarPorcentajeMdl($datos)
+    {
         try {
             $stmt = Conexion::conectar()->prepare("UPDATE porcentajes SET 
                 fecha = :fecha,
                 supervisor = :supervisor,
-                id_colaborador = :id_colaborador,
+                rut = :rut,
                 turno = :turno,
                 num_chequeos = :num_chequeos,
                 chequeos_correctos = :chequeos_correctos,
@@ -75,24 +99,25 @@ class ModeloPorcentajes {
                 comentarios = :comentarios,
                 fecha_registro = GETDATE()
                 WHERE id_estandar = :id_estandar");
-            
+
             $stmt->bindParam(":id_estandar", $datos["id_estandar"], PDO::PARAM_INT);
             $stmt->bindParam(":fecha", $datos["fecha"], PDO::PARAM_STR);
             $stmt->bindParam(":supervisor", $datos["supervisor"], PDO::PARAM_STR);
-            $stmt->bindParam(":id_colaborador", $datos["id_colaborador"], PDO::PARAM_INT);
+            $stmt->bindParam(":rut", $datos["rut"], PDO::PARAM_STR);
             $stmt->bindParam(":turno", $datos["turno"], PDO::PARAM_STR);
             $stmt->bindParam(":num_chequeos", $datos["num_chequeos"], PDO::PARAM_INT);
             $stmt->bindParam(":chequeos_correctos", $datos["chequeos_correctos"], PDO::PARAM_INT);
             $stmt->bindParam(":porcentaje", $datos["porcentaje"], PDO::PARAM_INT);
             $stmt->bindParam(":comentarios", $datos["comentarios"], PDO::PARAM_STR);
-            
+
             if (!$stmt->execute()) {
-                error_log("Error en actualizarPorcentajeMdl: " . print_r($stmt->errorInfo(), true));
-                throw new PDOException($stmt->errorInfo()[2]);
+                $info = $stmt->errorInfo();
+                error_log("Error en actualizarPorcentajeMdl: " . print_r($info, true));
+                throw new PDOException($info[2]);
             }
-            
+
             return true;
-            
+
         } catch (PDOException $e) {
             error_log("Error en actualizarPorcentajeMdl: " . $e->getMessage());
             throw $e;
@@ -102,30 +127,35 @@ class ModeloPorcentajes {
     }
 
     // Obtener datos para los gráficos
-    static public function obtenerDatosGraficosMdl($filtros) {
+    static public function obtenerDatosGraficosMdl($filtros)
+    {
         try {
             $conn = Conexion::conectar();
-            
+
             $sql = "EXEC SP_ObtenerPorcentajesSemana 
                     @FechaSeleccionada = :fecha,
-                    @AreaSeleccionada = :area";
+                    @AreaSeleccionada = :area,
+                    @planta_id = :planta_id
+                    ";
 
             $stmt = $conn->prepare($sql);
             $stmt->bindParam(':fecha', $filtros['fecha'], PDO::PARAM_STR);
             $stmt->bindParam(':area', $filtros['area'], PDO::PARAM_STR);
-            
+            $stmt->bindParam(':planta_id', $_SESSION['planta_id'], PDO::PARAM_INT);
+
+
             if (!$stmt->execute()) {
                 throw new Exception("Error al ejecutar el procedimiento: " . print_r($stmt->errorInfo(), true));
             }
 
             $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            
+
             // Inicializar arrays para ambos turnos
             $porcentajesSemana = [
                 'Día' => array_fill(0, 7, 0),
                 'Noche' => array_fill(0, 7, 0)
             ];
-            
+
             $totalRegistros = 0;
             $sumaPorcentajes = 0;
             $contadorRegistros = 0;
@@ -136,24 +166,24 @@ class ModeloPorcentajes {
                 $turno = $row['turno'];
                 $porcentaje = floatval($row['porcentaje_promedio']);
                 $registros = intval($row['total_registros']);
-                
+
                 // Asignar porcentaje al día y turno correspondiente
                 if (isset($porcentajesSemana[$turno])) {
                     $porcentajesSemana[$turno][$diaSemana] = round($porcentaje, 1);
-                    
+
                     // Acumular para el promedio general solo si hay registros
                     if ($registros > 0) {
                         $sumaPorcentajes += ($porcentaje * $registros);
                         $contadorRegistros += $registros;
                     }
                 }
-                
+
                 $totalRegistros += $registros;
             }
 
             // Calcular el porcentaje general ponderado
-            $porcentajeGeneral = $contadorRegistros > 0 
-                ? round($sumaPorcentajes / $contadorRegistros, 1) 
+            $porcentajeGeneral = $contadorRegistros > 0
+                ? round($sumaPorcentajes / $contadorRegistros, 1)
                 : 0;
 
             return [
@@ -179,55 +209,56 @@ class ModeloPorcentajes {
         }
     }
     // Agregar este nuevo método en la clase ModeloPorcentajes
-static public function obtenerDatosColaboradorMdl($filtros) {
-    try {
-        $conn = Conexion::conectar();
-        
-        // Si no hay filtros específicos, obtener todos los colaboradores del área
-        if (empty($filtros['supervisor']) && empty($filtros['colaborador']) && empty($filtros['turno'])) {
-            $sql = "EXEC SP_ObtenerDesempenoColaborador 
+    static public function obtenerDatosColaboradorMdl($filtros)
+    {
+        try {
+            $conn = Conexion::conectar();
+
+            // Si no hay filtros específicos, obtener todos los colaboradores del área
+            if (empty($filtros['supervisor']) && empty($filtros['colaborador']) && empty($filtros['turno'])) {
+                $sql = "EXEC SP_ObtenerDesempenoColaborador 
                     @FechaSeleccionada = :fecha,
                     @AreaSeleccionada = :area,
                     @Supervisor = NULL,
                     @Colaborador = NULL,
                     @Turno = NULL";
 
-            $stmt = $conn->prepare($sql);
-            $stmt->bindParam(':fecha', $filtros['fecha'], PDO::PARAM_STR);
-            $stmt->bindParam(':area', $filtros['area'], PDO::PARAM_STR);
-        } else {
-            $sql = "EXEC SP_ObtenerDesempenoColaborador 
+                $stmt = $conn->prepare($sql);
+                $stmt->bindParam(':fecha', $filtros['fecha'], PDO::PARAM_STR);
+                $stmt->bindParam(':area', $filtros['area'], PDO::PARAM_STR);
+            } else {
+                $sql = "EXEC SP_ObtenerDesempenoColaborador 
                     @FechaSeleccionada = :fecha,
                     @AreaSeleccionada = :area,
                     @Supervisor = :supervisor,
                     @Colaborador = :colaborador,
                     @Turno = :turno";
 
-            $stmt = $conn->prepare($sql);
-            $stmt->bindParam(':fecha', $filtros['fecha'], PDO::PARAM_STR);
-            $stmt->bindParam(':area', $filtros['area'], PDO::PARAM_STR);
-            $stmt->bindParam(':supervisor', $filtros['supervisor'], PDO::PARAM_STR);
-            $stmt->bindParam(':colaborador', $filtros['colaborador'], PDO::PARAM_INT);
-            $stmt->bindParam(':turno', $filtros['turno'], PDO::PARAM_STR);
-        }
-        
-        if (!$stmt->execute()) {
-            throw new Exception("Error al ejecutar el procedimiento");
-        }
+                $stmt = $conn->prepare($sql);
+                $stmt->bindParam(':fecha', $filtros['fecha'], PDO::PARAM_STR);
+                $stmt->bindParam(':area', $filtros['area'], PDO::PARAM_STR);
+                $stmt->bindParam(':supervisor', $filtros['supervisor'], PDO::PARAM_STR);
+                $stmt->bindParam(':colaborador', $filtros['colaborador'], PDO::PARAM_INT);
+                $stmt->bindParam(':turno', $filtros['turno'], PDO::PARAM_STR);
+            }
 
-        $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        
-        return [
-            'status' => 'success',
-            'data' => $resultados
-        ];
+            if (!$stmt->execute()) {
+                throw new Exception("Error al ejecutar el procedimiento");
+            }
 
-    } catch (Exception $e) {
-        error_log("Error en obtenerDatosColaboradorMdl: " . $e->getMessage());
-        return [
-            'status' => 'error',
-            'message' => 'Error al procesar los datos: ' . $e->getMessage()
-        ];
+            $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            return [
+                'status' => 'success',
+                'data' => $resultados
+            ];
+
+        } catch (Exception $e) {
+            error_log("Error en obtenerDatosColaboradorMdl: " . $e->getMessage());
+            return [
+                'status' => 'error',
+                'message' => 'Error al procesar los datos: ' . $e->getMessage()
+            ];
+        }
     }
-}
 }

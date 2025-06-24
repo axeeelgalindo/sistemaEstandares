@@ -1,7 +1,9 @@
 <?php
-// Desactivar la visualización de errores en producción
 ini_set('display_errors', 0);
-error_reporting(0);
+ini_set('log_errors', 1);
+ini_set('error_log', __DIR__ . '/../logs/php_errors.log');
+error_reporting(E_ALL);
+
 
 // Iniciar buffer de salida
 ob_start();
@@ -11,7 +13,7 @@ try {
 
     // Limpiar cualquier salida anterior
     ob_clean();
-    
+
     // Establecer headers
     header('Content-Type: application/json');
     header('Cache-Control: no-cache, must-revalidate');
@@ -35,7 +37,7 @@ try {
         try {
             // Obtener datos del modelo
             $datos = ModeloPorcentajes::obtenerDatosGraficosMdl($filtros);
-            
+
             // Si los datos son válidos, enviarlos directamente
             if (isset($datos['status']) && $datos['status'] === 'success') {
                 echo json_encode($datos);
@@ -51,12 +53,19 @@ try {
     // Si es una petición para guardar datos
     else if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $respuesta = array('status' => 'error', 'message' => '');
-        
+
         try {
             // Validar datos recibidos
-            $camposRequeridos = ['id_estandar', 'fecha', 'supervisor', 'id_colaborador', 
-                                'num_chequeos', 'chequeos_correctos', 'porcentaje'];
-            
+            $camposRequeridos = [
+                'id_estandar',
+                'fecha',
+                'supervisor',
+                'rut',
+                'num_chequeos',
+                'chequeos_correctos',
+                'porcentaje'
+            ];
+
             foreach ($camposRequeridos as $campo) {
                 if (!isset($_POST[$campo]) || empty($_POST[$campo])) {
                     throw new Exception('El campo ' . $campo . ' es requerido');
@@ -68,7 +77,7 @@ try {
                 "id_estandar" => intval($_POST['id_estandar']),
                 "fecha" => $_POST['fecha'],
                 "supervisor" => $_POST['supervisor'],
-                "id_colaborador" => intval($_POST['id_colaborador']),
+                "rut" => $_POST['rut'],
                 "turno" => $_POST['turno'],
                 "num_chequeos" => intval($_POST['num_chequeos']),
                 "chequeos_correctos" => intval($_POST['chequeos_correctos']),
@@ -77,8 +86,8 @@ try {
             );
 
             // Verificar si ya existe un registro
-            $existe = ModeloPorcentajes::verificarExistenciaMdl($datos['id_estandar'], $datos['id_colaborador']);
-            
+            $existe = ModeloPorcentajes::verificarExistenciaMdl($datos['id_estandar'], $datos['rut']);
+
             if ($existe) {
                 $resultado = ModeloPorcentajes::actualizarPorcentajeMdl($datos);
                 $mensaje = 'Registro actualizado correctamente';
@@ -95,8 +104,11 @@ try {
             }
 
         } catch (Exception $e) {
-            $respuesta['status'] = 'error';
-            $respuesta['message'] = $e->getMessage();
+            echo json_encode([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ]);
+            exit;
         }
 
         echo json_encode($respuesta);
@@ -120,7 +132,7 @@ try {
 
         try {
             $datos = ModeloPorcentajes::obtenerDatosColaboradorMdl($filtros);
-            
+
             if (isset($datos['status']) && $datos['status'] === 'success') {
                 echo json_encode($datos);
                 exit;
@@ -131,14 +143,14 @@ try {
             error_log("Error en obtenerDatosColaborador: " . $e->getMessage());
             throw $e;
         }
-    }
-    else {
+    } else {
         throw new Exception('Acción no válida');
     }
 
 } catch (Exception $e) {
-    ob_clean();
+    // registra en log para no perderlo
     error_log("Error en ajaxPorcentajes: " . $e->getMessage());
+    // devuélvelo al front
     echo json_encode([
         'status' => 'error',
         'message' => $e->getMessage()

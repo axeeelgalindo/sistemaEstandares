@@ -83,10 +83,7 @@ $(document).on("click", ".btnEditarUsuario", function(){
             $('#editarUsuario input[name="email"]').val(respuesta.email)
             $('#editarUsuario input[name="password"]').val(respuesta.password)
 			$('#editarUsuario select[name="nivel"]').val(respuesta.nivel_usuario)
-
-
-
-    
+			$('#editarUsuario select[name="planta_idEditar"]').val(respuesta.planta_id)
         }
     })
 })

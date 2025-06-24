@@ -1,11 +1,11 @@
 <?php
 class Conexion {
 	static public function Conectar() {
-		$serverName = "DESKTOP-2R85171\SQLEXPRESS"; // Reemplaza con el nombre del servidor SQL Server
+		$serverName = "DESKTOP-51OTLDQ\SQLEXPRESS"; // Reemplaza con el nombre del servidor SQL Server
 	//	$serverName = "192.168.1.21"; // Reemplaza con el nombre del servidor SQL Server
 		$databaseName = "db_estandares"; // Reemplaza con el nombre de tu base de datos
 		$username = "sa"; // Reemplaza con el nombre de usuario de SQL Server
-		$password = "smarteyes2024"; // Reemplaza con la contraseña de SQL Server
+		$password = "blueinge2025"; // Reemplaza con la contraseña de SQL Server
 		
 		try {
 			$conn = new PDO("sqlsrv:Server=$serverName;Database=$databaseName", $username, $password);
@@ -18,4 +18,3 @@ class Conexion {
 		}
 	}
 }
-?>

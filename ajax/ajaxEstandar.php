@@ -2,6 +2,20 @@
 require_once "../models/estandar.model.php";
 class ajaxEstandar
 {
+
+	public $id_estandar;
+	public $id_proceso;
+	public $id_area;
+	public $codigo;
+	public $estandar;
+	public $ruta;
+	public $rutaActual;
+	public $nombre;
+	public $tipo;
+	public $area;
+	public $imagen_estandar;
+	public $planta_id;
+	public $datos;
 	public function crearEstandar()
 	{
 		$datos = array(
@@ -9,7 +23,8 @@ class ajaxEstandar
 			"nombre" => $this->nombre,
 			"tipo" => $this->tipo,
 			"area" => $this->area,
-			"imagen_estandar" => $this->imagen_estandar
+			"imagen_estandar" => $this->imagen_estandar,
+			"planta_id" => $this->planta_id
 		);
 		$respuesta = ModeloEstandar::CrearEstandarMdl($datos);
 		echo json_encode($respuesta);
@@ -45,7 +60,8 @@ class ajaxEstandar
 			"tipo" => $this->tipo,
 			"area" => $this->area,
 			"imagen_estandar" => $this->imagen_estandar,
-			"rutaActual" => $this->rutaActual
+			"rutaActual" => $this->rutaActual,
+			"planta_id" => $this->planta_id
 		);
 		$respuesta = ModeloEstandar::ActualizarEstandarMdl($datos);
 		echo json_encode($respuesta);
@@ -74,27 +90,32 @@ class ajaxEstandar
 		echo json_encode($respuesta);
 	}
 
-public function validarPersonal(){
- $datos = $this->datos;
- $id_estandar = $this->id_estandar;
-$respuesta = ModeloEstandar::ValidarPersonalMdl($datos,$id_estandar);
-echo json_encode($respuesta);
-}
-public function revertirPersonal(){
-	$datos = $this->datos;
-	$id_estandar = $this->id_estandar;
-   $respuesta = ModeloEstandar::RevertirPersonalMdl($datos,$id_estandar);
-   echo json_encode($respuesta);
-   }
-public function CargarEstandares(){
-   $respuesta = ModeloEstandar::listarEstandaresCargadosMdl();
-   echo json_encode($respuesta);
-   }
-   public function GraficosCreadosEntrenados(){
-	$respuesta = ModeloEstandar::GraficosCreadosEntrenadosMdl();
-	echo json_encode($respuesta);
+	public function validarPersonal()
+	{
+		$datos = $this->datos;
+		$id_estandar = $this->id_estandar;
+		$respuesta = ModeloEstandar::ValidarPersonalMdl($datos, $id_estandar);
+		echo json_encode($respuesta);
 	}
-	public function GraficosBarrasEntrenados(){
+	public function revertirPersonal()
+	{
+		$datos = $this->datos;
+		$id_estandar = $this->id_estandar;
+		$respuesta = ModeloEstandar::RevertirPersonalMdl($datos, $id_estandar);
+		echo json_encode($respuesta);
+	}
+	public function CargarEstandares()
+	{
+		$respuesta = ModeloEstandar::listarEstandaresCargadosMdl();
+		echo json_encode($respuesta);
+	}
+	public function GraficosCreadosEntrenados()
+	{
+		$respuesta = ModeloEstandar::GraficosCreadosEntrenadosMdl();
+		echo json_encode($respuesta);
+	}
+	public function GraficosBarrasEntrenados()
+	{
 		$id_area = $this->id_area;
 		$respuesta = ModeloEstandar::GraficosBarrasEntrenadosMdl($id_area);
 		echo json_encode($respuesta);
@@ -177,8 +198,9 @@ if ($tipoOperacion == "insertarEstandar") {
 	$crearNuevoEstandar->codigo = $_POST["codigo"];
 	$crearNuevoEstandar->nombre = $_POST["nombre"];
 	$crearNuevoEstandar->tipo = $_POST["tipo"];
-	$crearNuevoEstandar->area = $_POST["area"];
+	$crearNuevoEstandar->area = $_POST["area"] ?? [];
 	$crearNuevoEstandar->imagen_estandar = $_FILES["ArchivoEstandar"];
+	$crearNuevoEstandar->planta_id = $_POST["planta_id"];
 	$crearNuevoEstandar->crearEstandar();
 }
 if ($tipoOperacion == "editarEstandar") {
@@ -192,9 +214,10 @@ if ($tipoOperacion == "actualizarEstandar") {
 	$actualizarEstandar->codigo = $_POST["codigo"];
 	$actualizarEstandar->nombre = $_POST["nombre"];
 	$actualizarEstandar->tipo = $_POST["tipo"];
-	$actualizarEstandar->area = $_POST["area"];
+	$actualizarEstandar->area = $_POST["area"] ?? [];
 	$actualizarEstandar->imagen_estandar = $_FILES["ArchivoEstandar"];
 	$actualizarEstandar->rutaActual = $_POST["rutaActual"];
+	$actualizarEstandar->planta_id = $_POST["planta_id"];
 	$actualizarEstandar->actualizarEstandar();
 }
 if ($tipoOperacion == "eliminarEstandar") {
@@ -224,9 +247,9 @@ if ($tipoOperacion == "ValidarPersonal") {
 }
 if ($tipoOperacion == "RevertirPersonal") {
 	$revertirPersonal = new ajaxEstandar();
-	$revertirPersonal -> datos = $_POST["datos"];
-	$revertirPersonal -> id_estandar = $_POST["id_estandar"];
-	$revertirPersonal -> revertirPersonal();
+	$revertirPersonal->datos = $_POST["datos"];
+	$revertirPersonal->id_estandar = $_POST["id_estandar"];
+	$revertirPersonal->revertirPersonal();
 }
 if ($tipoOperacion == "CargarEstandares") {
 	$CargarEstandares = new ajaxEstandar();

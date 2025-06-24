@@ -1,4 +1,4 @@
-<section class="content-header">
+<!--<section class="content-header">
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
@@ -10,10 +10,10 @@
             </ol>
           </div>
         </div>
-      </div><!-- /.container-fluid -->
-    </section>
+      </div><!-- /.container-fluid 
+</section>-->
     <!-- Main content -->
-    <section class="content">
+    <section class="content pt-3">
       <div class="container-fluid">
         <div class="row">
 <div class="col-12">
@@ -39,7 +39,10 @@
                        Activo
                       </th>
                       <th >
-                       Nivel se usuario
+                       Nivel de usuario
+                      </th>
+                      <th>
+                        Planta
                       </th>
                       <th style="width: 20%;" >
                       Acción
@@ -57,10 +60,12 @@
             <td>'.nl2br($value["email"]).'</td>
             <td>'.nl2br($value["activo"]).'</td>
             <td>'.nl2br($value["nivel de usuario"]).'</td>
-            <td width="100"> <button class="btn btn-sm btn-info btnEditarUsuario" idUsuario="'.$value["id"].'" data-toggle="modal" data-target="#modal-editar-usuario">
+            <td>'.(!empty($value["planta"]) ? nl2br($value["planta"]) : 'N/A').'</td>
+            <td width="100" class="text-center"> 
+            <button class="btn btn-sm btn-info btnEditarUsuario mx-1" idUsuario="'.$value["id"].'" data-toggle="modal" data-target="#modal-editar-usuario">
                                 <i class="far fa-edit"></i> 
                             </button>
-                <button class="btn btn-sm btn-danger btnEliminarUsuario" UsuarioActi="'.$value["activo"].'"  idUsuario="'.$value["id"].'">
+                <button class="btn btn-sm btn-danger btnEliminarUsuario mx-1" UsuarioActi="'.$value["activo"].'"  idUsuario="'.$value["id"].'">
                                 <i class="far fa-trash-alt"></i> 
                 </button>
                 </td>

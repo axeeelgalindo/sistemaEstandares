@@ -1,7 +1,16 @@
+<?php
+ini_set('display_errors',1);
+error_reporting(E_ALL);
+// Sólo inicia sesión si aún no hay una activa
+if (session_status() !== PHP_SESSION_ACTIVE) {
+    session_start();
+}
+?>
 <!-- Content Header (Page header) -->
 <section class="content-header">
   <link rel="stylesheet" type="text/css" href="https://cFn.datatables.net/1.10.24/css/jquery.dataTables.css">
-  <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>
+  <script type="text/javascript" charset="utf8"
+    src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>
   <div class="container-fluid">
     <div class="row mb-2">
       <div class="col-sm-6">
@@ -44,7 +53,10 @@
             <th style="width: 10%">
               Area
             </th>
-   <th style="width: 10%">
+            <th style="width: 10%">
+              Planta
+            </th>
+            <th style="width: 10%">
               Fecha Entrenamiento
             </th>
             <th>
@@ -61,23 +73,26 @@
 
         <tbody>
           <?php
-          $tabla = ModeloEstandar::listarEstandaresCargadosMdl();
+          $planta_id = $_SESSION['planta_id'] ?? die('Falta planta en sesión');
+          $tabla = ModeloEstandar::listarEstandaresCargadosMdl($planta_id);
           foreach ($tabla as $key => $value) {
             echo '
             <tr>
-            <td>' . nl2br($value["codigo"]) . ' </td>
-            <td>' . nl2br($value["tipo"]) . '</td>
-            <td> ' . nl2br($value["nombre"]) . '</td>
-            <td>' . nl2br($value["area"]) . '</td>
-                   <td>' . nl2br($value["fecha_inicio"]) . '</td>
-            <td>' . nl2br($value["total_personas"]) . '/' . nl2br($value["total_personas_entrenadas"]) . ' </td>
+            <td>' . nl2br($value["codigo"] ?? '') . ' </td>
+            <td>' . nl2br($value["tipo"] ?? '') . '</td>
+            <td> ' . nl2br($value["nombre"] ?? '') . '</td>
+            <td>' . nl2br($value["area"] ?? '') . '</td>
+            <td>' . (!empty($value["planta"] ?? '') ? nl2br($value["planta"] ?? '') : 'N/A') . '</td>
+
+                   <td>' . nl2br($value["fecha_inicio"] ?? '') . '</td>
+            <td>' . nl2br($value["total_personas"] ?? '') . '/' . nl2br($value["total_personas_entrenadas"] ?? '') . ' </td>
                       <td class="project_progress">
                           <div class="progress progress-sm">
-                              <div class="progress-bar bg-green" role="progressbar" aria-valuenow="' . nl2br($value["porcentaje_entrenado"]) . '" aria-valuemin="0" aria-valuemax="100" style="width: ' . nl2br($value["porcentaje_entrenado"]) . '%">
+                              <div class="progress-bar bg-green" role="progressbar" aria-valuenow="' . nl2br($value["porcentaje_entrenado"] ?? '') . '" aria-valuemin="0" aria-valuemax="100" style="width: ' . nl2br($value["porcentaje_entrenado"] ?? '') . '%">
                               </div>
                           </div>
                           <small>
-                          ' . nl2br($value["porcentaje_entrenado"]) . '% Entrenado
+                          ' . nl2br($value["porcentaje_entrenado"] ?? '') . '% Entrenado
                           </small>
                       </td>
           
@@ -85,10 +100,10 @@
                       <button class="btn btn-sm btn-default btnVerEstandar" Url="' . $value["url_pdf"] . '" data-toggle="modal" data-target="#modal-ver-estandar">
             <i class="far fa-solid fa-eye"> </i> 
             </button>   
-                          <button class="btn btn-sm btn-primary btnSubirEstandar" IdProceso="'.$value["id"].'" data-toggle="modal" data-target="#modal-cargar-personas-estandar">
+                          <button class="btn btn-sm btn-primary btnSubirEstandar" IdProceso="' . $value["id"] . '" data-toggle="modal" data-target="#modal-cargar-personas-estandar">
                           <i class="fas fa-rocket"></i> Entrenar
                           </button>
-                          <button class="btn btn-success btn-sm btnEstandarValidado" IdProceso="'.$value["id"].'"  data-toggle="modal" data-target="#modal-cargados-personas-estandar"   >
+                          <button class="btn btn-success btn-sm btnEstandarValidado" IdProceso="' . $value["id"] . '"  data-toggle="modal" data-target="#modal-cargados-personas-estandar"   >
                           <i class="fas fa-user-check"></i> Entrenados               
                           </button>
                       </td>
@@ -106,15 +121,15 @@
 <!-- jQuery -->
 
 <script>
-  $(document).ready(function() {
+  $(document).ready(function () {
     // Listener para el botón de aplicar filtro
-    $('#applyFilter').click(function() {
+    $('#applyFilter').click(function () {
       // Recoge los checkboxes seleccionados
-      var selectedAreas = $('input[name="area[]"]:checked').map(function() {
+      var selectedAreas = $('input[name="area[]"]:checked').map(function () {
         return $(this).next('label').text(); // Obtiene el nombre de los datos Area
       }).get();
 
-      var selectedTypes = $('input[name="tipo[]"]:checked').map(function() {
+      var selectedTypes = $('input[name="tipo[]"]:checked').map(function () {
         return $(this).next('label').text(); // Obtiene el nombre de los datos Tipo de Estandar
       }).get();
 
@@ -127,7 +142,7 @@
       // Inicializa la tabla
       $('#example1').DataTable({
         "paging": true,
-        "pageLength": 25, 
+        "pageLength": 25,
         "ordering": true,
         "info": false,
         "searching": true

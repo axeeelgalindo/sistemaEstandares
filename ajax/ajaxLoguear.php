@@ -1,33 +1,41 @@
 <?php
- session_start();
+session_start();
 require_once "../models/login.model.php";
 
-Class ajaxPesaje {
+class ajaxPesaje
+{
 
-        public function ValidarLogin(){
-            $datos = array(
-                            "email"=>$this->email,		
-                            "password"=>$this->password           		            			            												
-                        );  
-            $respuesta = ModeloLogin::mdlValidarLogin($datos);
-          //  var_dump($respuesta);
-            if($respuesta["result"] == 1){
-               
-				$_SESSION["autenticar"] = "ok";
-				$_SESSION["nombre"] = $this->email;
-				$_SESSION["nivel_usuario"] = $respuesta["nivel_usuario"];
-             }
-           echo ($respuesta["result"]);
+  public $email;
+  public $password;
 
-         //  echo ($_SESSION["nombre"]);
-        }
+  public function ValidarLogin()
+  {
+    $datos = array(
+      "email" => $this->email,
+      "password" => $this->password
+    );
+
+    $respuesta = ModeloLogin::mdlValidarLogin($datos);
+
+    if ($respuesta["result"] == 1) {
+      $_SESSION["autenticar"] = "ok";
+      $_SESSION["nombre"] = $this->email;
+      $_SESSION["nivel_usuario"] = $respuesta["nivel_usuario"];
+
+      if (isset($respuesta["planta_id"])) {
+        $_SESSION["planta_id"] = $respuesta["planta_id"];
+      }
     }
-        $tipoOperacion = $_POST["tipoOperacion"];
-        if($tipoOperacion == "ValidarLogin") {
-            $validarLogin = new ajaxPesaje();
-            $validarLogin -> email = $_POST["email"];
-            $validarLogin -> password = $_POST["password"];
-            $validarLogin -> cargarplano = $_POST["CargarPlano"];
-            $validarLogin ->ValidarLogin();
-        }
-    ?>
+
+    echo ($respuesta["result"]);
+  }
+}
+
+$tipoOperacion = $_POST["tipoOperacion"];
+if ($tipoOperacion == "ValidarLogin") {
+  $validarLogin = new ajaxPesaje();
+  $validarLogin->email = $_POST["email"];
+  $validarLogin->password = $_POST["password"];
+  $validarLogin->ValidarLogin();
+}
+?>

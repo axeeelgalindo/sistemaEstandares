@@ -1,211 +1,276 @@
 <?php
 require_once "conexion.php";
-Class ModeloUsuario {
-	static public function listarUsuarioMdl() {
+class ModeloUsuario
+{
+	static public function listarUsuarioMdl()
+	{
 		try {
 			$conn = Conexion::Conectar();
-	
+
 			// Define el nombre del procedimiento almacenado y los parámetros
 			$sql = "EXEC Listar_Usuario";
-			
+
 			// Prepara la consulta
 			$stmt = $conn->prepare($sql);
-						
+
 			// Ejecuta el procedimiento almacenado
 			$stmt->execute();
-			
+
 			// Recupera el resultado
 			$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-			
+
 			return $result;
 		} catch (PDOException $e) {
 			die("Error en la consulta: " . $e->getMessage());
 		}
-    }
-	static public function listarTipoMdl() {
+	}
+	static public function listarTipoMdl()
+	{
 		try {
 			$conn = Conexion::Conectar();
-	
+
 			// Define el nombre del procedimiento almacenado y los parámetros
 			$sql = "EXEC Listar_Tipo";
-			
+
 			// Prepara la consulta
 			$stmt = $conn->prepare($sql);
-						
+
 			// Ejecuta el procedimiento almacenado
 			$stmt->execute();
-			
+
 			// Recupera el resultado
 			$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-			
+
 			return $result;
 		} catch (PDOException $e) {
 			die("Error en la consulta: " . $e->getMessage());
 		}
-    }
+	}
 
-	static public function CrearUsuarioMdl($datos) {
+	static public function listarSupervisoresMdl($planta_id)
+	{
 		try {
-					$conn = Conexion::Conectar();
-			
-					// Define el nombre del procedimiento almacenado y los parámetros
-					$sql = "EXEC Usuario_Crear @nombre = :nombre, @email= :email, @password =:password, @nivel =:nivel";			
-					// Prepara la consulta
-					$stmt = $conn->prepare($sql);		
-					// Asocia los valores a los parámetros
-					$stmt->bindParam(":nombre", $datos["nombre"], PDO::PARAM_STR);
-					$stmt->bindParam(":email", $datos["email"], PDO::PARAM_STR);
-					$stmt->bindParam(":password", $datos["password"], PDO::PARAM_STR);
-					$stmt->bindParam(":nivel", $datos["nivel"], PDO::PARAM_INT);
+			$sql = "
+            SELECT
+                nombre
+            FROM usuarios
+            WHERE nivel_usuario = 3
+              AND planta_id = :planta_id
+        ";
+			$stmt = Conexion::conectar()->prepare($sql);
+			$stmt->bindParam(':planta_id', $planta_id, PDO::PARAM_INT);
+			$stmt->execute();
+			return $stmt->fetchAll(PDO::FETCH_ASSOC);
+		} catch (PDOException $e) {
+			error_log('Error en listarSupervisoresMdl:  . $e->getMessage()');
+			return [];
+		} finally {
+			$stmt = null;
+		}
+	}
 
-					// Enlaza el parámetro del tipo de tabla
-					$stmt->execute();
-					
-					// Recupera el resultado
-					$result = $stmt->fetch(PDO::FETCH_ASSOC);
-					return $result;
-				} catch (PDOException $e) {
-					die("Error en la consulta: " . $e->getMessage());
-				}
+	static public function CrearUsuarioMdl($datos)
+	{
+		try {
+			$conn = Conexion::Conectar();
+
+			// Define el nombre del procedimiento almacenado y los parámetros
+			$sql = "EXEC Usuario_Crear @nombre = :nombre, @email= :email, @password =:password, @nivel =:nivel, @planta_id =:planta_id";
+			// Prepara la consulta
+			$stmt = $conn->prepare($sql);
+			// Asocia los valores a los parámetros
+			$stmt->bindParam(":nombre", $datos["nombre"], PDO::PARAM_STR);
+			$stmt->bindParam(":email", $datos["email"], PDO::PARAM_STR);
+			$stmt->bindParam(":password", $datos["password"], PDO::PARAM_STR);
+			$stmt->bindParam(":nivel", $datos["nivel"], PDO::PARAM_INT);
+			$stmt->bindParam(":planta_id", $datos["planta_id"], PDO::PARAM_INT);
+
+
+			// Enlaza el parámetro del tipo de tabla
+			$stmt->execute();
+
+			// Recupera el resultado
+			$result = $stmt->fetch(PDO::FETCH_ASSOC);
+			return $result;
+		} catch (PDOException $e) {
+			die("Error en la consulta: " . $e->getMessage());
+		}
+	}
+
+	static public function EditarUsuarioMdl($id_usuario)
+	{
+		try {
+			$conn = Conexion::Conectar();
+
+			// Define el nombre del procedimiento almacenado y los parámetros
+			$sql = "EXEC Usuario_Editar_Detalle @id = :id";
+			// Prepara la consulta
+			$stmt = $conn->prepare($sql);
+			// Asocia los valores a los parámetros
+			$stmt->bindParam(":id", $id_usuario, PDO::PARAM_INT);
+			// Ejecuta el procedimiento almacenado
+			$stmt->execute();
+
+			// Recupera el resultado
+			$result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+			return $result;
+		} catch (PDOException $e) {
+			die("Error en la consulta: " . $e->getMessage());
+		}
+	}
+	static public function ActualizarUsuarioMdl($datos)
+	{
+		try {
+
+			$conn = Conexion::Conectar();
+
+			// Define el nombre del procedimiento almacenado y los parámetros
+			$sql = "EXEC Usuario_Actualizar @nombre = :nombre, @id = :id_usuario, @email= :email, @password =:password, @nivel =:nivel, @planta_id =:planta_id";
+			// Prepara la consulta
+			$stmt = $conn->prepare($sql);
+			// Asocia los valores a los parámetros
+			$stmt->bindParam(":id_usuario", $datos["id_usuario"], PDO::PARAM_INT);
+			$stmt->bindParam(":nombre", $datos["nombre"], PDO::PARAM_STR);
+			$stmt->bindParam(":email", $datos["email"], PDO::PARAM_STR);
+			$stmt->bindParam(":password", $datos["password"], PDO::PARAM_STR);
+			$stmt->bindParam(":nivel", $datos["nivel"], PDO::PARAM_INT);
+			if ($datos["planta_id"] === null) {
+				$stmt->bindValue(":planta_id", null, PDO::PARAM_NULL);
+			} else {
+				$stmt->bindValue(":planta_id", $datos["planta_id"], PDO::PARAM_INT);
 			}
-		
-	static public function EditarUsuarioMdl($id_usuario) {
-				try {
-					$conn = Conexion::Conectar();
-			
-					// Define el nombre del procedimiento almacenado y los parámetros
-					$sql = "EXEC Usuario_Editar_Detalle @id = :id";			
-					// Prepara la consulta
-					$stmt = $conn->prepare($sql);		
-					// Asocia los valores a los parámetros
-					$stmt->bindParam(":id", $id_usuario, PDO::PARAM_INT);
-					// Ejecuta el procedimiento almacenado
-					$stmt->execute();
-					
-					// Recupera el resultado
-					$result = $stmt->fetch(PDO::FETCH_ASSOC);
-					
-					return $result;
-				} catch (PDOException $e) {
-					die("Error en la consulta: " . $e->getMessage());
-				}
+
+			// Ejecuta el procedimiento almacenado
+			$stmt->execute();
+			// Recupera el resultado
+			$result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+			return $result;
+		} catch (PDOException $e) {
+			die("Error en la consulta: " . $e->getMessage());
+		}
+	}
+	static public function DeshabilitarUsuarioMdl($id_usuario)
+	{
+		try {
+			$conn = Conexion::Conectar();
+			// Define el nombre del procedimiento almacenado y los parámetros
+			$sql = "EXEC Usuario_Deshabilitar @id = :id";
+			// Prepara la consulta
+			$stmt = $conn->prepare($sql);
+			// Asocia los valores a los parámetros
+			$stmt->bindParam(":id", $id_usuario, PDO::PARAM_INT);
+			// Ejecuta el procedimiento almacenado
+			$stmt->execute();
+			// Recupera el resultado
+			$result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+			return $result;
+		} catch (PDOException $e) {
+			die("Error en la consulta: " . $e->getMessage());
+		}
+
+	}
+	static public function listarUsuarioIdMdl($mail)
+	{
+		try {
+			$conn = Conexion::Conectar();
+
+			// Define el nombre del procedimiento almacenado y los parámetros
+			$sql = "EXEC Usuario_Listar_Id @email= :email";
+
+			// Prepara la consulta
+			$stmt = $conn->prepare($sql);
+			$stmt->bindParam(":email", $mail, PDO::PARAM_STR);
+
+			// Ejecuta el procedimiento almacenado
+			$stmt->execute();
+
+			// Recupera el resultado
+			$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+			return $result;
+		} catch (PDOException $e) {
+			die("Error en la consulta: " . $e->getMessage());
+		}
+	}
+
+	static public function ActualizarPerfilMdl($datos)
+	{
+		try {
+			$conn = Conexion::Conectar();
+
+			// 1) Normalizamos los valores que pueden quedar en NULL
+			if (empty($datos['password'])) {
+				// si password viene vacío, lo pasamos a NULL
+				$datos['password'] = null;
 			}
-			static public function ActualizarUsuarioMdl($datos) {	
-				try {
+			if (!isset($datos['planta_id']) || $datos['planta_id'] === '') {
+				// si planta_id no viene o está vacío, lo pasamos a NULL
+				$datos['planta_id'] = null;
+			}
 
-					$conn = Conexion::Conectar();
-			
-					// Define el nombre del procedimiento almacenado y los parámetros
-					$sql = "EXEC Usuario_Actualizar @nombre = :nombre, @id = :id_usuario, @email= :email, @password =:password, @nivel =:nivel";			
-					// Prepara la consulta
-					$stmt = $conn->prepare($sql);		
-					// Asocia los valores a los parámetros
-					$stmt->bindParam(":id_usuario", $datos["id_usuario"], PDO::PARAM_INT);
-					$stmt->bindParam(":nombre", $datos["nombre"], PDO::PARAM_STR);
-			     	$stmt->bindParam(":email", $datos["email"], PDO::PARAM_STR);
-					$stmt->bindParam(":password", $datos["password"], PDO::PARAM_STR);
-					$stmt->bindParam(":nivel", $datos["nivel"], PDO::PARAM_INT);
+			// 2) Preparamos la llamada al SP
+			$sql = "EXEC Usuario_Actualizar_Perfil
+                    @id         = :id_usuario,
+                    @nombre     = :nombre,
+                    @email      = :email,
+                    @password   = :password,
+                    @planta_id  = :planta_id";
 
-					// Ejecuta el procedimiento almacenado
-					$stmt->execute();	
-					// Recupera el resultado
-					$result = $stmt->fetch(PDO::FETCH_ASSOC);
-					
-					return $result;
-				} catch (PDOException $e) {
-					die("Error en la consulta: " . $e->getMessage());
-				}
-				}
-				static public function DeshabilitarUsuarioMdl($id_usuario) {
-					try {
-						$conn = Conexion::Conectar();
-						// Define el nombre del procedimiento almacenado y los parámetros
-						$sql = "EXEC Usuario_Deshabilitar @id = :id";			
-						// Prepara la consulta
-						$stmt = $conn->prepare($sql);		
-						// Asocia los valores a los parámetros
-						$stmt->bindParam(":id", $id_usuario, PDO::PARAM_INT);
-						// Ejecuta el procedimiento almacenado
-						$stmt->execute();		
-						// Recupera el resultado
-						$result = $stmt->fetch(PDO::FETCH_ASSOC);	
+			$stmt = $conn->prepare($sql);
 
-						return $result;
-					} catch (PDOException $e) {
-						die("Error en la consulta: " . $e->getMessage());
-					}
-		
-				}
-				static public function listarUsuarioIdMdl($mail) {
-					try {
-						$conn = Conexion::Conectar();
-				
-						// Define el nombre del procedimiento almacenado y los parámetros
-						$sql = "EXEC Usuario_Listar_Id @email= :email";
-						
-						// Prepara la consulta
-						$stmt = $conn->prepare($sql);
-						$stmt->bindParam(":email", $mail, PDO::PARAM_STR);
-					
-						// Ejecuta el procedimiento almacenado
-						$stmt->execute();
-						
-						// Recupera el resultado
-						$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-						
-						return $result;
-					} catch (PDOException $e) {
-						die("Error en la consulta: " . $e->getMessage());
-					}
-				}
+			// 3) Vinculamos los parámetros obligatorios
+			$stmt->bindValue(":id_usuario", $datos["id_usuario"], PDO::PARAM_INT);
+			$stmt->bindValue(":nombre", $datos["nombre"], PDO::PARAM_STR);
+			$stmt->bindValue(":email", $datos["email"], PDO::PARAM_STR);
 
-				static public function ActualizarPerfilMdl($datos) {	
-					try {
-	
-						$conn = Conexion::Conectar();
-				
-						// Define el nombre del procedimiento almacenado y los parámetros
-						$sql = "EXEC Usuario_Actualizar_Perfil @nombre = :nombre, @id = :id_usuario, @email = :email, @password = :password";			
-						// Prepara la consulta
-						$stmt = $conn->prepare($sql);		
-						// Asocia los valores a los parámetros
-						$stmt->bindParam(":id_usuario", $datos["id_usuario"], PDO::PARAM_INT);
-						$stmt->bindParam(":nombre", $datos["nombre"], PDO::PARAM_STR);
-						$stmt->bindParam(":email", $datos["email"], PDO::PARAM_STR);
-						$stmt->bindParam(":password", $datos["password"], PDO::PARAM_STR);
+			// 4) Vinculamos password (puede ser NULL)
+			if ($datos["password"] === null) {
+				$stmt->bindValue(":password", null, PDO::PARAM_NULL);
+			} else {
+				$stmt->bindValue(":password", $datos["password"], PDO::PARAM_STR);
+			}
 
-						// Ejecuta el procedimiento almacenado
-						$stmt->execute();	
-						// Recupera el resultado
-						$result = $stmt->fetch(PDO::FETCH_ASSOC);
-						
-						return $result;
-					} catch (PDOException $e) {
-						die("Error en la consulta: " . $e->getMessage());
-					}
-					}
+			// 5) Vinculamos planta_id (puede ser NULL)
+			if ($datos["planta_id"] === null) {
+				$stmt->bindValue(":planta_id", null, PDO::PARAM_NULL);
+			} else {
+				$stmt->bindValue(":planta_id", $datos["planta_id"], PDO::PARAM_INT);
+			}
 
-					static public function listarNivelMdl() {
-						try {
-							$conn = Conexion::Conectar();
-					
-							// Define el nombre del procedimiento almacenado y los parámetros
-							$sql = "EXEC Usuario_Listar_Niveles";
-							
-							// Prepara la consulta
-							$stmt = $conn->prepare($sql);
-										
-							// Ejecuta el procedimiento almacenado
-							$stmt->execute();
-							
-							// Recupera el resultado
-							$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-							
-							return $result;
-						} catch (PDOException $e) {
-							die("Error en la consulta: " . $e->getMessage());
-						}
-					}
-		
+			// 6) Ejecutamos y devolvemos resultado
+			$stmt->execute();
+			return $stmt->fetch(PDO::FETCH_ASSOC);
+
+		} catch (PDOException $e) {
+			die("Error en la consulta: " . $e->getMessage());
+		}
+	}
+
+	static public function listarNivelMdl()
+	{
+		try {
+			$conn = Conexion::Conectar();
+
+			// Define el nombre del procedimiento almacenado y los parámetros
+			$sql = "EXEC Usuario_Listar_Niveles";
+
+			// Prepara la consulta
+			$stmt = $conn->prepare($sql);
+
+			// Ejecuta el procedimiento almacenado
+			$stmt->execute();
+
+			// Recupera el resultado
+			$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+			return $result;
+		} catch (PDOException $e) {
+			die("Error en la consulta: " . $e->getMessage());
+		}
+	}
+
 }
 ?>

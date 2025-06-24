@@ -1,3 +1,11 @@
+<?php
+if (!isset($_SESSION["planta_id"])) {
+  echo "<div class='alert alert-danger'>No se ha definido la planta_id en la sesión.</div>";
+  die();
+}
+
+?>
+
 <section class="content-header">
   <div class="container-fluid">
     <div class="row mb-2">
@@ -24,14 +32,17 @@
               <h3 class="col-md-7 col-sm-12 card-title">Listado de personas registradas</h3>
             </div>
             <div class="row m-1">
-              <button class="col-md-2 col-sm-12 btn btn-sm btn-secondary mr-1 ml-1" data-toggle="modal" data-target="#modal-insertar-nuevo-personas2">
+              <button class="col-md-2 col-sm-12 btn btn-sm btn-secondary mr-1 ml-1" data-toggle="modal"
+                data-target="#modal-insertar-nuevo-personas2">
                 <i class="far fa-edit"></i> + Agregar Personas
               </button>
-              <button class="col-md-2 col-sm-12 btn btn-sm btn-primary btnAgregarPersonaExcel ml-1" style="background: #1C245A;">
+              <button class="col-md-2 col-sm-12 btn btn-sm btn-primary btnAgregarPersonaExcel ml-1"
+                style="background: #1C245A;">
                 <i class="far fa-file-excel"></i> Cargar Archivo Excel
               </button>
               <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle ml-2" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <button class="btn btn-secondary dropdown-toggle ml-2" type="button" id="dropdownMenuButton"
+                  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   Filtrar
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -64,6 +75,9 @@
                     Área secundaria
                   </th>
                   <th>
+                    Planta
+                  </th>
+                  <th>
                     Estado
                   </th>
                   <th>
@@ -76,7 +90,9 @@
               </thead>
               <tbody>
                 <?php
-                $tabla = ModeloPersonas::listarPersonasMdl();
+                $tabla = ModeloPersonas::listarPersonasMdl($_SESSION["planta_id"]);
+
+
 
                 foreach ($tabla as $key => $value) {
                   echo '
@@ -86,6 +102,7 @@
                     <td>' . nl2br($value["apellido"]) . '</td>
                     <td>' . nl2br($value["area"]) . '</td>
                     <td>' . nl2br($value["area secundaria"]) . '</td>
+                    <td>' . nl2br($value["planta"]) . '</td>
                     <td>' . nl2br($value["Estado"]) . '</td>
                     <td>' . nl2br($value["fecha_integracion"]) . '</td>      
 

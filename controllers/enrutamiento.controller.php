@@ -11,7 +11,8 @@ static	public function enrutamiento() {
 		 $ruta == "usuarios" || 
 		 $ruta == "usuarioajustes" || 
 		 $ruta == "nivelesusuario" || 
-		 $ruta == "areas" || 
+		 $ruta == "areas" ||
+		 $ruta == "plantas" ||  
 		 $ruta == "reportes" || 
 		 $ruta == "unidades" || 
          $ruta == "salir" 
