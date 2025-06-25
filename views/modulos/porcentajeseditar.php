@@ -30,7 +30,7 @@
               <select class="form-control d-none" id="estandar-seleccion" name="estandar-seleccion">
                 <option value="0">Seleccione un estándar</option>
                 <?php
-                $tabla = ModeloEstandar::listarEstandaresMdl();
+                $tabla = ModeloEstandar::listarEstandaresMdl($_SESSION['planta_id']);
                 if ($tabla && is_array($tabla)) {
                   foreach ($tabla as $key => $value) {
                     if (isset($value["id"]) && isset($value["nombre"])) {
@@ -62,29 +62,26 @@
             </div>
           </div>
           <div class="col-sm-3">
-            <div class="form-group">
-              <label>Supervisor</label>
-              <div class="input-group">
-                <input type="text" id="buscar-supervisor" class="form-control" placeholder="Buscar supervisor…">
-                <select id="supervisor" name="supervisor" class="form-control d-none">
-                  <option value="">Seleccione un supervisor</option>
-                  <?php
-                  $sups = ModeloUsuario::listarSupervisoresMdl($_SESSION['planta_id']);
-                  foreach ($sups as $sup) {
-                    $nom = htmlspecialchars($sup['nombre'], ENT_QUOTES, 'UTF-8');
-                    // guardamos el nombre como valor, que es lo que recibe el SP
-                    echo "<option value=\"{$nom}\">{$nom}</option>";
-                  }
-                  ?>
-                </select>
-                <div class="input-group-append">
-                  <button class="btn btn-info" id="btn-buscar-supervisor"><i class="fas fa-search"></i></button>
-                </div>
-              </div>
-              <div id="resultados-supervisor" class="list-group mt-2"
-                style="display:none; position:absolute; z-index:1000; width:95%;"></div>
-            </div>
-          </div>
+                        <label>Supervisor</label>
+                        <div class="input-group">
+                            <select id="supervisor" name="supervisor" class="form-control">
+                                <option value="">Seleccione un supervisor</option>
+                                <?php
+                                // Traer sólo el array de nombres
+                                $supers = ModeloUsuario::listarSupervisoresMdl($_SESSION['planta_id']);
+                                foreach ($supers as $nombreSupervisor) {
+                                    $safe = htmlspecialchars($nombreSupervisor, ENT_QUOTES, 'UTF-8');
+                                    echo "<option value=\"{$safe}\">{$safe}</option>";
+                                }
+                                ?>
+                            </select>
+                            <div class="input-group-append">
+                                <button id="btn-buscar-supervisor" class="btn btn-info">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
 
           <div class="col-sm-3">
             <div class="form-group">

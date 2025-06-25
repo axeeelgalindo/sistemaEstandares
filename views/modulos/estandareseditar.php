@@ -56,7 +56,7 @@
               <tbody>
                 <?php
                 // Listamos estándares
-                $tabla = ModeloEstandar::listarEstandaresMdl();
+                $tabla = ModeloEstandar::listarEstandaresMdl($_SESSION['planta_id']);
                 // Ruta base de tu aplicación (ajústala si cambias de carpeta)
                 $baseUrl = '/SistemaEstandaresAquaChile/';
                 foreach ($tabla as $value) {

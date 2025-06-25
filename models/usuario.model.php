@@ -51,16 +51,18 @@ class ModeloUsuario
 	{
 		try {
 			$sql = "
-            SELECT
-                nombre
-            FROM usuarios
-            WHERE nivel_usuario = 3
-              AND planta_id = :planta_id
-        ";
+                SELECT nombre
+                FROM usuarios
+                WHERE nivel_usuario = 3
+                  AND activo        = 1
+                  AND planta_id    = :planta_id
+                ORDER BY nombre
+            ";
 			$stmt = Conexion::conectar()->prepare($sql);
 			$stmt->bindParam(':planta_id', $planta_id, PDO::PARAM_INT);
 			$stmt->execute();
-			return $stmt->fetchAll(PDO::FETCH_ASSOC);
+			return $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
+
 		} catch (PDOException $e) {
 			error_log('Error en listarSupervisoresMdl:  . $e->getMessage()');
 			return [];
@@ -248,6 +250,8 @@ class ModeloUsuario
 			die("Error en la consulta: " . $e->getMessage());
 		}
 	}
+
+
 
 	static public function listarNivelMdl()
 	{

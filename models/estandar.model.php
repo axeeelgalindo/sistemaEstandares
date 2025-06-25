@@ -3,16 +3,19 @@ require_once "conexion.php";
 class ModeloEstandar
 {
 
-    static public function listarEstandaresMdl()
+    static public function listarEstandaresMdl($planta_id = NULL)
     {
         try {
             $conn = Conexion::Conectar();
 
             // Define el nombre del procedimiento almacenado y los parámetros
-            $sql = "EXEC Listar_Estandares";
+            $sql = "EXEC Listar_Estandares @planta_id = :planta_id";
 
             // Prepara la consulta
             $stmt = $conn->prepare($sql);
+
+            // parametro
+            $stmt->bindValue(':planta_id', $planta_id, PDO::PARAM_INT);
 
             // Ejecuta el procedimiento almacenado
             $stmt->execute();
