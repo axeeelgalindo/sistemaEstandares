@@ -40,19 +40,21 @@
                     <div class="col-md-11">
                         <label>Área:</label>
                         <div class="input-group">
-                            <input type="text" id="buscar-area" class="form-control" placeholder="Buscar área…">
                             <select id="area-seleccion" class="form-control" name="area-seleccion">
                                 <option value="0">Seleccione un área</option>
                                 <?php
+                                // Obtiene el listado de estándares (ya devuelve id_area y area)
                                 $planta_id = $_SESSION['planta_id'];
                                 $tabla = ModeloEstandar::listarEstandaresCargadosMdl($planta_id);
-                                $areas = [];
+                                $seen = [];
                                 if ($tabla && is_array($tabla)) {
                                     foreach ($tabla as $v) {
-                                        if (isset($v['area']) && !in_array($v['area'], $areas)) {
-                                            $areas[] = $v['area'];
-                                            $a = htmlspecialchars($v['area'], ENT_QUOTES, 'UTF-8');
-                                            echo "<option value=\"{$a}\">{$a}</option>";
+                                        // Aseguramos que existan id_area y area, y no repitamos el mismo ID
+                                        if (isset($v['id_area'], $v['area']) && !in_array($v['id_area'], $seen)) {
+                                            $seen[] = $v['id_area'];
+                                            $id = (int) $v['id_area'];
+                                            $name = htmlspecialchars($v['area'], ENT_QUOTES, 'UTF-8');
+                                            echo "<option value=\"{$id}\">{$name}</option>";
                                         }
                                     }
                                 }
@@ -82,19 +84,19 @@
                     <div class="col-sm-3">
                         <label>Colaborador</label>
                         <div class="input-group">
-                            <input type="text" id="buscar-colaborador" class="form-control"
-                                placeholder="Buscar colaborador…">
+                            <!--<input type="text" id="buscar-colaborador" class="form-control"
+                                placeholder="Buscar colaborador…"> -->
                             <select id="colaborador" class="form-control" name="colaborador">
                                 <option value="0">Seleccione un colaborador</option>
                                 <?php
                                 $planta_id = $_SESSION['planta_id'];
                                 $pers = ModeloPersonas::listarPersonasMdl($planta_id);
                                 if ($pers && is_array($pers)) {
-                                    foreach ($pers as $k => $v) {
-                                        $id = (int) $k;
+                                    foreach ($pers as $v) {
+                                        $rut = htmlspecialchars($v['rut'], ENT_QUOTES, 'UTF-8');
                                         $n = htmlspecialchars($v['nombre'], ENT_QUOTES, 'UTF-8');
                                         $a = htmlspecialchars($v['apellido'], ENT_QUOTES, 'UTF-8');
-                                        echo "<option value=\"{$id}\">{$n} {$a}</option>";
+                                        echo "<option value=\"{$rut}\">{$n} {$a}</option>";
                                     }
                                 }
                                 ?>
@@ -420,7 +422,7 @@
                 // Click en resultado
                 $(document).on('click', '#resultados-area a', function (e) {
                     e.preventDefault();
-                    var id = $(this).data('id');
+                    var rut = $(this).data('id');
                     var texto = $(this).text();
 
                     $('#buscar-area').val(texto);
@@ -478,7 +480,7 @@
                     var nombre = $(this).data('nombre');
 
                     $('#buscar-colaborador').val(nombre);
-                    $('#colaborador').val(id).trigger('change');
+                    $('#colaborador').val(rut).trigger('change');
                     $('#resultados-colaborador').hide();
                 });
 
@@ -496,57 +498,28 @@
 
             // 2. Funciones core de carga y actualización de datos
             function cargarGraficos() {
-                const area = $('#area-seleccion').val();
-                const fecha = $('#start-date').val() || moment().format('YYYY-MM-DD');
+                const filtros = {
+                    accion: 'obtenerDatosGraficos',
+                    area: $('#area-seleccion').val(),  // ahora ID numérico
+                    fecha: $('#start-date').val() || moment().format('YYYY-MM-DD'),
+                    supervisor: $('#supervisor').val() || null,
+                    colaborador: $('#colaborador').val() || null,
+                    turno: $('#turno').val() || null
+                };
 
-                console.log('Fecha seleccionada:', fecha);
-                console.log('Área actual:', area);
-
-                if (!area || area === '0') {
-                    console.warn('Área no seleccionada');
-                    return;
+                if (!filtros.area || filtros.area === '0') {
+                    return Swal.fire('Aviso', 'Debe seleccionar un área', 'warning');
                 }
 
-                const datos = new FormData();
-                datos.append("accion", "obtenerDatosGraficos");
-                datos.append("area", area);
-                datos.append("fecha", fecha);
-
-                $.ajax({
-                    url: 'ajax/ajaxPorcentajes.php',
-                    method: 'POST',
-                    data: datos,
-                    processData: false,
-                    contentType: false,
-                    success: function (response) {
-                        console.log('Respuesta del servidor:', response);
-
-                        if (response.status === 'success' && response.data) {
-                            console.log('Actualizando gráficos con datos:', response.data);
-                            actualizarGraficos(response.data);
-                        } else {
-                            console.warn('No se encontraron datos, mostrando valores por defecto');
-                            actualizarGraficos({
-                                porcentajesSemana: {
-                                    Día: Array(7).fill(0),
-                                    Noche: Array(7).fill(0)
-                                },
-                                porcentajeGeneral: 0,
-                                totalRegistros: 0
-                            });
-                        }
-                    },
-                    error: function (xhr, status, error) {
-                        console.error('Error en la petición:', error);
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: 'Error al cargar los datos del servidor'
-                        });
+                $.post('ajax/ajaxPorcentajes.php', filtros, function (response) {
+                    if (response.status === 'success') {
+                        actualizarGraficos(response.data);
+                    } else {
+                        Swal.fire('Error', response.message || 'No hay datos', 'error');
                     }
-                });
+                }, 'json')
+                    .fail(() => Swal.fire('Error', 'No se pudo cargar datos', 'error'));
             }
-
             // Separar la carga de gráficos en dos funciones
             function cargarGraficoTendencia() {
                 const area = $('#area-seleccion').val();
@@ -684,15 +657,8 @@
                 });
             }
 
-            // Event listeners
-            $('#area-seleccion').on('change', function () {
-                cargarColaboradoresPorArea();
-                cargarGraficos();      // Cargar los gráficos
-            });
-
-            $('#supervisor, #colaborador, #turno').on('change', function () {
-                aplicarFiltros();
-            });
+            $('#area-seleccion, #start-date, #supervisor, #colaborador, #turno')
+                .on('change input', cargarGraficos);
 
             // 5. Configuración de datepicker
             $("#start-date").datepicker({

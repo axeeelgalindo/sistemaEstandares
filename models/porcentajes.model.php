@@ -127,20 +127,24 @@ class ModeloPorcentajes
     }
 
     // Obtener datos para los gráficos
-    static public function obtenerDatosGraficosMdl($filtros)
+    static public function obtenerDatosGraficosMdl(array $filtros)
     {
         try {
             $conn = Conexion::conectar();
 
-            $sql = "EXEC SP_ObtenerPorcentajesSemana 
-                    @FechaSeleccionada = :fecha,
-                    @AreaSeleccionada = :area,
-                    @planta_id = :planta_id
-                    ";
-
+            $sql = "EXEC SP_ObtenerPorcentajesSemana
+                        @FechaSeleccionada = :fecha,
+                        @AreaSeleccionada  = :area,
+                        @Supervisor        = :supervisor,
+                        @Colaborador       = :colaborador,
+                        @Turno             = :turno,
+                        @planta_id         = :planta_id";
             $stmt = $conn->prepare($sql);
             $stmt->bindParam(':fecha', $filtros['fecha'], PDO::PARAM_STR);
-            $stmt->bindParam(':area', $filtros['area'], PDO::PARAM_STR);
+            $stmt->bindParam(':area', $filtros['area'], PDO::PARAM_INT);
+            $stmt->bindParam(':supervisor', $filtros['supervisor'], PDO::PARAM_STR);
+            $stmt->bindParam(':colaborador', $filtros['colaborador'], PDO::PARAM_STR);
+            $stmt->bindParam(':turno', $filtros['turno'], PDO::PARAM_STR);
             $stmt->bindParam(':planta_id', $_SESSION['planta_id'], PDO::PARAM_INT);
 
 
@@ -225,7 +229,7 @@ class ModeloPorcentajes
 
                 $stmt = $conn->prepare($sql);
                 $stmt->bindParam(':fecha', $filtros['fecha'], PDO::PARAM_STR);
-                $stmt->bindParam(':area', $filtros['area'], PDO::PARAM_STR);
+                $stmt->bindParam(':area', $filtros['area'], PDO::PARAM_INT);
             } else {
                 $sql = "EXEC SP_ObtenerDesempenoColaborador 
                     @FechaSeleccionada = :fecha,
@@ -236,9 +240,9 @@ class ModeloPorcentajes
 
                 $stmt = $conn->prepare($sql);
                 $stmt->bindParam(':fecha', $filtros['fecha'], PDO::PARAM_STR);
-                $stmt->bindParam(':area', $filtros['area'], PDO::PARAM_STR);
+                $stmt->bindParam(':area', $filtros['area'], PDO::PARAM_INT);
                 $stmt->bindParam(':supervisor', $filtros['supervisor'], PDO::PARAM_STR);
-                $stmt->bindParam(':colaborador', $filtros['colaborador'], PDO::PARAM_INT);
+                $stmt->bindParam(':colaborador', $filtros['colaborador'], PDO::PARAM_STR);
                 $stmt->bindParam(':turno', $filtros['turno'], PDO::PARAM_STR);
             }
 
