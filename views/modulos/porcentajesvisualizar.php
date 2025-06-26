@@ -9,6 +9,9 @@
     <meta charset="UTF-8">
     <title>Visualizar Porcentajes</title>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+    <!-- arriba de tu <script> principal -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <style>
         /* estilo para los resultados desplegables */
         .list-group {
@@ -174,6 +177,8 @@
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/min/moment.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3"></script>
+
+
 
     <script>
         $(document).ready(function () {
@@ -531,6 +536,8 @@
                 $.post('ajax/ajaxPorcentajes.php', filtros, function (response) {
                     if (response.status === 'success') {
                         actualizarGraficos(response.data);
+                        // ─── aquí cargamos también el gráfico de colaboradores ───
+                        cargarColaboradoresPorArea();
                     } else {
                         Swal.fire('Error', response.message || 'No hay datos', 'error');
                     }
@@ -564,87 +571,49 @@
             }
 
             function cargarGraficoColaborador(datos) {
-                if (window.graficoColaborador) {
-                    const datosGrafico = {
-                        labels: datos.map(d => d.nombre_colaborador),
-                        datasets: [{
-                            data: datos.map(d => d.porcentaje_promedio),
-                            backgroundColor: datos.map(d => {
-                                const porcentaje = d.porcentaje_promedio;
-                                return !porcentaje ? '#dc3545' :  // Rojo para 0
-                                    porcentaje >= 80 ? '#28a745' : // Verde >= 80%
-                                        porcentaje >= 60 ? '#ffc107' : // Amarillo >= 60%
-                                            '#dc3545'; // Rojo < 60%
-                            }),
-                            barThickness: 20,
-                            maxBarThickness: 25
-                        }]
-                    };
-
-                    window.graficoColaborador.data = datosGrafico;
-                    window.graficoColaborador.options = {
-                        indexAxis: 'y',
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        scales: {
-                            x: {
-                                beginAtZero: true,
-                                max: 100,
-                                grid: {
-                                    display: true
-                                },
-                                ticks: {
-                                    callback: function (value) {
-                                        return value + '%';
-                                    }
-                                }
-                            },
-                            y: {
-                                grid: {
-                                    display: false
-                                }
-                            }
-                        },
-                        plugins: {
-                            legend: {
-                                display: false
-                            },
-                            tooltip: {
-                                callbacks: {
-                                    label: function (context) {
-                                        const colaborador = datos[context.dataIndex];
-                                        return `${colaborador.nombre_colaborador}: ${colaborador.porcentaje_promedio}% (${colaborador.total_registros} registros)`;
-                                    }
-                                }
-                            }
-                        }
-                    };
-                    window.graficoColaborador.update();
-                }
+                if (!window.graficoColaborador) return;
+                const etiquetas = datos.map(d => d.nombre_colaborador);
+                const valores = datos.map(d => d.porcentaje_promedio);
+                // … resto de tu lógica para pintar el bar horizontal …
+                window.graficoColaborador.data = {
+                    labels: etiquetas,
+                    datasets: [{
+                        data: valores,
+                        /* colores, etc. */
+                    }]
+                };
+                window.graficoColaborador.update();
             }
-
             // Función para cargar colaboradores por área
             function cargarColaboradoresPorArea() {
-                const area = $('#area-seleccion').val();
+                const filtros = {
+                    accion: 'obtenerDatosColaborador',
+                    area: $('#area-seleccion').val(),                                        // ID numérico del área
+                    fecha: $('#start-date').val() || moment().format('YYYY-MM-DD'),           // fecha seleccionada
+                    supervisor: $('#supervisor').val() || null,                              // puede ser null
+                    colaborador: $('#colaborador').val() || null,
+                    turno: $('#turno').val() || null
+                };
 
-                if (!area || area === '0') return;
+                console.log('Filtros Colaborador:', filtros);
+                console.log('▶▶ cargarColaboradoresPorArea – filtros enviados:', filtros);
 
-                $.ajax({
-                    url: 'ajax/ajaxPorcentajes.php',
-                    method: 'POST',
-                    data: {
-                        accion: 'obtenerDatosColaborador',
-                        area: area,
-                        fecha: $('#start-date').val() || moment().format('YYYY-MM-DD')
-                    },
-                    success: function (response) {
-                        if (response.status === 'success' && response.data) {
-                            actualizarGraficoColaborador(response.data);
-                        }
+                $.post('ajax/ajaxPorcentajes.php', filtros, function (res) {
+                    if (res.status === 'success') {
+                        const d = res.data;
+                        // actualizas tu chart de colaboradores:
+                        const labels = d.colaboradores.map(rut =>
+                            (document.querySelector(`#colaborador option[value="${rut}"]`) || {}).text || rut
+                        );
+                        window.graficoColaborador.data.labels = labels;
+                        window.graficoColaborador.data.datasets[0].data = d.porcentajesColaborador;
+                        window.graficoColaborador.update();
+                    } else {
+                        console.error('Error colaborador:', res.message);
                     }
-                });
+                }, 'json')
+                    .fail(() => Swal.fire('Error', 'No se pudo cargar desempeño por colaborador', 'error'));
             }
-
             // Función para aplicar filtros
             function aplicarFiltros() {
                 const area = $('#area-seleccion').val();
@@ -757,7 +726,7 @@
             }
 
             // 7. Inicializaciones
-            setupBuscadorArea();
+            //setupBuscadorArea();
             setupBuscadorColaborador();
             setupBuscadorEstandar();
 

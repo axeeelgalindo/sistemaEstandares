@@ -213,56 +213,40 @@ class ModeloPorcentajes
         }
     }
     // Agregar este nuevo método en la clase ModeloPorcentajes
-    static public function obtenerDatosColaboradorMdl($filtros)
+    static public function obtenerDatosColaboradorMdl(array $filtros)
     {
         try {
             $conn = Conexion::conectar();
-
-            // Si no hay filtros específicos, obtener todos los colaboradores del área
-            if (empty($filtros['supervisor']) && empty($filtros['colaborador']) && empty($filtros['turno'])) {
-                $sql = "EXEC SP_ObtenerDesempenoColaborador 
+            $sql = "EXEC SP_ObtenerDesempenoColaborador
                     @FechaSeleccionada = :fecha,
-                    @AreaSeleccionada = :area,
-                    @Supervisor = NULL,
-                    @Colaborador = NULL,
-                    @Turno = NULL";
+                    @AreaSeleccionada  = :area,
+                    @Supervisor        = :supervisor,
+                    @Colaborador       = :colaborador,
+                    @Turno             = :turno,
+                    @PilarSeleccionado = '0'";
+            $stmt = $conn->prepare($sql);
+            $stmt->bindParam(':fecha', $filtros['fecha'], PDO::PARAM_STR);
+            $stmt->bindParam(':area', $filtros['area'], PDO::PARAM_INT);
+            $stmt->bindValue(':supervisor', $filtros['supervisor'], PDO::PARAM_STR);
+            $stmt->bindValue(':colaborador', $filtros['colaborador'], PDO::PARAM_STR);
+            $stmt->bindValue(':turno', $filtros['turno'], PDO::PARAM_STR);
+            $stmt->execute();
 
-                $stmt = $conn->prepare($sql);
-                $stmt->bindParam(':fecha', $filtros['fecha'], PDO::PARAM_STR);
-                $stmt->bindParam(':area', $filtros['area'], PDO::PARAM_INT);
-            } else {
-                $sql = "EXEC SP_ObtenerDesempenoColaborador 
-                    @FechaSeleccionada = :fecha,
-                    @AreaSeleccionada = :area,
-                    @Supervisor = :supervisor,
-                    @Colaborador = :colaborador,
-                    @Turno = :turno";
-
-                $stmt = $conn->prepare($sql);
-                $stmt->bindParam(':fecha', $filtros['fecha'], PDO::PARAM_STR);
-                $stmt->bindParam(':area', $filtros['area'], PDO::PARAM_INT);
-                $stmt->bindParam(':supervisor', $filtros['supervisor'], PDO::PARAM_STR);
-                $stmt->bindParam(':colaborador', $filtros['colaborador'], PDO::PARAM_STR);
-                $stmt->bindParam(':turno', $filtros['turno'], PDO::PARAM_STR);
-            }
-
-            if (!$stmt->execute()) {
-                throw new Exception("Error al ejecutar el procedimiento");
-            }
-
-            $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $ruts = array_column($rows, 'rut');
+            $porcs = array_map(fn($r) => (float) $r['porcentaje_promedio'], $rows);
 
             return [
                 'status' => 'success',
-                'data' => $resultados
+                'data' => [
+                    'colaboradores' => $ruts,
+                    'porcentajesColaborador' => $porcs
+                ]
             ];
-
         } catch (Exception $e) {
-            error_log("Error en obtenerDatosColaboradorMdl: " . $e->getMessage());
-            return [
-                'status' => 'error',
-                'message' => 'Error al procesar los datos: ' . $e->getMessage()
-            ];
+            error_log("Error obtenerDatosColaboradorMdl: " . $e->getMessage());
+            return ['status' => 'error', 'message' => $e->getMessage()];
         }
     }
+
 }
