@@ -16,11 +16,16 @@ $ruta = $_GET['ruta'] ?? '';
   <title>Sistema Estandares</title>
   <link rel="icon" href="smarticono.png" type="image/x-icon">
 
+  <link href="plugins/select2/css/select2.min.css" rel="stylesheet" />
+
   <?php include __DIR__ . '/modulos/links.php'; ?>
+
+
 
   <!-- jQuery & jQuery UI -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="plugins/jquery-ui/jquery-ui.min.js"></script>
+  <script src="plugins/select2/js/select2.full.min.js"></script>
 
   <style>
     .password-container {
@@ -118,8 +123,9 @@ $ruta = $_GET['ruta'] ?? '';
     <!-- /.control-sidebar -->
   </div>
 
+
   <!-- Select2 -->
-  <script src="plugins/select2/js/select2.full.min.js"></script>
+
   <!-- Bootstrap 4 -->
   <script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
   <!-- ChartJS -->
@@ -141,14 +147,14 @@ $ruta = $_GET['ruta'] ?? '';
   <script src="plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
   <!-- <script src="plugins/chart.js/Chart2.min.js"></script> -->
   <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>-->
-  <script src="plugins/chart.js/Chart4.min.js"></script>
+  <!--<script src="plugins/chart.js/Chart4.min.js"></script> -->
 
   <!--<script src="plugins/chart.js/plugin.js"></script> -->
 
   <!--<script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.0/dist/chart.min.js"></script>-->
   <script src="plugins/chart.js/datalabel2.js"></script>
 
-  <script src="dist/js/pages/dashboard.js"></script>
+
   <!--<script type="text/javascript" src="views/dist/js/secciones.js"></script>-->
   <script type="text/javascript" src="views/dist/js/personas.js"></script>
   <script type="text/javascript" src="views/dist/js/area.js"></script>
@@ -159,7 +165,25 @@ $ruta = $_GET['ruta'] ?? '';
   <script type="text/javascript" src="views/dist/js/planta.js"></script>
 
 
-  <script src="dist/js/pages/dashboard3.js"></script>
+
+  <!-- Chart.js-->
+  <script src="plugins/chart.js/Chart.min.js"></script>
+
+  <script>
+    // lo inyectamos en JS de forma segura
+    const PLANTA_ID = <?= json_encode($_SESSION['planta_id'] ?? null) ?>;
+  </script>
+
+  <script src="plugins/jvectormap/jquery-jvectormap-2.0.5.min.js"></script>
+  <script src="plugins/jvectormap/jquery-jvectormap-us-aea-en.js"></script>
+
+  <script src="views/dist/js/dashboard.js"></script>
+
+  <script src="plugins/jvectormap/jquery-jvectormap-2.0.5.min.js"></script>
+
+  <script src="plugins/jvectormap/jquery-jvectormap-us-aea-en.js"></script>
+
+
   <script src="plugins/sweetalert2/sweetalert2.all.min.js"></script>
   <!-- Toastr -->
   <script src="plugins/toastr/toastr.min.js"></script>

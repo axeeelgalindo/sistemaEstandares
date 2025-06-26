@@ -94,11 +94,7 @@
                                 }
                                 ?>
                             </select>
-                            <div class="input-group-append">
-                                <button id="btn-buscar-supervisor" class="btn btn-info">
-                                    <i class="fas fa-search"></i>
-                                </button>
-                            </div>
+                            
                         </div>
                     </div>
                     <div class="col-sm-3">
@@ -121,11 +117,7 @@
                                 }
                                 ?>
                             </select>
-                            <div class="input-group-append">
-                                <button id="btn-buscar-colaborador" class="btn btn-info">
-                                    <i class="fas fa-search"></i>
-                                </button>
-                            </div>
+                            
                         </div>
                         <div id="resultados-colaborador" class="list-group mt-2" style="display:none;"></div>
                     </div>

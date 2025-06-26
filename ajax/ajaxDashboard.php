@@ -1,0 +1,61 @@
+<?php
+// ajax/dashboardAjax.php
+header('Content-Type: application/json; charset=utf-8');
+session_start();
+require_once __DIR__ . '/../models/conexion.php';         // tu conexión
+require_once __DIR__ . '/../models/dashboard.model.php'; // el modelo que acabas de crear
+
+$input = json_decode(file_get_contents('php://input'), true);
+$accion = $input['accion'] ?? '';
+$planta_id = $_SESSION['planta_id'] ?? null;
+$id_area = isset($input['id_area']) ? intval($input['id_area']) : null;
+
+try {
+    switch ($accion) {
+        //personas
+        case 'Personas_Graficos_Creados_Entrenados':
+            $out = ModeloDashboard::personasGraficosEntrenamientos($planta_id, $id_area);
+            echo json_encode($out);
+            break;
+        case 'Personas_Graficos_Por_Area':
+            $out = ModeloDashboard::personasGraficosPorArea($planta_id, $id_area);
+            echo json_encode($out);
+            break;
+
+        //estandares
+        case 'Estandares_Graficos_Creados_Entrenados':
+            $out = ModeloDashboard::getCreadosEntrenados($planta_id, $id_area);
+            echo json_encode($out);
+            break;
+
+        case 'Estandares_Graficos_Pie_Pilar':
+            $out = ModeloDashboard::graficosPiePilar($planta_id, $id_area);
+            echo json_encode($out);
+            break;
+
+        case 'Estandares_Graficos_Barras_Creados':
+            $out = ModeloDashboard::graficosBarrasCreados($planta_id, $id_area);
+            echo json_encode($out);
+            break;
+        case 'Estandares_Graficos_Anual':
+            $out = ModeloDashboard::estandaresGraficosAnual($planta_id, $id_area);
+            echo json_encode($out);
+            break;
+        case 'Estandares_Graficos_Por_Area':
+            $out = ModeloDashboard::graficosPorArea($planta_id, $id_area);
+            echo json_encode($out);
+            break;
+        case 'Estandares_Graficos_Barras_Entrenados':
+            $out = ModeloDashboard::graficosBarrasEntrenados($planta_id, $id_area);
+            echo json_encode($out);
+            break;
+
+        default:
+            http_response_code(400);
+            echo json_encode(['error' => 'Acción inválida']);
+            break;
+    }
+} catch (Exception $e) {
+    http_response_code(500);
+    echo json_encode(['error' => $e->getMessage()]);
+}

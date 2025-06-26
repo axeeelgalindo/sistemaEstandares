@@ -1,3 +1,8 @@
+<?php
+
+error_log("🕵️‍♀️ [dashboard.php] cargando vista del dashboard para planta: " . ($_SESSION['planta_id'] ?? 'NULL'));
+
+?>
 <!-- Content Header (Page header) -->
 <div class="content-header">
   <div class="container-fluid">
@@ -18,16 +23,13 @@
   <div class="card shadow">
     <ul class="nav nav-tabs m-2" id="myTab" role="tablist">
       <li class="nav-item">
-        <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
-          aria-selected="true">Estándares</a>
+        <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab">Estándares</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile"
-          aria-selected="false">Personas</a>
+        <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab">Personas</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" id="adquisicion-tab" data-toggle="tab" href="#adquisicion" role="tab"
-          aria-controls="adquisicion" aria-selected="false">Adquisición</a>
+        <a class="nav-link" id="adquisicion-tab" data-toggle="tab" href="#adquisicion" role="tab">Adquisición</a>
       </li>
     </ul>
     <div class="tab-content" id="myTabContent">
@@ -56,9 +58,8 @@
                   </div>
                   <div class="card-body">
                     <div class="row">
-                      <div class="col-lg-9 col-sm-6">
-                        <canvas id="donutChart"
-                          style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                      <div class="col-lg-9 col-sm-6" style="height:250px;">
+                        <canvas id="donutChart"></canvas>
                       </div>
                       <div class="col-lg-3 col-sm-6">
                         <!-- small card -->
@@ -97,14 +98,15 @@
                   <div class="card-body">
                     <div class="col-6 col-sm-6">
                       <div class="form-group">
-                        <select class="form-control areas" style="width: 60%;" name="areas">
+                        <select id="areaFilter" class="form-control areas" style="width: 60%;" name="areas">
                           <option value="0">Todas las Áreas</option>
                           <?php
-                          $planta_id = $_SESSION('planta_id');
+                          $planta_id = $_SESSION['planta_id'];
                           $tabla = ModeloArea::listarAreaMdl($planta_id);
-                          foreach ($tabla as $key => $value) {
-                            echo '<option value=' . $value["id"] . '>' . $value["nombre"] . '</option>';
-                          } ?>
+                          foreach ($tabla as $value) {
+                            echo '<option value="' . $value["id"] . '">' . $value["nombre"] . '</option>';
+                          }
+                          ?>
                         </select>
                       </div>
                       <!-- /.form-group -->
@@ -136,9 +138,8 @@
                     </div>
                   </div>
                   <div class="card-body">
-                    <div class="chart">
-                      <canvas id="barChart"
-                        style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                    <div class="chart" style="height:250px;">
+                      <canvas id="barChart"></canvas>
                     </div>
                   </div>
                   <!-- /.card-body -->
@@ -160,26 +161,25 @@
                     </div>
                   </div>
                   <div class="card-body">
-                    <div class="row">
+                    <div class="row" >
                       <div class=" col-md-6">
-                        <div class="small-box bg-default">
+                        <div class="small-box bg-default" >
                           <canvas id="pieChart"
-                            style="min-height: 150px; height: 150px; max-height: 150px; max-width: 100%;"></canvas>
+                            ></canvas>
                         </div>
 
                       </div>
                       <div class=" col-md-6">
                         <div class="small-box bg-default">
                           <canvas id="pieChart2"
-                            style="min-height: 150px; height: 150px; max-height: 150px; max-width: 100%;"></canvas>
+                            ></canvas>
                         </div>
                       </div>
 
                       <div class=" col-md-6">
                         <div class="small-box bg-default">
-
                           <canvas id="pieChart3"
-                            style="min-height: 150px; height: 150px; max-height: 150px; max-width: 100%;"></canvas>
+                            ></canvas>
                         </div>
                       </div>
 
@@ -187,7 +187,7 @@
                         <div class="small-box bg-default">
 
                           <canvas id="pieChart4"
-                            style="min-height: 150px; height: 150px; max-height: 150px; max-width: 100%;"></canvas>
+                            ></canvas>
                         </div>
                       </div>
 
@@ -206,7 +206,7 @@
         </div>
       </div>
       <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+        <div class="tab-pane fade show active" id="profile" role="tabpanel" aria-labelledby="home-tab">
           <!-- Main content 2 -->
           <div class="content">
             <div class="container-fluid">
@@ -230,7 +230,7 @@
                       <div class="row">
                         <div class="col-lg-9 col-sm-6">
                           <canvas id="donutChart2"
-                            style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                            ></canvas>
                         </div>
                         <div class="col-lg-3 col-sm-6">
                           <!-- small card -->
@@ -274,22 +274,22 @@
                     <div class="card-body">
                       <div class="col-6 col-sm-6">
                         <div class="form-group">
-                          <select class="form-control areas" style="width: 60%;" name="areas">
+                          <select id="areaFilter" class="form-control areas" style="width: 60%;" name="areas">
                             <option value="0">Todas las Áreas</option>
                             <?php
-                            $planta_id = $_SESSION('planta_id');
-
+                            $planta_id = $_SESSION['planta_id'];
                             $tabla = ModeloArea::listarAreaMdl($planta_id);
-                            foreach ($tabla as $key => $value) {
-                              echo '<option value=' . $value["id"] . '>' . $value["nombre"] . '</option>';
-                            } ?>
+                            foreach ($tabla as $value) {
+                              echo '<option value="' . $value["id"] . '">' . $value["nombre"] . '</option>';
+                            }
+                            ?>
                           </select>
                         </div>
                         <!-- /.form-group -->
                       </div>
                       <div class="chart" style="height: 285px;">
                         <canvas id="barChart4"
-                          style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                          ></canvas>
                       </div>
                     </div>
                     <!-- /.card-body -->
@@ -316,7 +316,7 @@
                     <div class="card-body">
                       <div class="chart">
                         <canvas id="barChart3"
-                          style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                          ></canvas>
                       </div>
 
                     </div>
@@ -343,7 +343,7 @@
                         <div class=" col-md-6">
                           <div class="small-box bg-default">
                             <canvas id="pieChart5"
-                              style="min-height: 150px; height: 150px; max-height: 150px; max-width: 100%;"></canvas>
+                              ></canvas>
                           </div>
                           <h5 style="color:red;">
                             <p style="font-size: 16px" ;>Horas entrenadas: <b id="HorasEntrenado1">TEST</b></p>
@@ -352,7 +352,7 @@
                         <div class=" col-md-6">
                           <div class="small-box bg-default">
                             <canvas id="pieChart6"
-                              style="min-height: 150px; height: 150px; max-height: 150px; max-width: 100%;"></canvas>
+                              ></canvas>
                           </div>
                           <h5 style="color:red;">
                             <p style="font-size: 16px" ;>Horas entrenadas: <b id="HorasEntrenado2">TEST</b></p>
@@ -362,7 +362,7 @@
                         <div class=" col-md-6">
                           <div class="small-box bg-default">
                             <canvas id="pieChart7"
-                              style="min-height: 150px; height: 150px; max-height: 150px; max-width: 100%;"></canvas>
+                              ></canvas>
                           </div>
                           <h5 style="color:red;">
                             <p style="font-size: 16px" ;>Horas entrenadas: <b id="HorasEntrenado3">TEST</b></p>
@@ -372,7 +372,7 @@
                         <div class=" col-md-6">
                           <div class="small-box bg-default">
                             <canvas id="pieChart8"
-                              style="min-height: 150px; height: 150px; max-height: 150px; max-width: 100%;"></canvas>
+                              ></canvas>
                           </div>
                           <h5 style="color:red;">
                             <p style="font-size: 16px" ;>Horas entrenadas: <b id="HorasEntrenado4">TEST</b></p>
@@ -416,7 +416,7 @@
                     <div class="row">
                       <div class="col-lg-9 col-sm-6">
                         <canvas id="donutChartAdquisicion"
-                          style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                          ></canvas>
                       </div>
                       <div class="col-lg-3 col-sm-6">
                         <div class="small-box bg-default">
@@ -451,21 +451,22 @@
                   <div class="card-body">
                     <div class="col-6 col-sm-6">
                       <div class="form-group">
-                        <select class="form-control areas" style="width: 60%;" name="areas">
+                        <select id="areaFilter" class="form-control areas" style="width: 60%;" name="areas">
                           <option value="0">Todas las Áreas</option>
                           <?php
-                          $planta_id = $_SESSION('planta_id');
+                          $planta_id = $_SESSION['planta_id'];
                           $tabla = ModeloArea::listarAreaMdl($planta_id);
-                          foreach ($tabla as $key => $value) {
-                            echo '<option value=' . $value["id"] . '>' . $value["nombre"] . '</option>';
-                          } ?>
+                          foreach ($tabla as $value) {
+                            echo '<option value="' . $value["id"] . '">' . $value["nombre"] . '</option>';
+                          }
+                          ?>
                         </select>
                       </div>
                       <!-- /.form-group -->
                     </div>
                     <div class="chart" style="height: 285px;">
                       <canvas id="barChartAdquisicion"
-                        style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                        ></canvas>
                     </div>
                   </div>
                   <!-- /.card-body -->
@@ -490,7 +491,7 @@
                   <div class="card-body">
                     <div class="chart">
                       <canvas id="barChartAdquisicionAnual"
-                        style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                        ></canvas>
                     </div>
                   </div>
                   <!-- /.card-body -->
@@ -515,25 +516,25 @@
                       <div class="col-md-6">
                         <div class="small-box bg-default">
                           <canvas id="pieChartAdquisicion1"
-                            style="min-height: 150px; height: 150px; max-height: 150px; max-width: 100%;"></canvas>
+                            ></canvas>
                         </div>
                       </div>
                       <div class="col-md-6">
                         <div class="small-box bg-default">
                           <canvas id="pieChartAdquisicion2"
-                            style="min-height: 150px; height: 150px; max-height: 150px; max-width: 100%;"></canvas>
+                            ></canvas>
                         </div>
                       </div>
                       <div class="col-md-6">
                         <div class="small-box bg-default">
                           <canvas id="pieChartAdquisicion3"
-                            style="min-height: 150px; height: 150px; max-height: 150px; max-width: 100%;"></canvas>
+                            ></canvas>
                         </div>
                       </div>
                       <div class="col-md-6">
                         <div class="small-box bg-default">
                           <canvas id="pieChartAdquisicion4"
-                            style="min-height: 150px; height: 150px; max-height: 150px; max-width: 100%;"></canvas>
+                            ></canvas>
                         </div>
                       </div>
                     </div>

@@ -76,7 +76,7 @@
               </thead>
                   <tbody>
                   <?php
-          $tabla = ModeloPersonas::listarPersonasMdl();
+          $tabla = ModeloPersonas::listarPersonasMdl($_SESSION['planta_id']);
           foreach ($tabla as $key => $value) {
             echo '
                     <tr>
