@@ -50,52 +50,77 @@ function updateCharts(areaId, seccion = "todas") {
           console.warn("⚠️ No hay datos de personas por área");
           return;
         }
-        // Extraemos la única fila (o más, pero normalmente 1)
         const r = rows[0];
 
-        // Labels y valores
         const labels = [
           "Personas Totales",
           "Personas en Entrenamiento",
           "Personas Entrenadas",
           "Horas Entrenadas (hrs)",
         ];
-        const data = [
-          r.PersonasTotales,
-          r.PersonasEnEntrenamiento,
-          r.PersonasEntrenadas,
-          parseFloat(r.HorasEntrenadas),
-        ];
-        const colors = ["#081A4A", "#2865DF", "#EB6D04", "#FABE34"];
+
+        // Dataset de PERSONAS en eje y
+        const datasetPersonas = {
+          label: "Personas",
+          data: [
+            r.PersonasTotales,
+            r.PersonasEnEntrenamiento,
+            r.PersonasEntrenadas,
+            0, // 0 para que en la posición de horas no pinte nada
+          ],
+          backgroundColor: ["#081A4A", "#2865DF", "#EB6D04", "#081A4A"],
+          yAxisID: "y",
+        };
+
+        // Dataset de HORAS en eje y1
+        const datasetHoras = {
+          label: "Horas Entrenadas",
+          data: [0, 0, 0, parseFloat(r.HorasEntrenadas)],
+          backgroundColor: "#FABE34",
+          yAxisID: "y1",
+        };
 
         createOrUpdateChart("barChart4", {
           type: "bar",
-          data: {
-            labels,
-            datasets: [
-              {
-                label: "Total Área",
-                data,
-                backgroundColor: colors,
-              },
-            ],
-          },
+          data: { labels, datasets: [datasetPersonas, datasetHoras] },
           options: {
             responsive: true,
             maintainAspectRatio: false,
             scales: {
-              y: {
-                beginAtZero: true,
-                title: { display: true, text: "Cantidad" },
-              },
+              yAxes: [
+                {
+                  id: "y",
+                  type: "linear",
+                  position: "left",
+                  ticks: {
+                    beginAtZero: true,
+                    callback: (v) => v.toLocaleString(),
+                  },
+                  scaleLabel: {
+                    display: true,
+                    labelString: "Personas",
+                  },
+                },
+                {
+                  id: "y1",
+                  type: "linear",
+                  position: "right",
+                  ticks: {
+                    beginAtZero: true,
+                    callback: (v) => v.toLocaleString(),
+                  },
+                  gridLines: {
+                    drawOnChartArea: false,
+                  },
+                  scaleLabel: {
+                    display: true,
+                    labelString: "Horas",
+                  },
+                },
+              ],
             },
-            plugins: {
-              legend: { display: true, position: "top" },
-              datalabels: {
-                anchor: "end",
-                align: "top",
-                formatter: (v) => v.toLocaleString(),
-              },
+            legend: {
+              position: "top",
             },
           },
         });

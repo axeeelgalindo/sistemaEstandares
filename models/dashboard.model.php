@@ -18,14 +18,24 @@ class ModeloDashboard
     }
 
     public static function personasGraficosPorArea($planta_id, $area_id = null)
-    {
-        $sql = "EXEC dbo.Personas_Graficos_Por_Area @planta_id = :planta, @area_id = :area";
-        $stmt = Conexion::conectar()->prepare($sql);
-        $stmt->bindValue(':planta', (int) $planta_id, PDO::PARAM_INT);
-        $stmt->bindValue(':area', $area_id ? (int) $area_id : null, $area_id ? PDO::PARAM_INT : PDO::PARAM_NULL);
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+{
+    $sql = "EXEC dbo.Personas_Graficos_Por_Area
+                @planta_id = :planta,
+                @area_id   = :area";
+
+    $stmt = Conexion::conectar()->prepare($sql);
+    $stmt->bindValue(':planta', (int) $planta_id, PDO::PARAM_INT);
+    if ($area_id === null || $area_id === 0) {
+        $stmt->bindValue(':area', null, PDO::PARAM_NULL);
+    } else {
+        $stmt->bindValue(':area', (int) $area_id, PDO::PARAM_INT);
     }
+    $stmt->execute();
+
+    // <<< aquí
+    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    return $rows;
+}
 
 
 
