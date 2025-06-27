@@ -152,7 +152,7 @@ $ruta = $_GET['ruta'] ?? '';
   <!--<script src="plugins/chart.js/plugin.js"></script> -->
 
   <!--<script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.0/dist/chart.min.js"></script>-->
-  <script src="plugins/chart.js/datalabel2.js"></script>
+  <!--<script src="plugins/chart.js/datalabel2.js"></script> -->
 
 
   <!--<script type="text/javascript" src="views/dist/js/secciones.js"></script>-->

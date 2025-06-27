@@ -16,17 +16,17 @@ class ModeloDashboard
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
-    static public function personasGraficosPorArea($planta_id, $id_area)
+
+    public static function personasGraficosPorArea($planta_id, $area_id = null)
     {
-        $sql = "EXEC dbo.Personas_Graficos_Por_Area
-              @planta_id = :planta_id,
-              @id_area   = :id_area";
-        $stmt = Conexion::Conectar()->prepare($sql);
-        $stmt->bindParam(':planta_id', $planta_id, PDO::PARAM_INT);
-        $stmt->bindParam(':id_area', $id_area, PDO::PARAM_INT);
+        $sql = "EXEC dbo.Personas_Graficos_Por_Area @planta_id = :planta, @area_id = :area";
+        $stmt = Conexion::conectar()->prepare($sql);
+        $stmt->bindValue(':planta', (int) $planta_id, PDO::PARAM_INT);
+        $stmt->bindValue(':area', $area_id ? (int) $area_id : null, $area_id ? PDO::PARAM_INT : PDO::PARAM_NULL);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
 
 
     // PERSONAS GRAFICOS

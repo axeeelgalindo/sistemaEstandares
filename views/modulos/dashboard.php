@@ -161,33 +161,29 @@ error_log("🕵️‍♀️ [dashboard.php] cargando vista del dashboard para pl
                     </div>
                   </div>
                   <div class="card-body">
-                    <div class="row" >
+                    <div class="row">
                       <div class=" col-md-6">
-                        <div class="small-box bg-default" >
-                          <canvas id="pieChart"
-                            ></canvas>
+                        <div class="small-box bg-default">
+                          <canvas id="pieChart"></canvas>
                         </div>
 
                       </div>
                       <div class=" col-md-6">
                         <div class="small-box bg-default">
-                          <canvas id="pieChart2"
-                            ></canvas>
+                          <canvas id="pieChart2"></canvas>
                         </div>
                       </div>
 
                       <div class=" col-md-6">
                         <div class="small-box bg-default">
-                          <canvas id="pieChart3"
-                            ></canvas>
+                          <canvas id="pieChart3"></canvas>
                         </div>
                       </div>
 
                       <div class=" col-md-6">
                         <div class="small-box bg-default">
 
-                          <canvas id="pieChart4"
-                            ></canvas>
+                          <canvas id="pieChart4"></canvas>
                         </div>
                       </div>
 
@@ -206,194 +202,165 @@ error_log("🕵️‍♀️ [dashboard.php] cargando vista del dashboard para pl
         </div>
       </div>
       <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-        <div class="tab-pane fade show active" id="profile" role="tabpanel" aria-labelledby="home-tab">
-          <!-- Main content 2 -->
-          <div class="content">
-            <div class="container-fluid">
-              <div class="row">
-                <div class="col-md-6">
-                  <!-- DONUT CHART -->
-                  <div class="card card-secondary">
-                    <div class="card-header">
-                      <h3 class="card-title">Entrenamientos Disponibles vs Entrenamientos Ejecutados</h3>
-
-                      <div class="card-tools">
-                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                          <i class="fas fa-minus"></i>
-                        </button>
-                        <button type="button" class="btn btn-tool" data-card-widget="remove">
-                          <i class="fas fa-times"></i>
-                        </button>
-                      </div>
-                    </div>
-                    <div class="card-body">
-                      <div class="row">
-                        <div class="col-lg-9 col-sm-6">
-                          <canvas id="donutChart2"
-                            ></canvas>
-                        </div>
-                        <div class="col-lg-3 col-sm-6">
-                          <!-- small card -->
-                          <div class="small-box bg-default">
-                            <div class="inner">
-                              <h3 style="color:red;" id="PorcentajeEntrenado2"></h3>
-                              <p>Entrenados</p>
-                            </div>
-                            <div class="icon">
-                              <i class="ion ion-stats-bars"></i>
-                            </div>
-                          </div>
-                          <div class="small-box bg-default">
-                            <div class="inner">
-                              <h3 style="color:red;" id="HorasEntrenado"></h3>
-                              <p>Horas entrenadas</p>
-                            </div>
-                          </div>
-                        </div>
-
-                      </div>
-                    </div>
-                    <!-- /.card-body -->
-                  </div>
-                  <!-- /.card -->
-
-                  <!-- BAR CHART -->
-                  <div class="card card-secondary">
-                    <div class="card-header">
-                      <h3 class="card-title">Personas en Entrenamiento vs Personas Entrenadas por Área</h3>
-                      <div class="card-tools">
-                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                          <i class="fas fa-minus"></i>
-                        </button>
-                        <button type="button" class="btn btn-tool" data-card-widget="remove">
-                          <i class="fas fa-times"></i>
-                        </button>
-                      </div>
-
-                    </div>
-                    <div class="card-body">
-                      <div class="col-6 col-sm-6">
-                        <div class="form-group">
-                          <select id="areaFilter" class="form-control areas" style="width: 60%;" name="areas">
-                            <option value="0">Todas las Áreas</option>
-                            <?php
-                            $planta_id = $_SESSION['planta_id'];
-                            $tabla = ModeloArea::listarAreaMdl($planta_id);
-                            foreach ($tabla as $value) {
-                              echo '<option value="' . $value["id"] . '">' . $value["nombre"] . '</option>';
-                            }
-                            ?>
-                          </select>
-                        </div>
-                        <!-- /.form-group -->
-                      </div>
-                      <div class="chart" style="height: 285px;">
-                        <canvas id="barChart4"
-                          ></canvas>
-                      </div>
-                    </div>
-                    <!-- /.card-body -->
-                  </div>
-
-                </div>
-                <!-- /.col (LEFT) -->
-                <div class="col-md-6">
-                  <!-- LINE CHART -->
-                  <!-- STACKED BAR CHART -->
-                  <div class="card card-secondary">
-                    <div class="card-header">
-                      <h3 class="card-title">Personas Totales vs Personas Entrenadas Anual</h3>
-
-                      <div class="card-tools">
-                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                          <i class="fas fa-minus"></i>
-                        </button>
-                        <button type="button" class="btn btn-tool" data-card-widget="remove">
-                          <i class="fas fa-times"></i>
-                        </button>
-                      </div>
-                    </div>
-                    <div class="card-body">
-                      <div class="chart">
-                        <canvas id="barChart3"
-                          ></canvas>
-                      </div>
-
-                    </div>
-                    <!-- /.card-body -->
-                  </div>
-                  <!-- /.card -->
-
-                  <!-- PIE CHART -->
-                  <div class="card card-secondary">
-                    <div class="card-header">
-                      <h3 class="card-title">Personas Totales vs Personas Entrenadas por pilar</h3>
-
-                      <div class="card-tools">
-                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                          <i class="fas fa-minus"></i>
-                        </button>
-                        <button type="button" class="btn btn-tool" data-card-widget="remove">
-                          <i class="fas fa-times"></i>
-                        </button>
-                      </div>
-                    </div>
-                    <div class="card-body">
-                      <div class="row">
-                        <div class=" col-md-6">
-                          <div class="small-box bg-default">
-                            <canvas id="pieChart5"
-                              ></canvas>
-                          </div>
-                          <h5 style="color:red;">
-                            <p style="font-size: 16px" ;>Horas entrenadas: <b id="HorasEntrenado1">TEST</b></p>
-                          </h5>
-                        </div>
-                        <div class=" col-md-6">
-                          <div class="small-box bg-default">
-                            <canvas id="pieChart6"
-                              ></canvas>
-                          </div>
-                          <h5 style="color:red;">
-                            <p style="font-size: 16px" ;>Horas entrenadas: <b id="HorasEntrenado2">TEST</b></p>
-                          </h5>
-                        </div>
-
-                        <div class=" col-md-6">
-                          <div class="small-box bg-default">
-                            <canvas id="pieChart7"
-                              ></canvas>
-                          </div>
-                          <h5 style="color:red;">
-                            <p style="font-size: 16px" ;>Horas entrenadas: <b id="HorasEntrenado3">TEST</b></p>
-                          </h5>
-                        </div>
-
-                        <div class=" col-md-6">
-                          <div class="small-box bg-default">
-                            <canvas id="pieChart8"
-                              ></canvas>
-                          </div>
-                          <h5 style="color:red;">
-                            <p style="font-size: 16px" ;>Horas entrenadas: <b id="HorasEntrenado4">TEST</b></p>
-                          </h5>
-                        </div>
-                      </div>
-
+        <!-- Main content 2 -->
+        <div class="content">
+          <div class="container-fluid">
+            <div class="row">
+              <!-- COLUMNA IZQUIERDA -->
+              <div class="col-md-6">
+                <!-- DONUT CHART -->
+                <div class="card card-secondary">
+                  <div class="card-header">
+                    <h3 class="card-title">Entrenamientos Disponibles vs Entrenamientos Ejecutados</h3>
+                    <div class="card-tools">
+                      <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                      </button>
+                      <button type="button" class="btn btn-tool" data-card-widget="remove">
+                        <i class="fas fa-times"></i>
+                      </button>
                     </div>
                   </div>
-                  <!-- /.card-body -->
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-lg-9 col-sm-6">
+                        <canvas id="donutChart2"></canvas>
+                      </div>
+                      <div class="col-lg-3 col-sm-6">
+                        <div class="small-box bg-default">
+                          <div class="inner">
+                            <h3 style="color:red;" id="PorcentajeEntrenado2"></h3>
+                            <p>Entrenados</p>
+                          </div>
+                          <div class="icon"><i class="ion ion-stats-bars"></i></div>
+                        </div>
+                        <div class="small-box bg-default">
+                          <div class="inner">
+                            <h3 style="color:red;" id="HorasEntrenado"></h3>
+                            <p>Horas entrenadas</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
                 <!-- /.card -->
 
+                <!-- BAR CHART: Personas por Área -->
+                <div class="card card-secondary">
+                  <div class="card-header">
+                    <h3 class="card-title">
+                      Personas en Entrenamiento vs Personas Entrenadas por Área
+                    </h3>
+                    <div class="card-tools">
+                      <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                      </button>
+                      <button type="button" class="btn btn-tool" data-card-widget="remove">
+                        <i class="fas fa-times"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <div class="row mb-3">
+                      <div class="col-6 col-sm-6">
+                        <select id="areaFilterPersonas" class="form-control" style="width: 60%">
+                          <option value="0">Todas las Áreas</option>
+                          <?php
+                          $planta_id = $_SESSION['planta_id'];
+                          $tabla = ModeloArea::listarAreaMdl($planta_id);
+                          foreach ($tabla as $value) {
+                            echo '<option value="' . $value["id"] . '">' . $value["nombre"] . '</option>';
+                          }
+                          ?>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="chart" style="height: 285px;">
+                      <canvas id="barChart4"></canvas>
+                    </div>
+                  </div>
+                </div>
+                <!-- /.card -->
+              </div>
+              <!-- /.col (LEFT) -->
+
+              <!-- COLUMNA DERECHA -->
+              <div class="col-md-6">
+                <!-- Personas Totales vs Entrenadas Anual -->
+                <div class="card card-secondary">
+                  <div class="card-header">
+                    <h3 class="card-title">Personas Totales vs Personas Entrenadas Anual</h3>
+                    <div class="card-tools">
+                      <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                      </button>
+                      <button type="button" class="btn btn-tool" data-card-widget="remove">
+                        <i class="fas fa-times"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <div class="chart">
+                      <canvas id="barChart3"></canvas>
+                    </div>
+                  </div>
+                </div>
+                <!-- /.card -->
+
+                <!-- Personas Totales vs Entrenadas por Pilar -->
+                <div class="card card-secondary">
+                  <div class="card-header">
+                    <h3 class="card-title">Personas Totales vs Personas Entrenadas por Pilar</h3>
+                    <div class="card-tools">
+                      <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                      </button>
+                      <button type="button" class="btn btn-tool" data-card-widget="remove">
+                        <i class="fas fa-times"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-md-6">
+                        <canvas id="pieChart5"></canvas>
+                        <p class="mt-2 text-danger">
+                          Horas entrenadas: <b id="HorasEntrenado1">TEST</b>
+                        </p>
+                      </div>
+                      <div class="col-md-6">
+                        <canvas id="pieChart6"></canvas>
+                        <p class="mt-2 text-danger">
+                          Horas entrenadas: <b id="HorasEntrenado2">TEST</b>
+                        </p>
+                      </div>
+                      <div class="col-md-6">
+                        <canvas id="pieChart7"></canvas>
+                        <p class="mt-2 text-danger">
+                          Horas entrenadas: <b id="HorasEntrenado3">TEST</b>
+                        </p>
+                      </div>
+                      <div class="col-md-6">
+                        <canvas id="pieChart8"></canvas>
+                        <p class="mt-2 text-danger">
+                          Horas entrenadas: <b id="HorasEntrenado4">TEST</b>
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- /.card-body -->
               </div>
               <!-- /.col (RIGHT) -->
             </div>
             <!-- /.row -->
-          </div><!-- /.container-fluid -->
+          </div>
           <!-- /.container-fluid -->
         </div>
+        <!-- /.content -->
       </div>
+
       <div class="tab-pane fade" id="adquisicion" role="tabpanel" aria-labelledby="adquisicion-tab">
         <div class="content">
           <div class="container-fluid">
@@ -415,8 +382,7 @@ error_log("🕵️‍♀️ [dashboard.php] cargando vista del dashboard para pl
                   <div class="card-body">
                     <div class="row">
                       <div class="col-lg-9 col-sm-6">
-                        <canvas id="donutChartAdquisicion"
-                          ></canvas>
+                        <canvas id="donutChartAdquisicion"></canvas>
                       </div>
                       <div class="col-lg-3 col-sm-6">
                         <div class="small-box bg-default">
@@ -465,8 +431,7 @@ error_log("🕵️‍♀️ [dashboard.php] cargando vista del dashboard para pl
                       <!-- /.form-group -->
                     </div>
                     <div class="chart" style="height: 285px;">
-                      <canvas id="barChartAdquisicion"
-                        ></canvas>
+                      <canvas id="barChartAdquisicion"></canvas>
                     </div>
                   </div>
                   <!-- /.card-body -->
@@ -490,8 +455,7 @@ error_log("🕵️‍♀️ [dashboard.php] cargando vista del dashboard para pl
                   </div>
                   <div class="card-body">
                     <div class="chart">
-                      <canvas id="barChartAdquisicionAnual"
-                        ></canvas>
+                      <canvas id="barChartAdquisicionAnual"></canvas>
                     </div>
                   </div>
                   <!-- /.card-body -->
@@ -515,26 +479,22 @@ error_log("🕵️‍♀️ [dashboard.php] cargando vista del dashboard para pl
                     <div class="row">
                       <div class="col-md-6">
                         <div class="small-box bg-default">
-                          <canvas id="pieChartAdquisicion1"
-                            ></canvas>
+                          <canvas id="pieChartAdquisicion1"></canvas>
                         </div>
                       </div>
                       <div class="col-md-6">
                         <div class="small-box bg-default">
-                          <canvas id="pieChartAdquisicion2"
-                            ></canvas>
+                          <canvas id="pieChartAdquisicion2"></canvas>
                         </div>
                       </div>
                       <div class="col-md-6">
                         <div class="small-box bg-default">
-                          <canvas id="pieChartAdquisicion3"
-                            ></canvas>
+                          <canvas id="pieChartAdquisicion3"></canvas>
                         </div>
                       </div>
                       <div class="col-md-6">
                         <div class="small-box bg-default">
-                          <canvas id="pieChartAdquisicion4"
-                            ></canvas>
+                          <canvas id="pieChartAdquisicion4"></canvas>
                         </div>
                       </div>
                     </div>
