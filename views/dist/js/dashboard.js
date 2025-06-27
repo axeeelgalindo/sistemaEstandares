@@ -59,69 +59,90 @@ function updateCharts(areaId, seccion = "todas") {
           "Horas Entrenadas (hrs)",
         ];
 
-        // Dataset de PERSONAS en eje y
-        const datasetPersonas = {
-          label: "Personas",
-          data: [
-            r.PersonasTotales,
-            r.PersonasEnEntrenamiento,
-            r.PersonasEntrenadas,
-            0, // 0 para que en la posición de horas no pinte nada
-          ],
-          backgroundColor: ["#081A4A", "#2865DF", "#EB6D04", "#081A4A"],
-          yAxisID: "y",
-        };
-
-        // Dataset de HORAS en eje y1
-        const datasetHoras = {
-          label: "Horas Entrenadas",
-          data: [0, 0, 0, parseFloat(r.HorasEntrenadas)],
-          backgroundColor: "#FABE34",
-          yAxisID: "y1",
-        };
+        const datasets = [
+          {
+            label: "Personas Totales",
+            data: [r.PersonasTotales, null, null, null],
+            backgroundColor: "#081A4A",
+            yAxisID: "y",
+          },
+          {
+            label: "Personas en Entrenamiento",
+            data: [null, r.PersonasEnEntrenamiento, null, null],
+            backgroundColor: "#2865DF",
+            yAxisID: "y",
+          },
+          {
+            label: "Personas Entrenadas",
+            data: [null, null, r.PersonasEntrenadas, null],
+            backgroundColor: "#EB6D04",
+            yAxisID: "y",
+          },
+          {
+            label: "Horas Entrenadas (hrs)",
+            data: [null, null, null, r.HorasEntrenadas],
+            backgroundColor: "#FABE34",
+            yAxisID: "y1",
+          },
+        ];
 
         createOrUpdateChart("barChart4", {
           type: "bar",
-          data: { labels, datasets: [datasetPersonas, datasetHoras] },
+          data: { labels, datasets },
           options: {
             responsive: true,
             maintainAspectRatio: false,
+
+            // 1) Tooltips que formatean a Hh Mm
+            tooltips: {
+              callbacks: {
+                label: function (tooltipItem, data) {
+                  const ds = data.datasets[tooltipItem.datasetIndex];
+                  const raw = ds.data[tooltipItem.index];
+                  // Si es la serie de Horas (yAxisID 'y1'):
+                  if (ds.yAxisID === "y1" && raw != null) {
+                    const totalMin = Math.round(raw * 60);
+                    const h = Math.floor(totalMin / 60);
+                    const m = totalMin % 60;
+                    return ds.label + ": " + h + "h " + m + "m";
+                  }
+                  // Para las Personas:
+                  return ds.label + ": " + raw;
+                },
+              },
+            },
+
             scales: {
               yAxes: [
                 {
                   id: "y",
-                  type: "linear",
                   position: "left",
-                  ticks: {
-                    beginAtZero: true,
-                    callback: (v) => v.toLocaleString(),
-                  },
-                  scaleLabel: {
-                    display: true,
-                    labelString: "Personas",
-                  },
+                  ticks: { beginAtZero: true },
+                  scaleLabel: { display: true, labelString: "Personas" },
                 },
                 {
                   id: "y1",
-                  type: "linear",
                   position: "right",
+                  gridLines: { drawOnChartArea: false },
+                  scaleLabel: { display: true, labelString: "Horas" },
                   ticks: {
                     beginAtZero: true,
-                    callback: (v) => v.toLocaleString(),
-                  },
-                  gridLines: {
-                    drawOnChartArea: false,
-                  },
-                  scaleLabel: {
-                    display: true,
-                    labelString: "Horas",
+                    // 2) Tick callback para mostrar horas enteras
+                    callback: function (value) {
+                      return Math.round(value) + "h";
+                    },
                   },
                 },
               ],
+              xAxes: [
+                {
+                  ticks: { display: false },
+                  gridLines: { display: false },
+                },
+              ],
             },
-            legend: {
-              position: "top",
-            },
+
+            legend: { display: true, position: "top" },
           },
         });
       })
