@@ -18,24 +18,55 @@ class ModeloDashboard
     }
 
     public static function personasGraficosPorArea($planta_id, $area_id = null)
-{
-    $sql = "EXEC dbo.Personas_Graficos_Por_Area
+    {
+        $sql = "EXEC dbo.Personas_Graficos_Por_Area
                 @planta_id = :planta,
                 @area_id   = :area";
 
-    $stmt = Conexion::conectar()->prepare($sql);
-    $stmt->bindValue(':planta', (int) $planta_id, PDO::PARAM_INT);
-    if ($area_id === null || $area_id === 0) {
-        $stmt->bindValue(':area', null, PDO::PARAM_NULL);
-    } else {
-        $stmt->bindValue(':area', (int) $area_id, PDO::PARAM_INT);
-    }
-    $stmt->execute();
+        $stmt = Conexion::conectar()->prepare($sql);
+        $stmt->bindValue(':planta', (int) $planta_id, PDO::PARAM_INT);
+        if ($area_id === null || $area_id === 0) {
+            $stmt->bindValue(':area', null, PDO::PARAM_NULL);
+        } else {
+            $stmt->bindValue(':area', (int) $area_id, PDO::PARAM_INT);
+        }
+        $stmt->execute();
 
-    // <<< aquí
-    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    return $rows;
-}
+        // <<< aquí
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $rows;
+    }
+
+    public static function personasGraficosAnual($planta_id, $area_id = null)
+    {
+        $sql = "EXEC dbo.Personas_Graficos_Anual
+                @planta_id = :planta_id,
+                @area_id   = :area_id";
+        $stmt = Conexion::conectar()->prepare($sql);
+        $stmt->bindValue(':planta_id', (int) $planta_id, PDO::PARAM_INT);
+        $stmt->bindValue(':area_id', ($area_id ?: 0), PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public static function personasGraficosPiePilar($planta_id, $area_id = null)
+    {
+        $sql = "EXEC dbo.Personas_Graficos_Pie_Pilar
+                @planta_id = :planta,
+                @area_id   = :area";
+        $stmt = Conexion::conectar()->prepare($sql);
+        $stmt->bindValue(':planta', (int) $planta_id, PDO::PARAM_INT);
+        if ($area_id) {
+            $stmt->bindValue(':area', (int) $area_id, PDO::PARAM_INT);
+        } else {
+            $stmt->bindValue(':area', null, PDO::PARAM_NULL);
+        }
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+
+
 
 
 

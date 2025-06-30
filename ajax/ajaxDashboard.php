@@ -22,6 +22,16 @@ try {
             echo json_encode($out);
             break;
 
+        case 'Personas_Graficos_Pie_Pilar':
+            $out = ModeloDashboard::personasGraficosPiePilar($planta_id, $id_area);
+            echo json_encode($out);
+            break;
+
+        case 'Personas_Graficos_Anual':
+            $out = ModeloDashboard::personasGraficosAnual($planta_id, $id_area);
+            echo json_encode($out);
+            break;
+
         //estandares
         case 'Estandares_Graficos_Creados_Entrenados':
             $out = ModeloDashboard::getCreadosEntrenados($planta_id, $id_area);

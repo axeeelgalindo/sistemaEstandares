@@ -2,17 +2,38 @@
 console.log("🚀 dashboard.js cargado");
 const _charts = {};
 
+
 document.addEventListener("DOMContentLoaded", () => {
   const est = document.getElementById("areaFilter");
   const per = document.getElementById("areaFilterPersonas");
-  if (est)
-    est.addEventListener("change", () =>
-      updateCharts(+est.value, "estandares")
+
+  // ── FILTROS DE ÁREA ─────────────────────────────────────────────────────────
+  if (est) {
+    est.addEventListener("change", () => updateCharts(+est.value, "estandares"));
+  }
+  if (per) {
+    per.addEventListener("change", () =>
+      updateCharts(+per.value, "personas")
     );
-  if (per)
-    per.addEventListener("change", () => updateCharts(+per.value, "personas"));
-  // carga inicial de ambos
-  updateCharts(0, "todas");
+  }
+
+  // ── CUANDO SE MUESTRA UNA PESTAÑA ─────────────────────────────────────────────
+  // Usamos el evento shown.bs.tab de Bootstrap para re-renderizar sólo lo que toca
+  $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+    if (e.target.id === 'home-tab') {
+      // volvemos a renderizar estándares
+      updateCharts(+est.value, "estandares");
+    }
+    if (e.target.id === 'profile-tab') {
+      // renderizamos personas
+      updateCharts(+per.value, "personas");
+    }
+    // (puedes añadir más pestañas, p.ej. adquisición, si quieres)
+  });
+
+  // ── CARGA INICIAL ────────────────────────────────────────────────────────────
+  // arranca con estándares
+  updateCharts(0, "estandares");
 });
 
 function updateCharts(areaId, seccion = "todas") {
@@ -31,7 +52,8 @@ function updateCharts(areaId, seccion = "todas") {
           [
             p.total_entrenamientos_disponibles,
             p.total_entrenamientos_ejecutados,
-          ]
+          ],
+          "Entrenamientos"
         );
         document.getElementById("PorcentajeEntrenado2").textContent =
           p.porcentaje_entrenados + " %";
@@ -42,6 +64,18 @@ function updateCharts(areaId, seccion = "todas") {
         console.error("❌ Error al obtener datos de personas:", err)
       );
 
+    fetchDashboardData("Personas_Graficos_Anual", { id_area: areaId })
+      .then((arr) => {
+        console.log("💡 Personas_Graficos_Anual response:", arr);
+        renderBarGrouped(
+          "barChart3",
+          arr.map((r) => r.Anio),
+          arr.map((r) => r.PersonasTotales),
+          arr.map((r) => r.PersonasEntrenadas)
+        );
+      })
+      .catch((err) => console.error("❌ Error anual personas:", err));
+
     // 2) Personas por Área (barChart4)
     console.log("🔍 fetch Personas_Graficos_Por_Area para área", areaId);
     fetchDashboardData("Personas_Graficos_Por_Area", { id_area: areaId })
@@ -51,14 +85,12 @@ function updateCharts(areaId, seccion = "todas") {
           return;
         }
         const r = rows[0];
-
         const labels = [
           "Personas Totales",
           "Personas en Entrenamiento",
           "Personas Entrenadas",
           "Horas Entrenadas (hrs)",
         ];
-
         const datasets = [
           {
             label: "Personas Totales",
@@ -85,33 +117,27 @@ function updateCharts(areaId, seccion = "todas") {
             yAxisID: "y1",
           },
         ];
-
         createOrUpdateChart("barChart4", {
           type: "bar",
           data: { labels, datasets },
           options: {
             responsive: true,
             maintainAspectRatio: false,
-
-            // 1) Tooltips que formatean a Hh Mm
             tooltips: {
               callbacks: {
                 label: function (tooltipItem, data) {
                   const ds = data.datasets[tooltipItem.datasetIndex];
-                  const raw = ds.data[tooltipItem.index];
-                  // Si es la serie de Horas (yAxisID 'y1'):
-                  if (ds.yAxisID === "y1" && raw != null) {
-                    const totalMin = Math.round(raw * 60);
-                    const h = Math.floor(totalMin / 60);
-                    const m = totalMin % 60;
+                  const val = ds.data[tooltipItem.index];
+                  if (ds.yAxisID === "y1" && val != null) {
+                    const totalMinutes = Math.round(val * 60);
+                    const h = Math.floor(totalMinutes / 60);
+                    const m = totalMinutes % 60;
                     return ds.label + ": " + h + "h " + m + "m";
                   }
-                  // Para las Personas:
-                  return ds.label + ": " + raw;
+                  return ds.label + ": " + val;
                 },
               },
             },
-
             scales: {
               yAxes: [
                 {
@@ -127,30 +153,69 @@ function updateCharts(areaId, seccion = "todas") {
                   scaleLabel: { display: true, labelString: "Horas" },
                   ticks: {
                     beginAtZero: true,
-                    // 2) Tick callback para mostrar horas enteras
-                    callback: function (value) {
-                      return Math.round(value) + "h";
-                    },
+                    callback: (v) => Math.round(v) + "h",
                   },
                 },
               ],
               xAxes: [
-                {
-                  ticks: { display: false },
-                  gridLines: { display: false },
-                },
+                { ticks: { display: false }, gridLines: { display: false } },
               ],
             },
-
             legend: { display: true, position: "top" },
           },
         });
       })
       .catch((err) => console.error("❌ Error personas por área:", err));
+
+    // 3) Donuts por Pilar (Personas)
+    fetchDashboardData("Estandares_Graficos_Pie_Pilar", { id_area: areaId })
+      .then((p) => {
+        console.log(p);
+        const pillars = [
+          {
+            id: "pieChart5",
+            name: "Seguridad",
+            data: [p.seguridad_en_entrenamiento, p.seguridad_entrenados],
+            hours: p.seguridad_horas,
+          },
+          {
+            id: "pieChart6",
+            name: "Calidad",
+            data: [p.calidad_en_entrenamiento, p.calidad_entrenados],
+            hours: p.calidad_horas,
+          },
+          {
+            id: "pieChart7",
+            name: "Producción",
+            data: [p.produccion_en_entrenamiento, p.produccion_entrenados],
+            hours: p.produccion_horas,
+          },
+          {
+            id: "pieChart8",
+            name: "5S",
+            data: [p.s5_en_entrenamiento, p.s5_entrenados],
+            hours: p.s5_horas,
+          },
+        ];
+        pillars.forEach((pl, i) => {
+          renderDonut(
+            pl.id,
+            ["En Entrenamiento", "Entrenados"],
+            pl.data,
+            pl.name
+          );
+          const el = document.getElementById(`HorasEntrenado${i + 1}`);
+          if (el) el.textContent = pl.hours ?? "0";
+        });
+      })
+      .catch((err) =>
+        console.error("❌ Error al cargar donuts personas por pilar:", err)
+      );
   }
 
   // ── ESTÁNDARES ────────────────────────────────────────────────────────────
   if (seccion === "todas" || seccion === "estandares") {
+    // Totales
     fetchDashboardData("Estandares_Graficos_Creados_Entrenados", {
       id_area: areaId,
     })
@@ -158,36 +223,43 @@ function updateCharts(areaId, seccion = "todas") {
         renderDonut(
           "donutChart",
           ["Creados", "Entrenados"],
-          [res.total_estandares_creados, res.total_estandares_entrenados]
+          [res.total_estandares_creados, res.total_estandares_entrenados],
+          "Estándares"
         );
       })
       .catch((err) => console.error("❌ Error totales estándares:", err));
 
+    // Pie por Pilar (Estándares)
     fetchDashboardData("Estandares_Graficos_Pie_Pilar", { id_area: areaId })
       .then((p) => {
         renderDonut(
           "pieChart",
           ["Creados", "Entrenados"],
-          [p.seguridad_creados, p.seguridad_entrenados]
+          [p.seguridad_creados, p.seguridad_entrenados],
+          "Seguridad"
         );
         renderDonut(
           "pieChart2",
           ["Creados", "Entrenados"],
-          [p.calidad_creados, p.calidad_entrenados]
+          [p.calidad_creados, p.calidad_entrenados],
+          "Calidad"
         );
         renderDonut(
           "pieChart3",
           ["Creados", "Entrenados"],
-          [p.produccion_creados, p.produccion_entrenados]
+          [p.produccion_creados, p.produccion_entrenados],
+          "Producción"
         );
         renderDonut(
           "pieChart4",
           ["Creados", "Entrenados"],
-          [p.s5_creados, p.s5_entrenados]
+          [p.s5_creados, p.s5_entrenados],
+          "5S"
         );
       })
-      .catch((err) => console.error("❌ Error por pilar estándares:", err));
+      .catch((err) => console.error("❌ Error pie estándares por pilar:", err));
 
+    // Barras mensuales
     fetchDashboardData("Estandares_Graficos_Barras_Creados", {
       id_area: areaId,
     })
@@ -212,24 +284,28 @@ function updateCharts(areaId, seccion = "todas") {
       )
       .catch((err) => console.error("❌ Error entrenados mensuales:", err));
 
+    // Barras agrupadas por Área
     fetchDashboardData("Estandares_Graficos_Por_Area", { id_area: areaId })
       .then((arr) => {
-        const labels = arr.map((r) => r.Area),
-          c = arr.map((r) => r.RegistrosCreados),
-          e = arr.map((r) => r.RegistrosEntrenados);
-        renderBarGrouped("barChart2", labels, c, e);
+        renderBarGrouped(
+          "barChart2",
+          arr.map((r) => r.Area),
+          arr.map((r) => r.RegistrosCreados),
+          arr.map((r) => r.RegistrosEntrenados)
+        );
       })
       .catch((err) => console.error("❌ Error estándares por área:", err));
 
+    // Barras anuales
     fetchDashboardData("Estandares_Graficos_Anual", { id_area: areaId })
-      .then((arr) => {
+      .then((arr) =>
         renderBarGrouped(
           "barChart",
           arr.map((r) => r.Año),
           arr.map((r) => r.RegistrosCreados),
           arr.map((r) => r.RegistrosEntrenados)
-        );
-      })
+        )
+      )
       .catch((err) => console.error("❌ Error anuales estándares:", err));
   }
 
@@ -250,36 +326,55 @@ function fetchDashboardData(accion, params) {
 
 function createOrUpdateChart(canvasId, config) {
   console.log("⚙️ createOrUpdateChart llamado con config:", config);
-
   const canvas = document.getElementById(canvasId);
   if (!canvas) {
     console.warn(`⚠️ Canvas ${canvasId} no existe, salto render.`);
     return;
   }
-  // destruyo si ya existía
-  if (_charts[canvasId]) {
-    _charts[canvasId].destroy();
-  }
-
-  // <-- Aseguro que config.options sea siempre un objeto
+  if (_charts[canvasId]) _charts[canvasId].destroy();
   const userOptions = typeof config.options === "object" ? config.options : {};
   config.options = {
     responsive: true,
     maintainAspectRatio: false,
     devicePixelRatio: window.devicePixelRatio || 1,
-    ...userOptions, // ahora esto nunca petará
+    ...userOptions,
   };
-
   const ctx = canvas.getContext("2d");
   _charts[canvasId] = new Chart(ctx, config);
 }
 
-function renderDonut(canvasId, labels, data) {
+function renderDonut(canvasId, labels, data, titleText = "") {
+  const total = data.reduce((sum, v) => sum + v, 0);
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+
+  // Si no hay datos, mostramos un mensaje en lugar de la dona
+  if (total === 0) {
+    const ctx = canvas.getContext("2d");
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.font = "16px sans-serif";
+    ctx.fillStyle = "#666";
+    ctx.textAlign = "center";
+    ctx.fillText("Sin datos", canvas.width / 2, canvas.height / 2);
+    return;
+  }
+
   createOrUpdateChart(canvasId, {
     type: "doughnut",
     data: {
       labels,
       datasets: [{ data, backgroundColor: ["#3b8bba", "#5fa8d3"] }],
+    },
+    options: {
+      cutoutPercentage: 60,
+      title: {
+        display: !!titleText,
+        text: titleText,
+        fontSize: 14,
+      },
+      legend: {
+        position: "bottom",
+      },
     },
   });
 }
@@ -289,13 +384,7 @@ function renderBar(canvasId, labels, data) {
     type: "bar",
     data: {
       labels,
-      datasets: [
-        {
-          label: "Cantidad",
-          data,
-          backgroundColor: "#3b8bba",
-        },
-      ],
+      datasets: [{ label: "Cantidad", data, backgroundColor: "#3b8bba" }],
     },
     options: { scales: { y: { beginAtZero: true } } },
   });
@@ -315,14 +404,8 @@ function renderBarGrouped(canvasId, labels, data1, data2) {
       scales: {
         yAxes: [
           {
-            ticks: {
-              beginAtZero: true,
-              min: 0,
-              stepSize: 1,
-            },
-            gridLines: {
-              color: "rgba(0,0,0,0.05)",
-            },
+            ticks: { beginAtZero: true, min: 0, stepSize: 1 },
+            gridLines: { color: "rgba(0,0,0,0.05)" },
           },
         ],
       },

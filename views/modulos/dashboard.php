@@ -201,14 +201,14 @@ error_log("🕵️‍♀️ [dashboard.php] cargando vista del dashboard para pl
           <!-- /.container-fluid -->
         </div>
       </div>
-      <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-        <!-- Main content 2 -->
+            <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
         <div class="content">
           <div class="container-fluid">
+
+            <!-- PRIMERA FILA: Donut y Anual -->
             <div class="row">
-              <!-- COLUMNA IZQUIERDA -->
+              <!-- Donut de Entrenamientos -->
               <div class="col-md-6">
-                <!-- DONUT CHART -->
                 <div class="card card-secondary">
                   <div class="card-header">
                     <h3 class="card-title">Entrenamientos Disponibles vs Entrenamientos Ejecutados</h3>
@@ -223,35 +223,63 @@ error_log("🕵️‍♀️ [dashboard.php] cargando vista del dashboard para pl
                   </div>
                   <div class="card-body">
                     <div class="row">
-                      <div class="col-lg-9 col-sm-6">
+                      <div class="col-lg-9 col-sm-6" style="height:250px;">
                         <canvas id="donutChart2"></canvas>
                       </div>
                       <div class="col-lg-3 col-sm-6">
                         <div class="small-box bg-default">
                           <div class="inner">
-                            <h3 style="color:red;" id="PorcentajeEntrenado2"></h3>
+                            <h3 id="PorcentajeEntrenado2" class="text-red"></h3>
                             <p>Entrenados</p>
                           </div>
-                          <div class="icon"><i class="ion ion-stats-bars"></i></div>
+                          <div class="icon">
+                            <i class="ion ion-stats-bars"></i>
+                          </div>
                         </div>
                         <div class="small-box bg-default">
                           <div class="inner">
-                            <h3 style="color:red;" id="HorasEntrenado"></h3>
+                            <h3 id="HorasEntrenado"></h3>
                             <p>Horas entrenadas</p>
+                          </div>
+                          <div class="icon">
+                            <i class="fas fa-clock"></i>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
-                <!-- /.card -->
-
-                <!-- BAR CHART: Personas por Área -->
+              </div>
+              <!-- Personas Totales vs Entrenadas Anual -->
+              <div class="col-md-6">
                 <div class="card card-secondary">
                   <div class="card-header">
-                    <h3 class="card-title">
-                      Personas en Entrenamiento vs Personas Entrenadas por Área
-                    </h3>
+                    <h3 class="card-title">Personas Totales vs Personas Entrenadas Anual</h3>
+                    <div class="card-tools">
+                      <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                      </button>
+                      <button type="button" class="btn btn-tool" data-card-widget="remove">
+                        <i class="fas fa-times"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <div class="chart" style="height:250px;">
+                      <canvas id="barChart3"></canvas>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- SEGUNDA FILA: Por Área y Por Pilar -->
+            <div class="row">
+              <!-- Personas en Entrenamiento vs Entrenadas por Área -->
+              <div class="col-md-6">
+                <div class="card card-secondary">
+                  <div class="card-header">
+                    <h3 class="card-title">Personas en Entrenamiento vs Personas Entrenadas por Área</h3>
                     <div class="card-tools">
                       <button type="button" class="btn btn-tool" data-card-widget="collapse">
                         <i class="fas fa-minus"></i>
@@ -267,48 +295,23 @@ error_log("🕵️‍♀️ [dashboard.php] cargando vista del dashboard para pl
                         <select id="areaFilterPersonas" class="form-control" style="width: 60%">
                           <option value="0">Todas las Áreas</option>
                           <?php
-                          $planta_id = $_SESSION['planta_id'];
-                          $tabla = ModeloArea::listarAreaMdl($planta_id);
-                          foreach ($tabla as $value) {
-                            echo '<option value="' . $value["id"] . '">' . $value["nombre"] . '</option>';
-                          }
+                            $planta_id = $_SESSION['planta_id'];
+                            $tabla = ModeloArea::listarAreaMdl($planta_id);
+                            foreach ($tabla as $value) {
+                              echo '<option value="'.$value["id"].'">'.$value["nombre"].'</option>';
+                            }
                           ?>
                         </select>
                       </div>
                     </div>
-                    <div class="chart" style="height: 285px;">
+                    <div class="chart" style="height:285px;">
                       <canvas id="barChart4"></canvas>
                     </div>
                   </div>
                 </div>
-                <!-- /.card -->
               </div>
-              <!-- /.col (LEFT) -->
-
-              <!-- COLUMNA DERECHA -->
+              <!-- Personas Totales vs Entrenadas por Pilar -->
               <div class="col-md-6">
-                <!-- Personas Totales vs Entrenadas Anual -->
-                <div class="card card-secondary">
-                  <div class="card-header">
-                    <h3 class="card-title">Personas Totales vs Personas Entrenadas Anual</h3>
-                    <div class="card-tools">
-                      <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                        <i class="fas fa-minus"></i>
-                      </button>
-                      <button type="button" class="btn btn-tool" data-card-widget="remove">
-                        <i class="fas fa-times"></i>
-                      </button>
-                    </div>
-                  </div>
-                  <div class="card-body">
-                    <div class="chart">
-                      <canvas id="barChart3"></canvas>
-                    </div>
-                  </div>
-                </div>
-                <!-- /.card -->
-
-                <!-- Personas Totales vs Entrenadas por Pilar -->
                 <div class="card card-secondary">
                   <div class="card-header">
                     <h3 class="card-title">Personas Totales vs Personas Entrenadas por Pilar</h3>
@@ -323,43 +326,33 @@ error_log("🕵️‍♀️ [dashboard.php] cargando vista del dashboard para pl
                   </div>
                   <div class="card-body">
                     <div class="row">
-                      <div class="col-md-6">
-                        <canvas id="pieChart5"></canvas>
-                        <p class="mt-2 text-danger">
-                          Horas entrenadas: <b id="HorasEntrenado1">TEST</b>
-                        </p>
-                      </div>
-                      <div class="col-md-6">
-                        <canvas id="pieChart6"></canvas>
-                        <p class="mt-2 text-danger">
-                          Horas entrenadas: <b id="HorasEntrenado2">TEST</b>
-                        </p>
-                      </div>
-                      <div class="col-md-6">
-                        <canvas id="pieChart7"></canvas>
-                        <p class="mt-2 text-danger">
-                          Horas entrenadas: <b id="HorasEntrenado3">TEST</b>
-                        </p>
-                      </div>
-                      <div class="col-md-6">
-                        <canvas id="pieChart8"></canvas>
-                        <p class="mt-2 text-danger">
-                          Horas entrenadas: <b id="HorasEntrenado4">TEST</b>
-                        </p>
-                      </div>
+                      <?php 
+                        $pillars = [
+                          ['id'=>'pieChart5','label'=>'Seguridad','horas'=>'HorasEntrenado1'],
+                          ['id'=>'pieChart6','label'=>'Calidad','horas'=>'HorasEntrenado2'],
+                          ['id'=>'pieChart7','label'=>'Producción','horas'=>'HorasEntrenado3'],
+                          ['id'=>'pieChart8','label'=>'5S','horas'=>'HorasEntrenado4'],
+                        ];
+                        foreach($pillars as $p): ?>
+                          <div class="col-md-6">
+                            <div class="small-box bg-default" style="height:200px; display:flex; align-items:center; justify-content:center;">
+                              <canvas id="<?= $p['id'] ?>"></canvas>
+                            </div>
+                            <p class="mt-2 text-danger">
+                              Horas entrenadas: <b id="<?= $p['horas'] ?>">0</b>
+                            </p>
+                          </div>
+                        <?php endforeach; ?>
                     </div>
                   </div>
                 </div>
-                <!-- /.card-body -->
               </div>
-              <!-- /.col (RIGHT) -->
             </div>
-            <!-- /.row -->
-          </div>
-          <!-- /.container-fluid -->
-        </div>
-        <!-- /.content -->
+
+          </div><!-- /.container-fluid -->
+        </div><!-- /.content -->
       </div>
+
 
       <div class="tab-pane fade" id="adquisicion" role="tabpanel" aria-labelledby="adquisicion-tab">
         <div class="content">
