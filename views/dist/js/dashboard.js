@@ -466,7 +466,12 @@ function renderDonut(canvasId, labels, data, titleText = "") {
     type: "doughnut",
     data: {
       labels,
-      datasets: [{ data, backgroundColor: ["#3b8bba", "#5fa8d3"] }],
+      datasets: [
+        {
+          data,
+          backgroundColor: ["#3b8bba", "#5fa8d3"],
+        },
+      ],
     },
     options: {
       cutoutPercentage: 60,
@@ -477,6 +482,25 @@ function renderDonut(canvasId, labels, data, titleText = "") {
       },
       legend: {
         position: "bottom",
+      },
+      // aquí activamos datalabels para el donut
+      plugins: {
+        datalabels: {
+          anchor: "center", // centra el label en el medio de cada porción
+          align: "center",
+          color: "#FFFDD0", // color del texto
+          font: {
+            weight: "bold",
+            size: 14,
+          },
+          formatter: (value, ctx) => {
+            // si quieres el número crudo:
+            return value;
+            // o si prefieres %:
+            // const sum = ctx.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+            // return sum ? Math.round(value / sum * 100) + "%" : "";
+          },
+        },
       },
     },
   });
@@ -489,7 +513,29 @@ function renderBar(canvasId, labels, data) {
       labels,
       datasets: [{ label: "Cantidad", data, backgroundColor: "#3b8bba" }],
     },
-    options: { scales: { y: { beginAtZero: true } } },
+    options: {
+      scales: {
+        y: { beginAtZero: true },
+        plugins: {
+          datalabels: {
+            anchor: "center", // centra el label en el medio de cada porción
+            align: "center",
+            color: "#FFFDD0", // color del texto
+            font: {
+              weight: "bold",
+              size: 14,
+            },
+            formatter: (value, ctx) => {
+              // si quieres el número crudo:
+              return value;
+              // o si prefieres %:
+              // const sum = ctx.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+              // return sum ? Math.round(value / sum * 100) + "%" : "";
+            },
+          },
+        },
+      },
+    },
   });
 }
 
@@ -511,6 +557,24 @@ function renderBarGrouped(canvasId, labels, data1, data2) {
             gridLines: { color: "rgba(0,0,0,0.05)" },
           },
         ],
+      },
+      plugins: {
+        datalabels: {
+          anchor: "center", // centra el label en el medio de cada porción
+          align: "center",
+          color: "#FFFDD0", // color del texto
+          font: {
+            weight: "bold",
+            size: 14,
+          },
+          formatter: (value, ctx) => {
+            // si quieres el número crudo:
+            return value;
+            // o si prefieres %:
+            // const sum = ctx.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+            // return sum ? Math.round(value / sum * 100) + "%" : "";
+          },
+        },
       },
     },
   });
