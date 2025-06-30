@@ -154,6 +154,7 @@
                 <div class="progress-bar bg-success" id="barra-progreso" role="progressbar" style="width: 0%;"
                   aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
               </div>
+              <div id="info-adquisicion"></div>
             </div>
           </div>
           <div class="col-sm-3">
@@ -304,29 +305,45 @@
 
     // Función para el cálculo de porcentaje
     function setupPorcentaje() {
-      $("#num-chequeos, #chequeos-correctos").on('input', function () {
-        var numChequeos = parseInt($("#num-chequeos").val()) || 0;
-        var chequeosCorrectos = parseInt($("#chequeos-correctos").val()) || 0;
-
-        // Validar que correctos no sea mayor que total
-        if (chequeosCorrectos > numChequeos) {
-          chequeosCorrectos = numChequeos;
-          $("#chequeos-correctos").val(numChequeos);
-        }
-
-        // Calcular porcentaje
-        var porcentaje = numChequeos > 0 ? Math.round((chequeosCorrectos / numChequeos) * 100) : 0;
-
-        // Actualizar campos
-        $("#porcentaje-cumplimiento").val(porcentaje);
-        $("#barra-progreso")
-          .css('width', porcentaje + '%')
-          .attr('aria-valuenow', porcentaje)
-          .text(porcentaje + '%')
-          .removeClass('bg-success bg-warning bg-danger')
-          .addClass(porcentaje >= 80 ? 'bg-success' :
-            porcentaje >= 50 ? 'bg-warning' : 'bg-danger');
-      });
+        $("#num-chequeos, #chequeos-correctos").on('input', function() {
+            var numChequeos = parseInt($("#num-chequeos").val()) || 0;
+            var chequeosCorrectos = parseInt($("#chequeos-correctos").val()) || 0;
+            
+            // Validar que correctos no sea mayor que total
+            if(chequeosCorrectos > numChequeos) {
+                chequeosCorrectos = numChequeos;
+                $("#chequeos-correctos").val(numChequeos);
+            }
+            
+            // Calcular porcentaje
+            var porcentaje = numChequeos > 0 ? Math.round((chequeosCorrectos / numChequeos) * 100) : 0;
+            
+            // Determinar si el estándar está adquirido (se permite fallar en máximo 1)
+            var estandarAdquirido = chequeosCorrectos >= (numChequeos - 1) && numChequeos > 0;
+            
+            // Actualizar campos
+            $("#porcentaje-cumplimiento").val(porcentaje);
+            
+            // Actualizar barra de progreso con color según adquisición
+            $("#barra-progreso")
+                .css('width', porcentaje + '%')
+                .attr('aria-valuenow', porcentaje)
+                .text(porcentaje + '% ' + (estandarAdquirido ? '(Adquirido)' : '(No adquirido)'))
+                .removeClass('bg-success bg-warning bg-danger')
+                .addClass(estandarAdquirido ? 'bg-success' : 'bg-danger');
+            
+            // Mostrar mensaje informativo sobre la regla de adquisición
+            var mensajeRequerido = numChequeos > 0 ? (numChequeos - 1) : 0;
+            $("#info-adquisicion").html(`
+                <div class="alert alert-info mt-2">
+                    <i class="fas fa-info-circle"></i> 
+                    Para que el estándar se considere adquirido, se requieren al menos 
+                    <strong>${mensajeRequerido}</strong> chequeos correctos de <strong>${numChequeos}</strong>.
+                    <br>
+                    Estado actual: <strong>${estandarAdquirido ? 'Adquirido' : 'No adquirido'}</strong>
+                </div>
+            `);
+        });
     }
 
     setupBuscador(

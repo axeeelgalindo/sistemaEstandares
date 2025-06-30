@@ -201,7 +201,7 @@ error_log("🕵️‍♀️ [dashboard.php] cargando vista del dashboard para pl
           <!-- /.container-fluid -->
         </div>
       </div>
-            <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+      <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
         <div class="content">
           <div class="container-fluid">
 
@@ -295,11 +295,11 @@ error_log("🕵️‍♀️ [dashboard.php] cargando vista del dashboard para pl
                         <select id="areaFilterPersonas" class="form-control" style="width: 60%">
                           <option value="0">Todas las Áreas</option>
                           <?php
-                            $planta_id = $_SESSION['planta_id'];
-                            $tabla = ModeloArea::listarAreaMdl($planta_id);
-                            foreach ($tabla as $value) {
-                              echo '<option value="'.$value["id"].'">'.$value["nombre"].'</option>';
-                            }
+                          $planta_id = $_SESSION['planta_id'];
+                          $tabla = ModeloArea::listarAreaMdl($planta_id);
+                          foreach ($tabla as $value) {
+                            echo '<option value="' . $value["id"] . '">' . $value["nombre"] . '</option>';
+                          }
                           ?>
                         </select>
                       </div>
@@ -326,23 +326,24 @@ error_log("🕵️‍♀️ [dashboard.php] cargando vista del dashboard para pl
                   </div>
                   <div class="card-body">
                     <div class="row">
-                      <?php 
-                        $pillars = [
-                          ['id'=>'pieChart5','label'=>'Seguridad','horas'=>'HorasEntrenado1'],
-                          ['id'=>'pieChart6','label'=>'Calidad','horas'=>'HorasEntrenado2'],
-                          ['id'=>'pieChart7','label'=>'Producción','horas'=>'HorasEntrenado3'],
-                          ['id'=>'pieChart8','label'=>'5S','horas'=>'HorasEntrenado4'],
-                        ];
-                        foreach($pillars as $p): ?>
-                          <div class="col-md-6">
-                            <div class="small-box bg-default" style="height:200px; display:flex; align-items:center; justify-content:center;">
-                              <canvas id="<?= $p['id'] ?>"></canvas>
-                            </div>
-                            <p class="mt-2 text-danger">
-                              Horas entrenadas: <b id="<?= $p['horas'] ?>">0</b>
-                            </p>
+                      <?php
+                      $pillars = [
+                        ['id' => 'pieChart5', 'label' => 'Seguridad', 'horas' => 'HorasEntrenado1'],
+                        ['id' => 'pieChart6', 'label' => 'Calidad', 'horas' => 'HorasEntrenado2'],
+                        ['id' => 'pieChart7', 'label' => 'Producción', 'horas' => 'HorasEntrenado3'],
+                        ['id' => 'pieChart8', 'label' => '5S', 'horas' => 'HorasEntrenado4'],
+                      ];
+                      foreach ($pillars as $p): ?>
+                        <div class="col-md-6">
+                          <div class="small-box bg-default"
+                            style="height:200px; display:flex; align-items:center; justify-content:center;">
+                            <canvas id="<?= $p['id'] ?>"></canvas>
                           </div>
-                        <?php endforeach; ?>
+                          <p class="mt-2 text-danger">
+                            Horas entrenadas: <b id="<?= $p['horas'] ?>">0</b>
+                          </p>
+                        </div>
+                      <?php endforeach; ?>
                     </div>
                   </div>
                 </div>
