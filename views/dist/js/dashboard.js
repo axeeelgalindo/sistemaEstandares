@@ -2,37 +2,51 @@
 console.log("🚀 dashboard.js cargado");
 const _charts = {};
 
-
 document.addEventListener("DOMContentLoaded", () => {
   const est = document.getElementById("areaFilter");
   const per = document.getElementById("areaFilterPersonas");
+  const adq = document.getElementById("areaFilterAdquisicion");
 
   // ── FILTROS DE ÁREA ─────────────────────────────────────────────────────────
   if (est) {
-    est.addEventListener("change", () => updateCharts(+est.value, "estandares"));
+    est.addEventListener("change", () => {
+      const activeId = document.querySelector("#myTab .active").id;
+      if (activeId === "home-tab") {
+        updateCharts(+est.value, "estandares");
+      }
+      if (activeId === "profile-tab") {
+        updateCharts(+per.value, "personas");
+      }
+      if (activeId === "adquisicion-tab") {
+        updateCharts(+adq.value, "adquisicion");
+      }
+    });
   }
+
   if (per) {
-    per.addEventListener("change", () =>
-      updateCharts(+per.value, "personas")
+    per.addEventListener("change", () => updateCharts(+per.value, "personas"));
+  }
+
+  if (adq) {
+    adq.addEventListener("change", () =>
+      updateCharts(+adq.value, "adquisicion")
     );
   }
 
   // ── CUANDO SE MUESTRA UNA PESTAÑA ─────────────────────────────────────────────
-  // Usamos el evento shown.bs.tab de Bootstrap para re-renderizar sólo lo que toca
-  $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-    if (e.target.id === 'home-tab') {
-      // volvemos a renderizar estándares
+  $('a[data-toggle="tab"]').on("shown.bs.tab", function (e) {
+    if (e.target.id === "home-tab") {
       updateCharts(+est.value, "estandares");
     }
-    if (e.target.id === 'profile-tab') {
-      // renderizamos personas
+    if (e.target.id === "profile-tab") {
       updateCharts(+per.value, "personas");
     }
-    // (puedes añadir más pestañas, p.ej. adquisición, si quieres)
+    if (e.target.id === "adquisicion-tab") {
+      updateCharts(+adq.value, "adquisicion");
+    }
   });
 
   // ── CARGA INICIAL ────────────────────────────────────────────────────────────
-  // arranca con estándares
   updateCharts(0, "estandares");
 });
 
@@ -307,6 +321,95 @@ function updateCharts(areaId, seccion = "todas") {
         )
       )
       .catch((err) => console.error("❌ Error anuales estándares:", err));
+  }
+
+  if (seccion == "todas" || seccion === "adquisicion") {
+    fetchDashboardData("Estandares_Graficos_Entrenados_Adquiridos", {
+      id_area: areaId,
+    })
+      .then((p) => {
+        // 1) Coerce a números
+        const entrenados = +p.total_estandares_entrenados;
+        const adquiridos = +p.total_estandares_adquiridos;
+
+        // 2) Render del donut
+        renderDonut(
+          "donutChartAdquisicion",
+          ["Entrenados", "Adquiridos"],
+          [entrenados, adquiridos],
+          "Entrenados vs Adquiridos"
+        );
+
+        // 3) % sobre los adquiridos
+        const total = entrenados + adquiridos;
+        const pct = total > 0 ? Math.round((entrenados / total) * 100) : 0;
+
+        document.getElementById("PorcentajeEntrenadoAdquisicion").textContent =
+          pct + " %";
+      })
+      .catch((err) =>
+        console.error("❌ Error al cargar datos de Adquisición:", err)
+      );
+
+    // 2) Barras de Entrenados vs Adquiridos
+    fetchDashboardData("Estandares_Graficos_Por_Area_Adquisicion", {
+      id_area: areaId,
+    })
+      .then((p) => {
+        const entrenados = +p.total_entrenados || 0;
+        const adquiridos = +p.total_adquiridos || 0;
+
+        createOrUpdateChart("barChartAdquisicion", {
+          type: "bar",
+          data: {
+            labels: ["Total Área"],
+            datasets: [
+              {
+                label: "Entrenados",
+                data: [entrenados],
+                backgroundColor: "#3b8bba",
+              },
+              {
+                label: "Adquiridos",
+                data: [adquiridos],
+                backgroundColor: "#5fa8d3",
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              yAxes: [
+                {
+                  ticks: { beginAtZero: true, stepSize: 1 },
+                  gridLines: { color: "rgba(0,0,0,0.05)" },
+                },
+              ],
+            },
+            legend: { position: "top" },
+
+            // <-- aquí venimos con datalabels
+            plugins: {
+              datalabels: {
+                anchor: "center", // posición del label
+                align: "center", // alineación dentro de la barra
+                color: "#FFFDD0", // color del texto
+                font: {
+                  weight: "bold", // negrita
+                  size: 14, // tamaño en px
+                },
+                formatter: function (value) {
+                  return value; // muestra el valor bruto
+                },
+              },
+            },
+          },
+        });
+      })
+      .catch((err) =>
+        console.error("❌ Error al cargar barras de Adquisición por Área:", err)
+      );
   }
 
   console.groupEnd();

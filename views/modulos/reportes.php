@@ -1,35 +1,32 @@
 <section class="content-header">
-      <div class="container-fluid">
-        <div class="row mb-2">
-          <div class="col-sm-6">
-            <h1>Reportes</h1>
-          </div>
-          <div class="col-sm-6">
-            <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">Inicio</a></li>
-            </ol>
-          </div>
-        </div>
-      </div><!-- /.container-fluid -->
-    </section>
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1>Reportes</h1>
+      </div>
+      <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right">
+          <li class="breadcrumb-item"><a href="#">Inicio</a></li>
+        </ol>
+      </div>
+    </div>
+  </div><!-- /.container-fluid -->
+</section>
 
-    <!-- Main content -->
-    <section class="content">
-
-      <div class="container-fluid">
-        <div class="row">
-
-<div class="col-12">
-
-            <div class="card">
-              <div class="card-header">
-                <div class="card card-default">
+<!-- Main content -->
+<section class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header">
+            <div class="card card-default">
               <div class="card-header">
                 <h3 class="card-title">Filtros</h3>
               </div>
               <div class="card-body">
                 <!-- Date -->
-     
+
 
                 <!-- /.form group -->
                 <!-- Date range -->
@@ -49,70 +46,70 @@
                 <!-- /.form group -->
                 <!-- /.form group -->
               </div>
-                <div class="card-footer">
+              <div class="card-footer">
 
-                </div>
+              </div>
               <!-- /.card-body -->
             </div>
-              </div>
-              <!-- /.card-header -->
-              <div class="card-body">
-                <table id="example1" class="table table-bordered table-striped">
-                             <thead>
-                  <tr>
-                      <th >
-                          Rut
-                      </th>
-                      <th>
-                         Nombre
-                      </th>
-                      <th >
-                       Apellido
-                      </th>
-                      <th >
-                      Acción
-                      </th>
-                  </tr>
+          </div>
+          <!-- /.card-header -->
+          <div class="card-body">
+            <table id="example1" class="table table-bordered table-striped">
+              <thead>
+                <tr>
+                  <th>
+                    Rut
+                  </th>
+                  <th>
+                    Nombre
+                  </th>
+                  <th>
+                    Apellido
+                  </th>
+                  <th>
+                    Acción
+                  </th>
+                </tr>
               </thead>
-                  <tbody>
-                  <?php
-          $tabla = ModeloPersonas::listarPersonasMdl($_SESSION['planta_id']);
-          foreach ($tabla as $key => $value) {
-            echo '
+              <tbody>
+                <?php
+                $tabla = ModeloPersonas::listarPersonasMdl($_SESSION['planta_id']);
+                foreach ($tabla as $key => $value) {
+                  echo '
                     <tr>
-                    <td>'.nl2br($value["rut"]).'</td>
-                    <td>'.nl2br($value["nombre"]).'</td>
-                    <td>'.nl2br($value["apellido"]).'</td>
+                    <td>' . nl2br($value["rut"]) . '</td>
+                    <td>' . nl2br($value["nombre"]) . '</td>
+                    <td>' . nl2br($value["apellido"]) . '</td>
 
-                    <td width="100"> <button class="btn btn-sm btn-info btnEditarSecciones" idSeccion="'.$value["rut"].'" data-toggle="modal" data-target="#modal-editar-secciones">
+                    <td width="100"> <button class="btn btn-sm btn-info btnEditarSecciones" idSeccion="' . $value["rut"] . '" data-toggle="modal" data-target="#modal-editar-secciones">
                                         <i class="far fa-edit"></i> Editar
                                     </button>
-                        <button class="btn btn-sm btn-danger btnEliminarSecciones"  idSeccion="'.$value["rut"].'">
+                        <button class="btn btn-sm btn-danger btnEliminarSecciones"  idSeccion="' . $value["rut"] . '">
                                         <i class="far fa-trash-alt"></i> Eliminar
                         </button>
                         </td>
                     </tr>
             ';
-          }
-               ?>  
-    
-                  </tbody>
-    
-                </table>
-              </div>
-              <!-- /.card-body -->
-            </div>
-            <!-- /.card -->
-          </div>
-          <!-- /.col -->
-        </div>
-</div>
+                }
+                ?>
 
-        <!-- /.row -->
+              </tbody>
+
+            </table>
+          </div>
+          <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
       </div>
-      <!-- /.container-fluid -->
-    </section>
-    <!-- /.content -->
+      <!-- /.col -->
+    </div>
+  </div>
+
+  <!-- /.row -->
+  </div>
+  <!-- /.container-fluid -->
+</section>
+<!-- /.content -->
 
 
 <!-- jQuery -->
@@ -135,8 +132,3 @@
 <script src="plugins/uplot/uPlot.iife.min.js"></script>
 <!-- AdminLTE App -->
 <script src="dist/js/adminlte.min.js"></script>
-
-<!-- Page specific script -->
-<script>
-
-

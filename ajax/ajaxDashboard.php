@@ -60,6 +60,17 @@ try {
             echo json_encode($out);
             break;
 
+        //ADQUISICIONES
+        //ADQUISICIONES
+        case 'Estandares_Graficos_Entrenados_Adquiridos':
+            $out = ModeloDashboard::graficosAdquisicion($planta_id, $id_area);
+            echo json_encode($out);
+            break;
+        case 'Estandares_Graficos_Por_Area_Adquisicion':
+            $out = ModeloDashboard::graficosPorAreaAdquisicion($planta_id, $id_area);
+            echo json_encode($out);
+            break;
+
         default:
             http_response_code(400);
             echo json_encode(['error' => 'Acción inválida']);

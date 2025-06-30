@@ -147,6 +147,11 @@ $ruta = $_GET['ruta'] ?? '';
   <script src="plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
   <!-- <script src="plugins/chart.js/Chart2.min.js"></script> -->
   <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>-->
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+
+
+
+
   <!--<script src="plugins/chart.js/Chart4.min.js"></script> -->
 
   <!--<script src="plugins/chart.js/plugin.js"></script> -->
@@ -168,6 +173,9 @@ $ruta = $_GET['ruta'] ?? '';
 
   <!-- Chart.js-->
   <script src="plugins/chart.js/Chart.min.js"></script>
+
+  <script
+    src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0/dist/chartjs-plugin-datalabels.min.js"></script>
 
   <script>
     // lo inyectamos en JS de forma segura

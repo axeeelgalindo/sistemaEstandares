@@ -411,7 +411,7 @@ error_log("🕵️‍♀️ [dashboard.php] cargando vista del dashboard para pl
                   <div class="card-body">
                     <div class="col-6 col-sm-6">
                       <div class="form-group">
-                        <select id="areaFilter" class="form-control areas" style="width: 60%;" name="areas">
+                        <select id="areaFilterAdquisicion" class="form-control areas" style="width: 60%;" name="areas">
                           <option value="0">Todas las Áreas</option>
                           <?php
                           $planta_id = $_SESSION['planta_id'];
