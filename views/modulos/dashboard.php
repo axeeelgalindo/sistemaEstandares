@@ -375,7 +375,7 @@ error_log("🕵️‍♀️ [dashboard.php] cargando vista del dashboard para pl
                   </div>
                   <div class="card-body">
                     <div class="row">
-                      <div class="col-lg-9 col-sm-6">
+                      <div class="col-lg-9 col-sm-6" style="height:250px;">
                         <canvas id="donutChartAdquisicion"></canvas>
                       </div>
                       <div class="col-lg-3 col-sm-6">
@@ -448,7 +448,7 @@ error_log("🕵️‍♀️ [dashboard.php] cargando vista del dashboard para pl
                     </div>
                   </div>
                   <div class="card-body">
-                    <div class="chart">
+                    <div class="chart" style="height:250px;">
                       <canvas id="barChartAdquisicionAnual"></canvas>
                     </div>
                   </div>

@@ -75,6 +75,10 @@ try {
             http_response_code(400);
             echo json_encode(['error' => 'Acción inválida']);
             break;
+        case 'Estandares_Graficos_Adquisicion_Anual':
+            $out = ModeloDashboard::graficosAdquisicionAnual($planta_id, $id_area);
+            echo json_encode($out);
+            break;
     }
 } catch (Exception $e) {
     http_response_code(500);

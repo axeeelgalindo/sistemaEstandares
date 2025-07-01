@@ -1,5 +1,8 @@
 // views/dist/js/dashboard.js
 console.log("🚀 dashboard.js cargado");
+
+Chart.plugins.register(ChartDataLabels);
+
 const _charts = {};
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -410,6 +413,184 @@ function updateCharts(areaId, seccion = "todas") {
       .catch((err) =>
         console.error("❌ Error al cargar barras de Adquisición por Área:", err)
       );
+
+    // ── 3) Entrenados vs Estándares Adquiridos Anual ───────────────────────────
+    fetchDashboardData("Estandares_Graficos_Adquisicion_Anual", {
+      id_area: areaId,
+    })
+      .then((arr) => {
+        const mesesEs = [
+          "Enero",
+          "Febrero",
+          "Marzo",
+          "Abril",
+          "Mayo",
+          "Junio",
+          "Julio",
+          "Agosto",
+          "Septiembre",
+          "Octubre",
+          "Noviembre",
+          "Diciembre",
+        ];
+        // Etiquetas
+        const labels = arr.map((r) => mesesEs[r.MesNum - 1] || "");
+
+        // Valores por pilar
+        const dsSeg = arr.map((r) => +r.Seguridad);
+        const dsCal = arr.map((r) => +r.Calidad);
+        const dsProd = arr.map((r) => +r.Producción);
+        const ds5S = arr.map((r) => +r["5S"]);
+
+        // Totales y % para el footer
+        const dsAdq = arr.map((r) => +r.TotalAdquiridos);
+        const dsPct = arr.map((r) => +r.PorcentajeCumplimiento);
+
+        // Objetivo al 80%
+        const dsObj = labels.map(() => 80);
+
+        createOrUpdateChart("barChartAdquisicionAnual", {
+          type: "bar",
+          data: {
+            labels,
+            datasets: [
+              {
+                label: "Seguridad",
+                data: dsSeg,
+                backgroundColor: "#081A4A",
+                stack: "pilar",
+              },
+              {
+                label: "Calidad",
+                data: dsCal,
+                backgroundColor: "#EB6D04",
+                stack: "pilar",
+              },
+              {
+                label: "Producción",
+                data: dsProd,
+                backgroundColor: "#C0C0C0",
+                stack: "pilar",
+              },
+              {
+                label: "5S",
+                data: ds5S,
+                backgroundColor: "#707070",
+                stack: "pilar",
+              },
+              {
+                label: "Objetivo",
+                data: dsObj,
+                type: "line",
+                yAxisID: "y1",
+                borderDash: [5, 5],
+                fill: false,
+                borderColor: "#000",
+                pointRadius: 0,
+              },
+              {
+                label: "% Cumplimiento",
+                data: dsPct,
+                type: "line",
+                yAxisID: "y1",
+                borderColor: "#999",
+                fill: false,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            legend: {
+              position: "top",
+              labels: { fontColor: "#333", fontSize: 12 },
+            },
+            scales: {
+              xAxes: [
+                {
+                  stacked: true,
+                  ticks: { fontColor: "#333" },
+                  gridLines: { color: "rgba(0,0,0,0.05)" },
+                },
+              ],
+              yAxes: [
+                {
+                  id: "y",
+                  position: "left",
+                  stacked: true,
+                  ticks: { beginAtZero: true, fontColor: "#333" },
+                  scaleLabel: {
+                    display: true,
+                    labelString: "Cantidad de Estándares",
+                    fontColor: "#333",
+                  },
+                },
+                {
+                  id: "y1",
+                  position: "right",
+                  stacked: false,
+                  ticks: {
+                    beginAtZero: true,
+                    max: 100,
+                    callback: (v) => v + "%",
+                    fontColor: "#333",
+                  },
+                  gridLines: { drawOnChartArea: false },
+                  scaleLabel: {
+                    display: true,
+                    labelString: "% Cumplimiento",
+                    fontColor: "#333",
+                  },
+                },
+              ],
+            },
+            tooltips: {
+              mode: "index",
+              intersect: false,
+              backgroundColor: "#222",
+              titleFontColor: "#FFF",
+              bodyFontColor: "#FFF",
+              footerFontColor: "#FFF",
+              xPadding: 12,
+              yPadding: 8,
+              borderWidth: 1,
+              callbacks: {
+                title: (items) => {
+                  return items[0].label; // el mes
+                },
+                label: (item, data) => {
+                  // sólo para los primeros 4 datasets (pilares)
+                  if (item.datasetIndex < 4) {
+                    const ds = data.datasets[item.datasetIndex];
+                    return `${ds.label}: ${ds.data[item.index]} estándares`;
+                  }
+                  return null;
+                },
+                afterBody: (items) => {
+                  const i = items[0].index;
+                  const totalStd = dsSeg[i] + dsCal[i] + dsProd[i] + ds5S[i];
+                  return [
+                    "────────────",
+                    `Total Estándares: ${totalStd}`,
+                    `Estándares Adquiridos: ${dsAdq[i]}`,
+                    `Cumplimiento: ${dsPct[i]}%`,
+                  ];
+                },
+              },
+            },
+            plugins: {
+              datalabels: {
+                color: "#333",
+                font: { weight: "bold", size: 12 },
+                anchor: "center",
+                align: "center",
+                formatter: (v) => v,
+              },
+            },
+          },
+        });
+      })
+      .catch((err) => console.error("❌ Error anual Adquisición:", err));
   }
 
   console.groupEnd();
@@ -557,24 +738,6 @@ function renderBarGrouped(canvasId, labels, data1, data2) {
             gridLines: { color: "rgba(0,0,0,0.05)" },
           },
         ],
-      },
-      plugins: {
-        datalabels: {
-          anchor: "center", // centra el label en el medio de cada porción
-          align: "center",
-          color: "#FFFDD0", // color del texto
-          font: {
-            weight: "bold",
-            size: 14,
-          },
-          formatter: (value, ctx) => {
-            // si quieres el número crudo:
-            return value;
-            // o si prefieres %:
-            // const sum = ctx.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
-            // return sum ? Math.round(value / sum * 100) + "%" : "";
-          },
-        },
       },
     },
   });

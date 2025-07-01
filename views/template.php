@@ -174,8 +174,8 @@ $ruta = $_GET['ruta'] ?? '';
   <!-- Chart.js-->
   <script src="plugins/chart.js/Chart.min.js"></script>
 
-  <script
-    src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0/dist/chartjs-plugin-datalabels.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0/dist/chartjs-plugin-datalabels.min.js"></script>
+
 
   <script>
     // lo inyectamos en JS de forma segura

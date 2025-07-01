@@ -166,4 +166,20 @@ class ModeloDashboard
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
+    public static function graficosAdquisicionAnual($planta_id, $id_area = null)
+    {
+        $sql = "EXEC dbo.Estandares_Graficos_Adquisicion_Anual
+             @planta_id = :planta_id,
+             @id_area   = :id_area";
+        $stmt = Conexion::Conectar()->prepare($sql);
+        $stmt->bindValue(':planta_id', (int) $planta_id, PDO::PARAM_INT);
+        if (empty($id_area) || $id_area === 0) {
+            $stmt->bindValue(':id_area', null, PDO::PARAM_NULL);
+        } else {
+            $stmt->bindValue(':id_area', (int) $id_area, PDO::PARAM_INT);
+        }
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
