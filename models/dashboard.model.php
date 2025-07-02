@@ -40,14 +40,15 @@ class ModeloDashboard
     public static function personasGraficosAnual($planta_id, $area_id = null)
     {
         $sql = "EXEC dbo.Personas_Graficos_Anual
-                @planta_id = :planta_id,
-                @area_id   = :area_id";
+            @planta_id = :planta_id,
+            @area_id   = :area_id";
         $stmt = Conexion::conectar()->prepare($sql);
         $stmt->bindValue(':planta_id', (int) $planta_id, PDO::PARAM_INT);
-        $stmt->bindValue(':area_id', ($area_id ?: 0), PDO::PARAM_INT);
+        $stmt->bindValue(':area_id', $area_id ?: 0, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
 
     public static function personasGraficosPiePilar($planta_id, $area_id = null)
     {

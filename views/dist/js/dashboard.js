@@ -74,22 +74,136 @@ function updateCharts(areaId, seccion = "todas") {
         );
         document.getElementById("PorcentajeEntrenado2").textContent =
           p.porcentaje_entrenados + " %";
-        document.getElementById("HorasEntrenado").textContent =
-          p.horas_entrenadas;
+        // ahora sí mostrará un número de horas razonable
+        const rawHrs = parseFloat(p.horas_entrenadas) || 0;
+
+        // si supera 24h, mostrar en días y horas
+        let displayHrs;
+        if (rawHrs >= 24) {
+          const days = Math.floor(rawHrs / 24);
+          const hours = Math.round(rawHrs % 24);
+          displayHrs = `${days}d ${hours}h`;
+        } else {
+          // si no tiene parte decimal, no mostrar ".0"
+          if (Number.isInteger(rawHrs)) {
+            displayHrs = `${rawHrs.toLocaleString()} h`;
+          } else {
+            displayHrs = `${rawHrs.toFixed(1).toLocaleString()} h`;
+          }
+        }
+
+        document.getElementById("HorasEntrenado").textContent = displayHrs;
       })
       .catch((err) =>
         console.error("❌ Error al obtener datos de personas:", err)
       );
 
+    // ── Personas Totales vs Personas Entrenadas Anual ─────────────────────────
     fetchDashboardData("Personas_Graficos_Anual", { id_area: areaId })
       .then((arr) => {
-        console.log("💡 Personas_Graficos_Anual response:", arr);
-        renderBarGrouped(
-          "barChart3",
-          arr.map((r) => r.Anio),
-          arr.map((r) => r.PersonasTotales),
-          arr.map((r) => r.PersonasEntrenadas)
-        );
+        const labels = arr.map((r) => r.Anio);
+        const totales = arr.map((r) => r.PersonasTotales);
+        const entrenadas = arr.map((r) => r.PersonasEntrenadas);
+        const horas = arr.map((r) => +r.HorasEntrenadas); // en horas
+
+        createOrUpdateChart("barChart3", {
+          type: "bar",
+          data: {
+            labels,
+            datasets: [
+              {
+                label: "Personas en Entrenamiento",
+                data: totales,
+                backgroundColor: "#081A4A",
+                // Opción: grosor fijo
+                // barThickness: 40
+              },
+              {
+                label: "Personas Entrenadas",
+                data: entrenadas,
+                backgroundColor: "#EB6D04",
+                // barThickness: 40
+              },
+              {
+                label: "Horas Entrenadas",
+                data: horas,
+                type: "line",
+                yAxisID: "y1",
+                borderColor: "#FBDA61",
+                fill: false,
+                pointRadius: 4,
+                tension: 0,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            legend: {
+              position: "top",
+              labels: { boxWidth: 12, fontSize: 12 },
+            },
+            scales: {
+              xAxes: [
+                {
+                  gridLines: { display: false },
+                  // haz que las barras llenen más el espacio:
+                  categoryPercentage: 0.8, // antes 0.6
+                  barPercentage: 0.8, // antes 0.5
+                  // si prefieres usar grosor fijo en px, descomenta barThickness arriba
+                },
+              ],
+              yAxes: [
+                {
+                  id: "y",
+                  position: "left",
+                  ticks: {
+                    beginAtZero: true,
+                    callback: (v) => v.toLocaleString(),
+                  },
+                  scaleLabel: { display: true, labelString: "Personas" },
+                  gridLines: { color: "rgba(0,0,0,0.05)" },
+                },
+                {
+                  id: "y1",
+                  position: "right",
+                  ticks: { beginAtZero: true },
+                  scaleLabel: { display: true, labelString: "Horas" },
+                  gridLines: { drawOnChartArea: false },
+                },
+              ],
+            },
+            plugins: {
+              datalabels: {
+                display: true,
+                anchor: "center",
+                align: "center",
+                color: "#FFF",
+                font: { weight: "bold", size: 12 },
+                formatter: (value, ctx) => {
+                  if (ctx.dataset.type === "line") {
+                    return Math.round(value) + "h";
+                  }
+                  return value.toLocaleString();
+                },
+              },
+            },
+            tooltips: {
+              mode: "index",
+              intersect: false,
+              callbacks: {
+                label: (item, data) => {
+                  const ds = data.datasets[item.datasetIndex];
+                  const v = ds.data[item.index];
+                  if (ds.type === "line") {
+                    return `${ds.label}: ${Math.round(v)}h`;
+                  }
+                  return `${ds.label}: ${v.toLocaleString()}`;
+                },
+              },
+            },
+          },
+        });
       })
       .catch((err) => console.error("❌ Error anual personas:", err));
 
@@ -239,18 +353,35 @@ function updateCharts(areaId, seccion = "todas") {
   // ── ESTÁNDARES ────────────────────────────────────────────────────────────
   if (seccion === "todas" || seccion === "estandares") {
     // Totales
+    // ─────────────────────────────────────────────────────────────────────────────
+    // Donut “Creados vs Entrenados” + % Entrenados
     fetchDashboardData("Estandares_Graficos_Creados_Entrenados", {
       id_area: areaId,
     })
       .then((res) => {
+        // 1) parseamos valores
+        const creados = +res.total_estandares_creados;
+        const entrenados = +res.total_estandares_entrenados;
+
+        // 2) dibujamos el donut
         renderDonut(
           "donutChart",
           ["Creados", "Entrenados"],
-          [res.total_estandares_creados, res.total_estandares_entrenados],
+          [creados, entrenados],
           "Estándares"
         );
+
+        // 3) calculamos porcentaje
+        //const total = creados + entrenados;
+        const porcentaje = Math.round((entrenados * 100) / creados);
+        //const pct = total > 0 ? Math.round((entrenados / total) * 100) : 0;
+
+        // 4) volcamos al DOM en tu <h3 id="PorcentajeEntrenado">
+        const el = document.getElementById("PorcentajeEntrenado");
+        if (el) el.textContent = porcentaje + " %";
       })
       .catch((err) => console.error("❌ Error totales estándares:", err));
+    // ─────────────────────────────────────────────────────────────────────────────
 
     // Pie por Pilar (Estándares)
     fetchDashboardData("Estandares_Graficos_Pie_Pilar", { id_area: areaId })
@@ -281,19 +412,6 @@ function updateCharts(areaId, seccion = "todas") {
         );
       })
       .catch((err) => console.error("❌ Error pie estándares por pilar:", err));
-
-    // Barras mensuales
-    fetchDashboardData("Estandares_Graficos_Barras_Creados", {
-      id_area: areaId,
-    })
-      .then((arr) =>
-        renderBar(
-          "barChartCreados",
-          arr.map((r) => r.Mes),
-          arr.map((r) => r.CantidadRegistrosCreados)
-        )
-      )
-      .catch((err) => console.error("❌ Error creados mensuales:", err));
 
     fetchDashboardData("Estandares_Graficos_Barras_Entrenados", {
       id_area: areaId,
@@ -391,7 +509,7 @@ function updateCharts(areaId, seccion = "todas") {
             scales: {
               yAxes: [
                 {
-                  ticks: { beginAtZero: true, stepSize: 1 },
+                  ticks: { beginAtZero: true, stepSize: 100 },
                   gridLines: { color: "rgba(0,0,0,0.05)" },
                 },
               ],
@@ -755,18 +873,40 @@ function renderBarGrouped(canvasId, labels, data1, data2) {
     data: {
       labels,
       datasets: [
-        { label: "Creados", data: data1, backgroundColor: "#3b8bba" },
-        { label: "Entrenados", data: data2, backgroundColor: "#5fa8d3" },
+        {
+          label: "Creados",
+          data: data1,
+          backgroundColor: "#3b8bba",
+        },
+        {
+          label: "Entrenados",
+          data: data2,
+          backgroundColor: "#5fa8d3",
+        },
       ],
     },
     options: {
       scales: {
         yAxes: [
           {
-            ticks: { beginAtZero: true, min: 0, stepSize: 1 },
+            ticks: { beginAtZero: true, min: 0, stepSize: 200 },
             gridLines: { color: "rgba(0,0,0,0.05)" },
           },
         ],
+      },
+      // ←── Aquí activamos DataLabels para todas las barChartGrouped
+      plugins: {
+        datalabels: {
+          anchor: "center", // etiqueta centrada en la barra
+          align: "center", // alineación centrada
+          color: "#FFF", // texto BLANCO
+          font: {
+            // tamaño y peso
+            weight: "bold",
+            size: 14,
+          },
+          formatter: (value) => value, // mostramos el valor bruto
+        },
       },
     },
   });
