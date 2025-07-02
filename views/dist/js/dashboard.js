@@ -74,25 +74,24 @@ function updateCharts(areaId, seccion = "todas") {
         );
         document.getElementById("PorcentajeEntrenado2").textContent =
           p.porcentaje_entrenados + " %";
-        // ahora sí mostrará un número de horas razonable
-        const rawHrs = parseFloat(p.horas_entrenadas) || 0;
 
-        // si supera 24h, mostrar en días y horas
-        let displayHrs;
-        if (rawHrs >= 24) {
-          const days = Math.floor(rawHrs / 24);
-          const hours = Math.round(rawHrs % 24);
-          displayHrs = `${days}d ${hours}h`;
-        } else {
-          // si no tiene parte decimal, no mostrar ".0"
-          if (Number.isInteger(rawHrs)) {
-            displayHrs = `${rawHrs.toLocaleString()} h`;
-          } else {
-            displayHrs = `${rawHrs.toFixed(1).toLocaleString()} h`;
-          }
-        }
+        // =====> Nuevo cálculo en semanas/días/horas <=====
+        let totalHrs = parseFloat(p.horas_entrenadas) || 0;
+        const weeks = Math.floor(totalHrs / (24 * 7));
+        totalHrs -= weeks * 24 * 7;
+        const days = Math.floor(totalHrs / 24);
+        totalHrs -= days * 24;
+        const hours = Math.round(totalHrs); // redondea
 
-        document.getElementById("HorasEntrenado").textContent = displayHrs;
+        // montar líneas solo si hay valor
+        const parts = [];
+        if (weeks > 0) parts.push(`${weeks} semana${weeks > 1 ? "s" : ""}`);
+        if (days > 0) parts.push(`${days} día${days > 1 ? "s" : ""}`);
+        if (hours > 0) parts.push(`${hours} hora${hours > 1 ? "s" : ""}`);
+        if (parts.length === 0) parts.push("0 horas");
+
+        // inyectar con saltos de línea
+        document.getElementById("HorasEntrenado").innerHTML = parts.join("\n");
       })
       .catch((err) =>
         console.error("❌ Error al obtener datos de personas:", err)

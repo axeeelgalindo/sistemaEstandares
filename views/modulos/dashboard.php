@@ -236,13 +236,15 @@ error_log("🕵️‍♀️ [dashboard.php] cargando vista del dashboard para pl
                             <i class="ion ion-stats-bars"></i>
                           </div>
                         </div>
-                        <div class="small-box bg-default">
+                        <div class="small-box bg-default" style="min-height: 120px;">
                           <div class="inner">
-                            <h3 id="HorasEntrenado"></h3>
-                            <p>Horas entrenadas</p>
+                            <h3 id="PorcentajeEntrenado2" style="color:red; margin-bottom: 0.5em;"></h3>
+                            <!-- aquí insertaremos las horas -->
+                            <h4 id="HorasEntrenado" style="white-space: pre-line; font-size: 0.9em; margin-top: 0.5em;">
+                            </h4>
                           </div>
                           <div class="icon">
-                            <i class="fas fa-clock"></i>
+                            <i class="ion ion-clock"></i>
                           </div>
                         </div>
                       </div>
