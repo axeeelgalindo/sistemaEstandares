@@ -52,8 +52,8 @@ class ModeloDashboard
     public static function personasGraficosPiePilar($planta_id, $area_id = null)
     {
         $sql = "EXEC dbo.Personas_Graficos_Pie_Pilar
-                @planta_id = :planta,
-                @area_id   = :area";
+            @planta_id = :planta,
+            @area_id   = :area";
         $stmt = Conexion::conectar()->prepare($sql);
         $stmt->bindValue(':planta', (int) $planta_id, PDO::PARAM_INT);
         if ($area_id) {
@@ -62,8 +62,11 @@ class ModeloDashboard
             $stmt->bindValue(':area', null, PDO::PARAM_NULL);
         }
         $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+
+        // ---> cámbialo por:
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
     // PERSONAS GRAFICOS
     // PERSONAS GRAFICOS
 

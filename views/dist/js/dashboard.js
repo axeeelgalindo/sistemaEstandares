@@ -97,65 +97,54 @@ function updateCharts(areaId, seccion = "todas") {
     console.log("🔍 fetch Personas_Graficos_Por_Area para área", areaId);
     fetchDashboardData("Personas_Graficos_Por_Area", { id_area: areaId })
       .then((rows) => {
-        if (!Array.isArray(rows) || !rows.length) {
-          console.warn("⚠️ No hay datos de personas por área");
-          return;
-        }
+        if (!rows.length) return;
         const r = rows[0];
-        const labels = [
-          "Personas Totales",
-          "Personas en Entrenamiento",
-          "Personas Entrenadas",
-          "Horas Entrenadas (hrs)",
-        ];
+
+        // -- un solo punto X --
+        const labels = ["Total Área"];
+        const minutes = Math.round(r.HorasEntrenadas * 60);
+
+        // -- 4 series, la 4ª es Horas Entrenadas --
         const datasets = [
           {
             label: "Personas Totales",
-            data: [r.PersonasTotales, null, null, null],
+            data: [r.PersonasTotales],
             backgroundColor: "#081A4A",
             yAxisID: "y",
           },
           {
             label: "Personas en Entrenamiento",
-            data: [null, r.PersonasEnEntrenamiento, null, null],
+            data: [r.PersonasEnEntrenamiento],
             backgroundColor: "#2865DF",
             yAxisID: "y",
           },
           {
             label: "Personas Entrenadas",
-            data: [null, null, r.PersonasEntrenadas, null],
+            data: [r.PersonasEntrenadas],
             backgroundColor: "#EB6D04",
             yAxisID: "y",
           },
           {
-            label: "Horas Entrenadas (hrs)",
-            data: [null, null, null, r.HorasEntrenadas],
+            label: "Horas Entrenadas",
+            data: [minutes],
             backgroundColor: "#FABE34",
             yAxisID: "y1",
           },
         ];
+
         createOrUpdateChart("barChart4", {
           type: "bar",
           data: { labels, datasets },
           options: {
             responsive: true,
             maintainAspectRatio: false,
-            tooltips: {
-              callbacks: {
-                label: function (tooltipItem, data) {
-                  const ds = data.datasets[tooltipItem.datasetIndex];
-                  const val = ds.data[tooltipItem.index];
-                  if (ds.yAxisID === "y1" && val != null) {
-                    const totalMinutes = Math.round(val * 60);
-                    const h = Math.floor(totalMinutes / 60);
-                    const m = totalMinutes % 60;
-                    return ds.label + ": " + h + "h " + m + "m";
-                  }
-                  return ds.label + ": " + val;
-                },
-              },
-            },
             scales: {
+              xAxes: [
+                {
+                  gridLines: { display: false },
+                  ticks: { display: true },
+                },
+              ],
               yAxes: [
                 {
                   id: "y",
@@ -167,62 +156,79 @@ function updateCharts(areaId, seccion = "todas") {
                   id: "y1",
                   position: "right",
                   gridLines: { drawOnChartArea: false },
-                  scaleLabel: { display: true, labelString: "Horas" },
+                  scaleLabel: {
+                    display: true,
+                    labelString: "Horas Entrenadas",
+                  },
                   ticks: {
                     beginAtZero: true,
-                    callback: (v) => Math.round(v) + "h",
+                    // mostramos sólo horas enteras en el eje
+                    callback: (v) => {
+                      const h = Math.floor(v / 60);
+                      return h + "h";
+                    },
                   },
                 },
               ],
-              xAxes: [
-                { ticks: { display: false }, gridLines: { display: false } },
-              ],
             },
-            legend: { display: true, position: "top" },
+            legend: { position: "top" },
+            tooltips: {
+              callbacks: {
+                label: (tt, data) => {
+                  const ds = data.datasets[tt.datasetIndex];
+                  const v = ds.data[tt.index];
+                  if (ds.yAxisID === "y1") {
+                    const h = Math.floor(v / 60);
+                    const m = v % 60;
+                    return `Horas entrenadas: ${h}h ${m}m`;
+                  }
+                  return `${ds.label}: ${v}`;
+                },
+              },
+            },
+            plugins: {
+              datalabels: {
+                anchor: "center",
+                align: "center",
+                color: "#FFF",
+                font: { weight: "bold", size: 14 },
+                formatter: (val, ctx) => {
+                  if (ctx.dataset.yAxisID === "y1") {
+                    // val está en minutos
+                    const h = Math.floor(val / 60);
+                    const m = val % 60;
+                    return `${h}h ${m}m`;
+                  }
+                  return val;
+                },
+              },
+            },
           },
         });
       })
       .catch((err) => console.error("❌ Error personas por área:", err));
 
-    // 3) Donuts por Pilar (Personas)
-    fetchDashboardData("Estandares_Graficos_Pie_Pilar", { id_area: areaId })
-      .then((p) => {
-        console.log(p);
-        const pillars = [
-          {
-            id: "pieChart5",
-            name: "Seguridad",
-            data: [p.seguridad_en_entrenamiento, p.seguridad_entrenados],
-            hours: p.seguridad_horas,
-          },
-          {
-            id: "pieChart6",
-            name: "Calidad",
-            data: [p.calidad_en_entrenamiento, p.calidad_entrenados],
-            hours: p.calidad_horas,
-          },
-          {
-            id: "pieChart7",
-            name: "Producción",
-            data: [p.produccion_en_entrenamiento, p.produccion_entrenados],
-            hours: p.produccion_horas,
-          },
-          {
-            id: "pieChart8",
-            name: "5S",
-            data: [p.s5_en_entrenamiento, p.s5_entrenados],
-            hours: p.s5_horas,
-          },
-        ];
-        pillars.forEach((pl, i) => {
+    // ── 3) Donuts por Pilar (Personas)
+    fetchDashboardData("Personas_Graficos_Pie_Pilar", { id_area: areaId })
+      .then((rows) => {
+        if (!Array.isArray(rows) || rows.length === 0) {
+          console.warn("⚠️ No hay datos de personas por pilar");
+          return;
+        }
+        rows.forEach((r, i) => {
+          // usamos los nuevos campos: r.PersonasCreadas, r.PersonasEntrenadas
           renderDonut(
-            pl.id,
-            ["En Entrenamiento", "Entrenados"],
-            pl.data,
-            pl.name
+            `pieChart${5 + i}`,
+            ["Personas Creadas", "Personas Entrenadas"],
+            [+r.PersonasCreadas, +r.PersonasEntrenadas],
+            r.Pilar
           );
+          // mostramos las horas entrenadas a partir de r.HorasEntrenadas
+          const minutos = Math.round(r.HorasEntrenadas * 60);
+          const h = Math.floor(minutos / 60);
+          const m = minutos % 60;
           const el = document.getElementById(`HorasEntrenado${i + 1}`);
-          if (el) el.textContent = pl.hours ?? "0";
+          if (el) el.textContent = `${h}h ${m}m`;
         });
       })
       .catch((err) =>
