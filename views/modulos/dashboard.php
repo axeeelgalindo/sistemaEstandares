@@ -278,8 +278,8 @@ error_log("🕵️‍♀️ [dashboard.php] cargando vista del dashboard para pl
             <!-- SEGUNDA FILA: Por Área y Por Pilar -->
             <div class="row">
               <!-- Personas en Entrenamiento vs Entrenadas por Área -->
-              <div class="col-md-6">
-                <div class="card card-secondary">
+              <div class="col-md-6 d-flex align-items-stretch mb-3">
+                <div class="card card-secondary w-100">
                   <div class="card-header">
                     <h3 class="card-title">Personas en Entrenamiento vs Personas Entrenadas por Área</h3>
                     <div class="card-tools">
@@ -291,7 +291,8 @@ error_log("🕵️‍♀️ [dashboard.php] cargando vista del dashboard para pl
                       </button>
                     </div>
                   </div>
-                  <div class="card-body">
+                  <!-- Convertimos el body en flex-column para que el chart “crezca” -->
+                  <div class="card-body d-flex flex-column">
                     <div class="row mb-3">
                       <div class="col-6 col-sm-6">
                         <select id="areaFilterPersonas" class="form-control" style="width: 60%">
@@ -306,7 +307,8 @@ error_log("🕵️‍♀️ [dashboard.php] cargando vista del dashboard para pl
                         </select>
                       </div>
                     </div>
-                    <div class="chart" style="height:285px;">
+                    <!-- Hacemos que este div crezca -->
+                    <div class="chart flex-fill" style="min-height: 285px;">
                       <canvas id="barChart4"></canvas>
                     </div>
                   </div>
@@ -314,6 +316,7 @@ error_log("🕵️‍♀️ [dashboard.php] cargando vista del dashboard para pl
               </div>
               <!-- Personas Totales vs Entrenadas por Pilar -->
               <div class="col-md-6">
+                <!-- Personas Totales vs Personas Entrenadas por Pilar -->
                 <div class="card card-secondary">
                   <div class="card-header">
                     <h3 class="card-title">Personas Totales vs Personas Entrenadas por Pilar</h3>
@@ -330,25 +333,33 @@ error_log("🕵️‍♀️ [dashboard.php] cargando vista del dashboard para pl
                     <div class="row">
                       <?php
                       $pillars = [
-                        ['id' => 'pieChart5', 'label' => 'Seguridad', 'horas' => 'HorasEntrenado1'],
-                        ['id' => 'pieChart6', 'label' => 'Calidad', 'horas' => 'HorasEntrenado2'],
-                        ['id' => 'pieChart7', 'label' => 'Producción', 'horas' => 'HorasEntrenado3'],
-                        ['id' => 'pieChart8', 'label' => '5S', 'horas' => 'HorasEntrenado4'],
+                        ['id' => 'pieChart5', 'horas' => 'HorasEntrenado1'],
+                        ['id' => 'pieChart6', 'horas' => 'HorasEntrenado2'],
+                        ['id' => 'pieChart7', 'horas' => 'HorasEntrenado3'],
+                        ['id' => 'pieChart8', 'horas' => 'HorasEntrenado4'],
                       ];
                       foreach ($pillars as $p): ?>
-                        <div class="col-md-6">
-                          <div class="small-box bg-default"
-                            style="height:200px; display:flex; align-items:center; justify-content:center;">
-                            <canvas id="<?= $p['id'] ?>"></canvas>
+                        <div class="col-md-6 d-flex align-items-stretch mb-3">
+                          <!-- small-box igual alto que tu gráfico de área -->
+                          <div class="small-box bg-default w-100" style="height: 285px;">
+                            <!-- aca tu canvas centrado -->
+                            <div class="chart" style="height: 220px;">
+                              <canvas id="<?= $p['id'] ?>"></canvas>
+                            </div>
+                            <!-- horas abajo, dentro de la misma caja -->
+                            <div class="inner">
+                              <p class="text-danger mb-0">
+                                Horas entrenadas:<br>
+                                <b id="<?= $p['horas'] ?>">0</b>
+                              </p>
+                            </div>
                           </div>
-                          <p class="mt-2 text-danger">
-                            Horas entrenadas: <b id="<?= $p['horas'] ?>">0</b>
-                          </p>
                         </div>
                       <?php endforeach; ?>
                     </div>
                   </div>
                 </div>
+
               </div>
             </div>
 
