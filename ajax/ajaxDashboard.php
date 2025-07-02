@@ -71,14 +71,27 @@ try {
             echo json_encode($out);
             break;
 
-        default:
-            http_response_code(400);
-            echo json_encode(['error' => 'Acción inválida']);
-            break;
         case 'Estandares_Graficos_Adquisicion_Anual':
             $out = ModeloDashboard::graficosAdquisicionAnual($planta_id, $id_area);
             echo json_encode($out);
             break;
+        case 'Estandares_Graficos_Pie_Pilar_Adquisicion':
+            // dump de depuración
+            error_log("INPUT AJAX → " . print_r($input, true));
+            error_log("SESSION planta_id → " . var_export($planta_id, true));
+            error_log("AREA id_area → " . var_export($id_area, true));
+
+            $data = ModeloDashboard::getPiePilarAdquisicion($planta_id, $id_area);
+            error_log("Pie Pilar Adquisición (PHP) → " . print_r($data, true));
+
+            echo json_encode($data);
+            break;
+
+        default:
+            http_response_code(400);
+            echo json_encode(['error' => 'Acción inválida']);
+            break;
+
     }
 } catch (Exception $e) {
     http_response_code(500);

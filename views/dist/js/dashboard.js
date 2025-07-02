@@ -454,6 +454,7 @@ function updateCharts(areaId, seccion = "todas") {
           data: {
             labels,
             datasets: [
+              // El orden importa: primero las 4 barras
               {
                 label: "Seguridad",
                 data: dsSeg,
@@ -478,23 +479,27 @@ function updateCharts(areaId, seccion = "todas") {
                 backgroundColor: "#707070",
                 stack: "pilar",
               },
+              // Luego la línea discontinua (objetivo)
               {
                 label: "Objetivo",
-                data: dsObj,
                 type: "line",
+                data: dsObj,
                 yAxisID: "y1",
                 borderDash: [5, 5],
+                borderColor: "#181818",
                 fill: false,
-                borderColor: "#000",
                 pointRadius: 0,
               },
+              // Finalmente la línea sólida de % Cumplimiento
               {
                 label: "% Cumplimiento",
-                data: dsPct,
                 type: "line",
+                data: dsPct,
                 yAxisID: "y1",
                 borderColor: "#999",
                 fill: false,
+                pointRadius: 4,
+                tension: 0,
               },
             ],
           },
@@ -503,13 +508,15 @@ function updateCharts(areaId, seccion = "todas") {
             maintainAspectRatio: false,
             legend: {
               position: "top",
-              labels: { fontColor: "#333", fontSize: 12 },
+              labels: {
+                usePointStyle: true, // hace que la leyenda use los “puntitos/líneas”
+                boxWidth: 12,
+              },
             },
             scales: {
               xAxes: [
                 {
                   stacked: true,
-                  ticks: { fontColor: "#333" },
                   gridLines: { color: "rgba(0,0,0,0.05)" },
                 },
               ],
@@ -518,51 +525,52 @@ function updateCharts(areaId, seccion = "todas") {
                   id: "y",
                   position: "left",
                   stacked: true,
-                  ticks: { beginAtZero: true, fontColor: "#333" },
                   scaleLabel: {
                     display: true,
                     labelString: "Cantidad de Estándares",
-                    fontColor: "#333",
                   },
+                  ticks: { beginAtZero: true },
                 },
                 {
                   id: "y1",
                   position: "right",
                   stacked: false,
+                  scaleLabel: {
+                    display: true,
+                    labelString: "% Cumplimiento",
+                  },
                   ticks: {
                     beginAtZero: true,
                     max: 100,
                     callback: (v) => v + "%",
-                    fontColor: "#333",
                   },
                   gridLines: { drawOnChartArea: false },
-                  scaleLabel: {
-                    display: true,
-                    labelString: "% Cumplimiento",
-                    fontColor: "#333",
-                  },
                 },
               ],
+            },
+            plugins: {
+              datalabels: {
+                // sólo para los segmentos de barra
+                display: (ctx) => ctx.dataset.type === "bar",
+                color: "#FFF",
+                font: { weight: "bold", size: 12 },
+                anchor: "center",
+                align: "center",
+                formatter: (v) => v || "",
+              },
             },
             tooltips: {
               mode: "index",
               intersect: false,
-              backgroundColor: "#222",
-              titleFontColor: "#FFF",
-              bodyFontColor: "#FFF",
-              footerFontColor: "#FFF",
-              xPadding: 12,
-              yPadding: 8,
-              borderWidth: 1,
               callbacks: {
-                title: (items) => {
-                  return items[0].label; // el mes
-                },
+                title: (items) => items[0].label,
                 label: (item, data) => {
-                  // sólo para los primeros 4 datasets (pilares)
+                  const ds = data.datasets[item.datasetIndex];
                   if (item.datasetIndex < 4) {
-                    const ds = data.datasets[item.datasetIndex];
                     return `${ds.label}: ${ds.data[item.index]} estándares`;
+                  }
+                  if (ds.label === "% Cumplimiento") {
+                    return `${ds.label}: ${ds.data[item.index]}%`;
                   }
                   return null;
                 },
@@ -572,25 +580,40 @@ function updateCharts(areaId, seccion = "todas") {
                   return [
                     "────────────",
                     `Total Estándares: ${totalStd}`,
-                    `Estándares Adquiridos: ${dsAdq[i]}`,
+                    `Adquiridos: ${arr[i].TotalAdquiridos}`,
                     `Cumplimiento: ${dsPct[i]}%`,
                   ];
                 },
-              },
-            },
-            plugins: {
-              datalabels: {
-                color: "#333",
-                font: { weight: "bold", size: 12 },
-                anchor: "center",
-                align: "center",
-                formatter: (v) => v,
               },
             },
           },
         });
       })
       .catch((err) => console.error("❌ Error anual Adquisición:", err));
+
+    // ── 4) Donuts por Pilar (Adquisición) ───────────────────────────────────────
+    // dentro de updateCharts(), al final de la sección if (seccion==='adquisicion') { …
+    fetchDashboardData("Estandares_Graficos_Pie_Pilar_Adquisicion", {
+      id_area: areaId,
+    })
+      .then((rows) => {
+        console.log("🔥 Pie Pilar Adquisición response:", rows);
+        if (!Array.isArray(rows) || rows.length === 0) {
+          console.warn("⚠️ No hay datos de adquisición por pilar");
+          return;
+        }
+        rows.forEach((p, i) => {
+          renderDonut(
+            `pieChartAdquisicion${i + 1}`,
+            ["Entrenados", "Adquiridos"],
+            [+p.entrenados, +p.adquiridos],
+            p.Pilar
+          );
+        });
+      })
+      .catch((err) =>
+        console.error("❌ Error al cargar donuts adquisición por pilar:", err)
+      );
   }
 
   console.groupEnd();

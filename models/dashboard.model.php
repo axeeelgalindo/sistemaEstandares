@@ -182,4 +182,27 @@ class ModeloDashboard
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    public static function getPiePilarAdquisicion(int $planta_id, ?int $id_area): array
+    {
+        $db = Conexion::conectar();
+        $sql = "
+            EXEC dbo.Estandares_Graficos_Pie_Pilar_Adquisicion
+              @planta_id = :planta,
+              @id_area   = :area
+            ";
+        $stmt = $db->prepare($sql);
+
+        // planta_id siempre INT
+        $stmt->bindValue(':planta', (int) $planta_id, PDO::PARAM_INT);
+
+        // id_area = 0 ó null → pasamos NULL al SP
+        if (empty($id_area) || $id_area === 0) {
+            $stmt->bindValue(':area', null, PDO::PARAM_NULL);
+        } else {
+            $stmt->bindValue(':area', (int) $id_area, PDO::PARAM_INT);
+        }
+
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
