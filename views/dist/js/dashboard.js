@@ -1,14 +1,39 @@
 // views/dist/js/dashboard.js
-console.log("🚀 dashboard.js cargado");
+
+let plantaActual = PLANTA_ID;
+const esSuperadmin = USER_NIVEL === 4;
+const _charts = {};
+console.log("🚀 dashboard.js cargado", { plantaActual, esSuperadmin });
 
 Chart.plugins.register(ChartDataLabels);
-
-const _charts = {};
-
 document.addEventListener("DOMContentLoaded", () => {
   const est = document.getElementById("areaFilter");
   const per = document.getElementById("areaFilterPersonas");
   const adq = document.getElementById("areaFilterAdquisicion");
+
+const selectPlanta = document.getElementById("plantaFilter");
+
+  // 2) SI EXISTE EL SELECT DE PLANTA, escucha sus cambios:
+  if (selectPlanta) {
+    selectPlanta.addEventListener("change", () => {
+      plantaActual = Number(selectPlanta.value);
+      // refresca la pestaña activa:
+      const activeId = document.querySelector("#myTab .active").id;
+      const areaId =
+        activeId === "home-tab"
+          ? +est.value
+          : activeId === "profile-tab"
+          ? +per.value
+          : +adq.value;
+      const seccion =
+        activeId === "home-tab"
+          ? "estandares"
+          : activeId === "profile-tab"
+          ? "personas"
+          : "adquisicion";
+      updateCharts(areaId, seccion);
+    });
+  }
 
   // ── FILTROS DE ÁREA ─────────────────────────────────────────────────────────
   if (est) {
@@ -748,7 +773,7 @@ function fetchDashboardData(accion, params) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       accion,
-      planta_id: PLANTA_ID,
+      planta_id: plantaActual,
       id_area: params.id_area,
     }),
   }).then((r) => r.json());

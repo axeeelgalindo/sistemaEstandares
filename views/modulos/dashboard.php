@@ -1,8 +1,13 @@
 <?php
 
 error_log("🕵️‍♀️ [dashboard.php] cargando vista del dashboard para planta: " . ($_SESSION['planta_id'] ?? 'NULL'));
+$planta_id = $_SESSION['planta_id'] ?? null;
+$id_nivel = isset($_SESSION['nivel_usuario']) ? intval($_SESSION['nivel_usuario']) : 0;
+
+error_log("💡 SESSION id_nivel → " . var_export($_SESSION['id_nivel'], true));
 
 ?>
+
 <!-- Content Header (Page header) -->
 <div class="content-header">
   <div class="container-fluid">
@@ -21,7 +26,26 @@ error_log("🕵️‍♀️ [dashboard.php] cargando vista del dashboard para pl
 <!-- /.content-header -->
 <div class="content m-2">
   <div class="card shadow">
-    
+    <?php if ($id_nivel === 4):
+
+      ?>
+      <div class="card-header">
+        <div class="form-group">
+          <label for="plantaFilter">Planta:</label>
+          <select id="plantaFilter" class="form-control" style="width:30%;">
+            <?php
+            require_once __DIR__ . '/../../models/planta.model.php';
+            // Asegúrate de haber incluido el modelo Planta antes
+            $plantas = ModeloPlanta::listarPlantas();
+            foreach ($plantas as $p) {
+              $sel = ($p['id'] == ($_SESSION['planta_id'] ?? 0)) ? 'selected' : '';
+              echo "<option value=\"{$p['id']}\" $sel>{$p['nombre']}</option>";
+            }
+            ?>
+          </select>
+        </div>
+      </div>
+    <?php endif; ?>
     <ul class="nav nav-tabs m-2" id="myTab" role="tablist">
       <li class="nav-item">
         <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab">Estándares</a>

@@ -6,11 +6,21 @@ if (session_status() === PHP_SESSION_NONE) {
   session_start();
 }
 $ruta = $_GET['ruta'] ?? '';
+
+
+// Suprime la impresión de warnings PHP dentro de JS:
+ini_set('display_errors', 0);
+$plantaId = $_SESSION['planta_id'] ?? null;
+$userNivel = $_SESSION['id_nivel'] ?? null;
 ?>
 <!DOCTYPE html>
 <html lang="es">
 
 <head>
+  <script>
+    const PLANTA_ID = <?= json_encode($plantaId, JSON_NUMERIC_CHECK) ?>;
+    const USER_NIVEL = <?= json_encode($id_nivel, JSON_NUMERIC_CHECK) ?>;
+  </script>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Sistema Estandares</title>
@@ -147,8 +157,8 @@ $ruta = $_GET['ruta'] ?? '';
   <script src="plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
   <!-- <script src="plugins/chart.js/Chart2.min.js"></script> -->
   <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>-->
-  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
-
+  <!--<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+    -->
 
 
 
@@ -174,23 +184,17 @@ $ruta = $_GET['ruta'] ?? '';
   <!-- Chart.js-->
   <script src="plugins/chart.js/Chart.min.js"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0/dist/chartjs-plugin-datalabels.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>
 
 
-  <script>
-    // lo inyectamos en JS de forma segura
-    const PLANTA_ID = <?= json_encode($_SESSION['planta_id'] ?? null) ?>;
-  </script>
+
+
 
   <script src="plugins/jvectormap/jquery-jvectormap-2.0.5.min.js"></script>
   <script src="plugins/jvectormap/jquery-jvectormap-us-aea-en.js"></script>
+
 
   <script src="views/dist/js/dashboard.js"></script>
-
-  <script src="plugins/jvectormap/jquery-jvectormap-2.0.5.min.js"></script>
-
-  <script src="plugins/jvectormap/jquery-jvectormap-us-aea-en.js"></script>
-
 
   <script src="plugins/sweetalert2/sweetalert2.all.min.js"></script>
   <!-- Toastr -->

@@ -5,10 +5,22 @@ session_start();
 require_once __DIR__ . '/../models/conexion.php';         // tu conexión
 require_once __DIR__ . '/../models/dashboard.model.php'; // el modelo que acabas de crear
 
+
+// 1) Decodificas el JSON de entrada
 $input = json_decode(file_get_contents('php://input'), true);
+
+// 2) Tomas planta_id del request si viene, si no usas la sesión
+$planta_id = isset($input['planta_id'])
+    ? intval($input['planta_id'])
+    : ($_SESSION['planta_id'] ?? 0);
+
+// 3) idem con el filtro de área
+$id_area = isset($input['id_area'])
+    ? intval($input['id_area'])
+    : 0;
+
+// 4) Acción
 $accion = $input['accion'] ?? '';
-$planta_id = $_SESSION['planta_id'] ?? null;
-$id_area = isset($input['id_area']) ? intval($input['id_area']) : null;
 
 try {
     switch ($accion) {
