@@ -21,6 +21,7 @@ error_log("🕵️‍♀️ [dashboard.php] cargando vista del dashboard para pl
 <!-- /.content-header -->
 <div class="content m-2">
   <div class="card shadow">
+    
     <ul class="nav nav-tabs m-2" id="myTab" role="tablist">
       <li class="nav-item">
         <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab">Estándares</a>
@@ -366,8 +367,6 @@ error_log("🕵️‍♀️ [dashboard.php] cargando vista del dashboard para pl
           </div><!-- /.container-fluid -->
         </div><!-- /.content -->
       </div>
-
-
       <div class="tab-pane fade" id="adquisicion" role="tabpanel" aria-labelledby="adquisicion-tab">
         <div class="content">
           <div class="container-fluid">
