@@ -10,6 +10,13 @@ class ajaxPersonas
 	public $area;
 	public $area_secundaria;
 	public $planta_id;
+
+	public function listarPersonas()
+	{
+		$lista = ModeloPersonas::listarPersonasMdl($this->planta_id);
+		echo json_encode($lista);
+		exit;
+	}
 	public function crearPersonas()
 	{
 		$datos = array(
@@ -58,7 +65,13 @@ class ajaxPersonas
 		echo json_encode($respuesta);
 	}
 }
+$ajax = new ajaxPersonas();
 $tipoOperacion = $_POST["tipoOperacion"];
+
+if ($tipoOperacion === 'listarPersonas') {
+  $ajax->planta_id = intval($_POST['planta_id'] ?? 0);
+  $ajax->listarPersonas();
+}
 
 if ($tipoOperacion == "insertarPersonas") {
 	$crearNuevoPersonas = new ajaxPersonas();
@@ -67,7 +80,7 @@ if ($tipoOperacion == "insertarPersonas") {
 	$crearNuevoPersonas->apellido = $_POST["apellido"];
 	$crearNuevoPersonas->area = $_POST["area"];
 	$crearNuevoPersonas->area_secundaria = $_POST["areaSecundaria"];
-	$crearNuevoPersonas->planta_id = $_POST["planta_id"]; 
+	$crearNuevoPersonas->planta_id = $_POST["planta_id"];
 	$crearNuevoPersonas->crearPersonas();
 }
 if ($tipoOperacion == "editarPersonas") {

@@ -191,7 +191,7 @@ $("#editarEstandar").submit(function(e){
   });
 });
 
-
+//crear
 $(document).on("submit", "#cargarEstandar", function (e) {
   e.preventDefault();
 
@@ -420,7 +420,10 @@ function CargarEstandares() {
   $.ajax({
     url: "ajax/ajaxEstandar.php",
     type: "POST",
-    data: { tipoOperacion: "CargarEstandares" },
+    data: { 
+      tipoOperacion: "CargarEstandares",
+    
+    },
     dataType: "json",
     success: function (respuesta) {
       var miTabla = $("#example1").DataTable();

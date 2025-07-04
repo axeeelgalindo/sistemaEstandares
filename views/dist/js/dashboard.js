@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const per = document.getElementById("areaFilterPersonas");
   const adq = document.getElementById("areaFilterAdquisicion");
 
-const selectPlanta = document.getElementById("plantaFilter");
+  const selectPlanta = document.getElementById("plantaFilter");
 
   // 2) SI EXISTE EL SELECT DE PLANTA, escucha sus cambios:
   if (selectPlanta) {
@@ -461,17 +461,90 @@ function updateCharts(areaId, seccion = "todas") {
       })
       .catch((err) => console.error("❌ Error estándares por área:", err));
 
-    // Barras anuales
-    fetchDashboardData("Estandares_Graficos_Anual", { id_area: areaId })
-      .then((arr) =>
+    // GRAFICOS ANUAL Y MENSUAL
+    const paramsBase = { planta_id: plantaActual, id_area: areaId };
+    const $year = document.getElementById("yearFilter");
+    const monthNames = [
+      "Ene",
+      "Feb",
+      "Mar",
+      "Abr",
+      "May",
+      "Jun",
+      "Jul",
+      "Ago",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dic",
+    ];
+
+    // ——————————————————————————
+    // 1) Carga ANUAL y llena el <select>
+    // ——————————————————————————
+    // 1) Carga ANUAL y llena el <select>
+    // ——————————————————————————
+    fetchDashboardData("Estandares_Graficos_Anual", paramsBase)
+      .then((arr) => {
+        // 1a) Renderizar gráfico ANUAL
         renderBarGrouped(
           "barChart",
           arr.map((r) => r.Año),
           arr.map((r) => r.RegistrosCreados),
           arr.map((r) => r.RegistrosEntrenados)
-        )
-      )
-      .catch((err) => console.error("❌ Error anuales estándares:", err));
+        );
+
+        // 1b) Poblar el select de años
+        $year.innerHTML = ""; // limpiar opciones previas
+        arr.forEach((r) => {
+          const opt = document.createElement("option");
+          opt.value = r.Año;
+          opt.text = r.Año;
+          $year.add(opt);
+        });
+
+        // 1c) Seleccionar primer año y disparar carga mensual
+        if (arr.length > 0) {
+          $year.value = arr[0].Año;
+          $year.dispatchEvent(new Event("change"));
+        }
+      })
+      .catch((err) =>
+        console.error("❌ Error al cargar datos anuales de estándares:", err)
+      );
+
+    // ——————————————————————————
+    // 2) Al cambiar año → gráfico MENSUAL
+    // ——————————————————————————
+    // 2) Al cambiar año → gráfico MENSUAL con nombres de meses
+    // ——————————————————————————
+    $year.addEventListener("change", () => {
+      const selectedYear = parseInt($year.value, 10);
+
+      fetchDashboardData("Estandares_Graficos_Anual", {
+        ...paramsBase,
+        anio: selectedYear,
+      })
+        .then((arr) => {
+          // Solo usamos el nombre del mes, sin año
+          const labels = arr.map((r) => monthNames[r.Mes - 1]);
+
+          renderBarGrouped(
+            "barChart",
+            labels,
+            arr.map((r) => r.RegistrosCreados),
+            arr.map((r) => r.RegistrosEntrenados)
+          );
+        })
+        .catch((err) =>
+          console.error(
+            "❌ Error al cargar datos mensuales de estándares:",
+            err
+          )
+        );
+    });
+
+    // HASTA AQUI MODIFICA
   }
 
   if (seccion == "todas" || seccion === "adquisicion") {
@@ -774,7 +847,7 @@ function fetchDashboardData(accion, params) {
     body: JSON.stringify({
       accion,
       planta_id: plantaActual,
-      id_area: params.id_area,
+      ...params,
     }),
   }).then((r) => r.json());
 }
@@ -901,35 +974,56 @@ function renderBarGrouped(canvasId, labels, data1, data2) {
           label: "Creados",
           data: data1,
           backgroundColor: "#3b8bba",
+          barPercentage: 0.9,
+          categoryPercentage: 0.9,
         },
         {
           label: "Entrenados",
           data: data2,
           backgroundColor: "#5fa8d3",
+          barPercentage: 0.9,
+          categoryPercentage: 0.9,
         },
       ],
     },
     options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      //layout: {
+      //  padding: { bottom: 10 },   // espacio extra para las etiquetas
+      //},
       scales: {
+        xAxes: [
+          {
+            display: true,
+            offset: true,
+            gridLines: { display: false },
+            ticks: {
+              autoSkip: false,         // no saltar ninguna etiqueta
+              maxRotation: 0,          // sin rotación
+              minRotation: 0,
+              maxTicksLimit: labels.length, // forzar todas
+              fontSize: 12,
+            },
+          },
+        ],
         yAxes: [
           {
-            ticks: { beginAtZero: true, min: 0, stepSize: 200 },
+            ticks: {
+              beginAtZero: true,
+              stepSize: 40,
+            },
             gridLines: { color: "rgba(0,0,0,0.05)" },
           },
         ],
       },
-      // ←── Aquí activamos DataLabels para todas las barChartGrouped
       plugins: {
         datalabels: {
-          anchor: "center", // etiqueta centrada en la barra
-          align: "center", // alineación centrada
-          color: "#FFF", // texto BLANCO
-          font: {
-            // tamaño y peso
-            weight: "bold",
-            size: 14,
-          },
-          formatter: (value) => value, // mostramos el valor bruto
+          anchor: "center",
+          align: "center",
+          color: "#FFF",
+          font: { weight: "bold", size: 14 },
+          formatter: (v) => v,
         },
       },
     },

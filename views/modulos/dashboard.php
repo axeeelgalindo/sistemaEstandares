@@ -26,18 +26,20 @@ error_log("💡 SESSION id_nivel → " . var_export($_SESSION['id_nivel'], true)
 <!-- /.content-header -->
 <div class="content m-2">
   <div class="card shadow">
-    <?php if ($id_nivel === 4):
-
-      ?>
+    <?php if ($id_nivel === 4): ?>
       <div class="card-header">
         <div class="form-group">
           <label for="plantaFilter">Planta:</label>
           <select id="plantaFilter" class="form-control" style="width:30%;">
+            <!-- opción “Todas las plantas” -->
+            <option value="0" <?= (($_SESSION['planta_id'] ?? 0) == 0) ? 'selected' : '' ?>>
+              Todas las plantas
+            </option>
             <?php
             require_once __DIR__ . '/../../models/planta.model.php';
-            // Asegúrate de haber incluido el modelo Planta antes
             $plantas = ModeloPlanta::listarPlantas();
             foreach ($plantas as $p) {
+              // si session planta_id coincide => selected
               $sel = ($p['id'] == ($_SESSION['planta_id'] ?? 0)) ? 'selected' : '';
               echo "<option value=\"{$p['id']}\" $sel>{$p['nombre']}</option>";
             }
@@ -83,7 +85,7 @@ error_log("💡 SESSION id_nivel → " . var_export($_SESSION['id_nivel'], true)
                   </div>
                   <div class="card-body">
                     <div class="row">
-                      <div class="col-lg-9 col-sm-6" style="height:250px;">
+                      <div class="col-lg-9 col-sm-6" style="height:320px;">
                         <canvas id="donutChart"></canvas>
                       </div>
                       <div class="col-lg-3 col-sm-6">
@@ -152,7 +154,6 @@ error_log("💡 SESSION id_nivel → " . var_export($_SESSION['id_nivel'], true)
                 <div class="card card-secondary">
                   <div class="card-header">
                     <h3 class="card-title">Creados vs Entrenados Anual</h3>
-
                     <div class="card-tools">
                       <button type="button" class="btn btn-tool" data-card-widget="collapse">
                         <i class="fas fa-minus"></i>
@@ -163,11 +164,20 @@ error_log("💡 SESSION id_nivel → " . var_export($_SESSION['id_nivel'], true)
                     </div>
                   </div>
                   <div class="card-body">
-                    <div class="chart" style="height:250px;">
-                      <canvas id="barChart"></canvas>
+                    <!-- Fila del filtro de año -->
+                    <div class="row mb-2 align-items-center">
+                      <div class="col-auto">
+                        <label for="yearFilter" class="mb-0 mr-2">Año:</label>
+                        <select id="yearFilter" class="form-control" style="width:100px">
+                          <!-- se llenará por JS -->
+                        </select>
+                      </div>
+                    </div>
+                    <!-- Contenedor del gráfico -->
+                    <div class="position-relative" style="width:100%; height:250px;">
+                      <canvas id="barChart" style="position:absolute; top:0; left:0; width:100%; height:100%;"></canvas>
                     </div>
                   </div>
-                  <!-- /.card-body -->
                 </div>
                 <!-- /.card -->
 
