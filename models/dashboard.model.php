@@ -11,7 +11,7 @@ class ModeloDashboard
               @id_area   = :id_area";
         $stmt = Conexion::conectar()->prepare($sql);
         $stmt->bindValue(':planta_id', $planta_id, PDO::PARAM_INT);
-        $stmt->bindValue(':id_area',   $id_area,   PDO::PARAM_INT);
+        $stmt->bindValue(':id_area', $id_area, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
@@ -23,7 +23,7 @@ class ModeloDashboard
                 @area_id   = :area";
         $stmt = Conexion::conectar()->prepare($sql);
         $stmt->bindValue(':planta', $planta_id, PDO::PARAM_INT);
-        $stmt->bindValue(':area',   $area_id,   PDO::PARAM_INT);
+        $stmt->bindValue(':area', $area_id, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -35,7 +35,7 @@ class ModeloDashboard
                 @area_id   = :area_id";
         $stmt = Conexion::conectar()->prepare($sql);
         $stmt->bindValue(':planta_id', $planta_id, PDO::PARAM_INT);
-        $stmt->bindValue(':area_id',   $area_id,   PDO::PARAM_INT);
+        $stmt->bindValue(':area_id', $area_id, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -47,7 +47,7 @@ class ModeloDashboard
                 @area_id   = :area";
         $stmt = Conexion::conectar()->prepare($sql);
         $stmt->bindValue(':planta', $planta_id, PDO::PARAM_INT);
-        $stmt->bindValue(':area',   $area_id,   PDO::PARAM_INT);
+        $stmt->bindValue(':area', $area_id, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -60,7 +60,7 @@ class ModeloDashboard
                 @id_area   = :id_area";
         $stmt = Conexion::conectar()->prepare($sql);
         $stmt->bindValue(':planta_id', $planta_id, PDO::PARAM_INT);
-        $stmt->bindValue(':id_area',   $id_area,   PDO::PARAM_INT);
+        $stmt->bindValue(':id_area', $id_area, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
@@ -75,7 +75,7 @@ class ModeloDashboard
         }
         $stmt = Conexion::conectar()->prepare($sql);
         $stmt->bindValue(':planta_id', $planta_id, PDO::PARAM_INT);
-        $stmt->bindValue(':id_area',   $id_area,   PDO::PARAM_INT);
+        $stmt->bindValue(':id_area', $id_area, PDO::PARAM_INT);
         if ($anio !== null) {
             $stmt->bindValue(':anio', $anio, PDO::PARAM_INT);
         }
@@ -90,7 +90,7 @@ class ModeloDashboard
                 @id_area   = :id_area";
         $stmt = Conexion::conectar()->prepare($sql);
         $stmt->bindValue(':planta_id', $planta_id, PDO::PARAM_INT);
-        $stmt->bindValue(':id_area',   $id_area,   PDO::PARAM_INT);
+        $stmt->bindValue(':id_area', $id_area, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -102,7 +102,7 @@ class ModeloDashboard
                 @id_area   = :id_area";
         $stmt = Conexion::conectar()->prepare($sql);
         $stmt->bindValue(':planta_id', $planta_id, PDO::PARAM_INT);
-        $stmt->bindValue(':id_area',   $id_area,   PDO::PARAM_INT);
+        $stmt->bindValue(':id_area', $id_area, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
@@ -114,7 +114,7 @@ class ModeloDashboard
                 @id_area   = :id_area";
         $stmt = Conexion::conectar()->prepare($sql);
         $stmt->bindValue(':planta_id', $planta_id, PDO::PARAM_INT);
-        $stmt->bindValue(':id_area',   $id_area,   PDO::PARAM_INT);
+        $stmt->bindValue(':id_area', $id_area, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -126,7 +126,7 @@ class ModeloDashboard
                 @id_area   = :id_area";
         $stmt = Conexion::conectar()->prepare($sql);
         $stmt->bindValue(':planta_id', $planta_id, PDO::PARAM_INT);
-        $stmt->bindValue(':id_area',   $id_area,   PDO::PARAM_INT);
+        $stmt->bindValue(':id_area', $id_area, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -139,7 +139,7 @@ class ModeloDashboard
                 @id_area   = :id_area";
         $stmt = Conexion::conectar()->prepare($sql);
         $stmt->bindValue(':planta_id', $planta_id, PDO::PARAM_INT);
-        $stmt->bindValue(':id_area',   $id_area,   PDO::PARAM_INT);
+        $stmt->bindValue(':id_area', $id_area, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
@@ -147,13 +147,14 @@ class ModeloDashboard
     public static function graficosPorAreaAdquisicion(int $planta_id, int $id_area = 0): array
     {
         $sql = "EXEC dbo.Estandares_Graficos_Por_Area_Adquisicion
-                @planta_id = :planta_id,
-                @id_area   = :id_area";
+            @planta_id = :planta_id,
+            @id_area   = :id_area";
         $stmt = Conexion::conectar()->prepare($sql);
         $stmt->bindValue(':planta_id', $planta_id, PDO::PARAM_INT);
-        $stmt->bindValue(':id_area',   $id_area,   PDO::PARAM_INT);
+        $stmt->bindValue(':id_area', $id_area, PDO::PARAM_INT);
         $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        // <-- aquí
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
     public static function graficosAdquisicionAnual(int $planta_id, int $id_area = 0): array
@@ -163,7 +164,7 @@ class ModeloDashboard
                 @id_area   = :id_area";
         $stmt = Conexion::conectar()->prepare($sql);
         $stmt->bindValue(':planta_id', $planta_id, PDO::PARAM_INT);
-        $stmt->bindValue(':id_area',   $id_area,   PDO::PARAM_INT);
+        $stmt->bindValue(':id_area', $id_area, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -175,7 +176,7 @@ class ModeloDashboard
                 @id_area   = :area";
         $stmt = Conexion::conectar()->prepare($sql);
         $stmt->bindValue(':planta', $planta_id, PDO::PARAM_INT);
-        $stmt->bindValue(':area',   $id_area,   PDO::PARAM_INT);
+        $stmt->bindValue(':area', $id_area, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
