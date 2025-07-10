@@ -262,6 +262,8 @@
                     }
                 });
             }
+
+
             if (ctxColaborador) {
                 graficoColaborador = new Chart(ctxColaborador, {
                     type: 'bar',          // barras verticales

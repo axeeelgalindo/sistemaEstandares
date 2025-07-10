@@ -165,10 +165,10 @@ error_log("💡 SESSION id_nivel → " . var_export($_SESSION['id_nivel'], true)
                   </div>
                   <div class="card-body">
                     <!-- Fila del filtro de año -->
-                    <div class="row mb-2 align-items-center">
-                      <div class="col-auto">
+                    <div class="row mb-2 align-items-center w-full ">
+                      <div class="d-flex justify-items-center align-items-center w-full ">
                         <label for="yearFilter" class="mb-0 mr-2">Año:</label>
-                        <select id="yearFilter" class="form-control" style="width:100px">
+                        <select id="yearFilter" class="form-control " style="width:100px">
                           <!-- se llenará por JS -->
                         </select>
                       </div>

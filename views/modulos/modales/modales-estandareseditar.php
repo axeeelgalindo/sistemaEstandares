@@ -21,6 +21,7 @@
                   <div class="card card-primary">
                     <!-- /.card-header -->
                     <!-- form start -->
+
                     <div class="card-body">
 
 
@@ -49,14 +50,19 @@
                           ?>
                       </div>
                       <div class="form-group">
+                        <input type="hidden" name="planta_id" value="<?php echo $_SESSION['planta_id']; ?>">
+
                         <label for="planta_id">Planta:</label>
-                        <select class="form-control" name="planta_id" id="planta_id">
-                          <option value="">Sin planta</option>
+                        <select class="form-control" id="planta_id" disabled>
                           <?php
                           require_once "models/planta.model.php";
                           $plantas = ModeloPlanta::listarPlantas();
+                          $sesion = $_SESSION['planta_id'];
                           foreach ($plantas as $p) {
-                            echo '<option value="' . $p["id"] . '">' . $p["nombre"] . '</option>';
+                            // solo mostramos la que coincide con la sesión
+                            if ($p['id'] == $sesion) {
+                              echo '<option value="' . $p['id'] . '" selected>' . htmlspecialchars($p['nombre'], ENT_QUOTES) . '</option>';
+                            }
                           }
                           ?>
                         </select>
@@ -121,6 +127,8 @@
         <input type="hidden" name="tipoOperacion" value="actualizarEstandar">
         <input type="hidden" name="rutaActual" id="rutaActual">
         <input type="hidden" name="id_estandar" id="id_estandar">
+        <input type="hidden" name="planta_id" value="<?php echo $_SESSION['planta_id']; ?>">
+
 
         <!-- Header -->
         <div class="modal-header">
@@ -154,12 +162,14 @@
           </div>
           <div class="form-group">
             <label for="planta_idEditar">Planta:</label>
-            <select class="form-control" name="planta_id" id="planta_idEditar">
-              <option value="">Sin planta</option>
+            <select class="form-control" id="planta_idEditar" disabled>
               <?php
               $plantas = ModeloPlanta::listarPlantas();
+              $sesion = $_SESSION['planta_id'];
               foreach ($plantas as $p) {
-                echo '<option value="' . $p['id'] . '">' . htmlspecialchars($p['nombre'], ENT_QUOTES, 'UTF-8') . '</option>';
+                if ($p['id'] == $sesion) {
+                  echo '<option value="' . $p['id'] . '" selected>' . htmlspecialchars($p['nombre'], ENT_QUOTES) . '</option>';
+                }
               }
               ?>
             </select>
