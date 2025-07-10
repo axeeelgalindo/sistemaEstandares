@@ -2,16 +2,19 @@
 require_once "conexion.php";
 class ModeloUsuario
 {
-	static public function listarUsuarioMdl()
+	static public function listarUsuarioMdl($planta_id = null)
 	{
 		try {
 			$conn = Conexion::Conectar();
 
-			// Define el nombre del procedimiento almacenado y los parámetros
-			$sql = "EXEC Listar_Usuario";
+			// Define el procedimiento con parámetro
+			$sql = "EXEC Listar_Usuario @planta_id = :planta_id";
 
 			// Prepara la consulta
 			$stmt = $conn->prepare($sql);
+
+			// Asigna el valor del parámetro (puede ser NULL)
+			$stmt->bindParam(':planta_id', $planta_id, PDO::PARAM_INT);
 
 			// Ejecuta el procedimiento almacenado
 			$stmt->execute();
@@ -24,6 +27,7 @@ class ModeloUsuario
 			die("Error en la consulta: " . $e->getMessage());
 		}
 	}
+
 	static public function listarTipoMdl()
 	{
 		try {

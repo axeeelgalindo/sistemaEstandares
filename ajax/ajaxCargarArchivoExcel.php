@@ -1,4 +1,5 @@
 <?php
+//ajaxCargarArchivoExcel.php
 require '../vendor/autoload.php'; // Reemplaza esto con la ubicación de la biblioteca PhpSpreadsheet
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
@@ -37,11 +38,11 @@ if (isset($_FILES['archivo_excel']['name'])) {
     // Ahora, $datosAreas contiene todos los datos de la posición 4.
 
     // Conectarse a la base de datos SQL Server
-    $serverName = "DESKTOP-2R85171\SQLEXPRESS";
+    $serverName = "DESKTOP-51OTLDQ\SQLEXPRESS";
             $connectionOptions = array(
                 "Database" => "db_estandares",
                 "Uid" => "sa",
-                "PWD" => "sa"
+                "PWD" => "blueinge2025"
             );
 
     $conn = sqlsrv_connect($serverName, $connectionOptions);

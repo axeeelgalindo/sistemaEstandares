@@ -221,7 +221,10 @@
                             y: {
                                 beginAtZero: true,
                                 max: 100,
-                                ticks: { callback: v => v + '%' }
+                                ticks: {
+                                    stepSize: 10,
+                                    callback: v => v + '%'
+                                }
                             }
                         },
                         plugins: {
@@ -261,12 +264,12 @@
             }
             if (ctxColaborador) {
                 graficoColaborador = new Chart(ctxColaborador, {
-                    type: 'bar',
+                    type: 'bar',          // barras verticales
                     data: {
-                        labels: [],
+                        labels: [],       // aquí pondrás tus nombres de colaboradores
                         datasets: [{
-                            label: "Colaboradoresssss",
-                            data: [],
+                            label: "Colaboradores",
+                            data: [],      // aquí los % redondeados [e.g. 100, 85, …]
                             backgroundColor: '#17a2b8',
                             barThickness: 40,
                             maxBarThickness: 80,
@@ -274,30 +277,26 @@
                             categoryPercentage: 1.0
                         }]
                     },
+                    plugins: [ChartDataLabels],
                     options: {
-                        indexAxis: 'y',
                         responsive: true,
                         maintainAspectRatio: false,
                         scales: {
                             x: {
-                                beginAtZero: true,
-                                max: 100,
-                                grid: {
-                                    display: function (context) {
-                                        return context.raw > 0;
-                                    },
-                                },
-                                ticks: {
-                                    callback: function (value) {
-                                        return value + '%';
-                                    }
-                                }
+                                grid: { display: false }
                             },
                             y: {
-                                grid: {
-                                    display: false
+                                beginAtZero: true,
+                                min: 0,
+                                max: 100,
+                                ticks: {
+                                    stepSize: 10,
+                                    callback: value => `${value}%`
                                 },
-
+                                grid: {
+                                    display: true,
+                                    color: '#e4e4e4'
+                                }
                             }
                         },
                         plugins: {
@@ -305,18 +304,19 @@
                                 display: false
                             },
                             datalabels: {
-                                color: 'white',            // color del texto
-                                anchor: 'end',             // en la punta de la barra
-                                align: 'start',            // justo dentro, arriba
+                                color: 'white',
+                                anchor: 'end',
+                                align: 'start',
                                 font: { weight: 'bold', size: 12 },
-                                formatter: v => (v !== null ? v + '%' : ''),
-
+                                // solo mostramos etiqueta si el valor > 0
+                                display: ctx => ctx.dataset.data[ctx.dataIndex] > 0,
+                                formatter: v => `${v}%`
                             }
                         }
-                    },
-
+                    }
                 });
             }
+
 
             if ($('#area-seleccion').val() && $('#area-seleccion').val() !== '0') {
                 cargarGraficos();
@@ -389,6 +389,7 @@
                             beginAtZero: true,
                             max: 100,
                             ticks: {
+
                                 callback: value => value + '%'
                             }
                         }
@@ -430,10 +431,12 @@
                     return option ? option.text : `Colaborador ${id}`;
                 });
 
+                window.graficoColaborador.data.datasets[0].data =
+                    datos.porcentajesColaborador.map(p => Math.min(100, Math.round(p)));
                 window.graficoColaborador.data.labels = nombresColaboradores;
-                window.graficoColaborador.data.datasets[0].data = datos.porcentajesColaborador;
-                window.graficoColaborador.data.datasets[0].backgroundColor = datos.porcentajesColaborador.map(p =>
-                    !p ? '#dc3545' :  // Rojo para 0 o null
+
+                window.graficoColaborador.data.datasets[0].backgroundColor = d.porcentajesColaborador.map(p =>
+                    !p ? '#dc3545' :
                         p >= 80 ? '#28a745' :
                             p >= 60 ? '#ffc107' :
                                 '#dc3545'

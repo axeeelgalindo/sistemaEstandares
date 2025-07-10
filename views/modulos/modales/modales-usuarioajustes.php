@@ -37,7 +37,7 @@ if (!isset($value)) {
           <?php $plantas = ModeloPlanta::listarPlantas(); ?>
           <div class="form-group">
             <label>Planta:</label>
-            <select name="planta_id" class="form-control" required>
+            <select name="planta_id" class="form-control" required disabled>
               <?php foreach ($plantas as $pl): ?>
                 <option value="<?= $pl['id'] ?>" <?= $pl['id'] == $value['planta_id'] ? 'selected' : '' ?>>
                   <?= htmlspecialchars($pl['nombre']) ?>

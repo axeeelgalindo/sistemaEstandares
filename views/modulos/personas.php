@@ -106,11 +106,11 @@ if (!isset($_SESSION["planta_id"])) {
                     <td>' . nl2br($value["Estado"]) . '</td>
                     <td>' . nl2br($value["fecha_integracion"]) . '</td>      
 
-                    <td width="100"> <button class="btn btn-sm btn-info btnEditarPersonas" idRut="' . $value["rut"] . '" data-toggle="modal" data-target="#modal-editar-personas">
+                    <td width="100" class="text-center"> <button class="btn btn-sm btn-info mx-1 btnEditarPersonas" idRut="' . $value["rut"] . '" data-toggle="modal" data-target="#modal-editar-personas">
                                         <i class="far fa-edit"></i> 
                                     </button>';
                   if ($value["Estado"] == 'Activo') {
-                    echo '<button class="btn btn-sm btn-danger btnEliminarPersonas"  idRut="' . $value["rut"] . '">
+                    echo '<button class="btn btn-sm btn-danger mx-1 btnEliminarPersonas"  idRut="' . $value["rut"] . '">
                                         <i class="far fa-trash-alt"></i> 
                         </button>';
                   } else {

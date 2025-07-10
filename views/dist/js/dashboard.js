@@ -6,6 +6,185 @@ const _charts = {};
 console.log("🚀 dashboard.js cargado", { plantaActual, esSuperadmin });
 
 Chart.plugins.register(ChartDataLabels);
+
+// ────────────────────────────────────────────────────────────
+// 1) “Real” fetch al back-end
+// ────────────────────────────────────────────────────────────
+function fetchDashboardData(accion, params) {
+  return fetch("/SistemaEstandaresAquaChile/ajax/ajaxDashboard.php", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      accion,
+      planta_id: plantaActual,
+      ...params,
+    }),
+  }).then(r => r.json());
+}
+
+// Guardamos la función real para poder invocarla después
+const realFetchDashboardData = fetchDashboardData;
+
+// ────────────────────────────────────────────────────────────
+// 2) WRAPPER que elige mock o real según plantaActual
+// ────────────────────────────────────────────────────────────
+fetchDashboardData = (accion, params) => {
+  if (plantaActual === 1) {
+    // Generadores de datos aleatorios
+    const rnd = (min, max) =>
+      Math.floor(Math.random() * (max - min + 1)) + min;
+    const rndFloat = (min, max, dec = 1) =>
+      parseFloat((Math.random() * (max - min) + min).toFixed(dec));
+
+    return new Promise(resolve => {
+      switch (accion) {
+        // ── PERSONAS ─────────────────────────────────────────────
+        case "Personas_Graficos_Creados_Entrenados":
+          resolve({
+            total_entrenamientos_disponibles: rnd(50, 200),
+            total_entrenamientos_ejecutados:    rnd(0, 180),
+            porcentaje_entrenados:              rnd(0, 100),
+            horas_entrenadas:                   rndFloat(0, 300),
+          });
+          break;
+
+        case "Personas_Graficos_Anual":
+          resolve(
+            Array.from({ length: 5 }, (_, i) => ({
+              Anio:               2020 + i,
+              PersonasTotales:    rnd(100, 500),
+              PersonasEntrenadas: rnd(0,   500),
+              HorasEntrenadas:    rndFloat(0, 400),
+            }))
+          );
+          break;
+
+        case "Personas_Graficos_Por_Area":
+          resolve([{
+            PersonasTotales:        rnd(50, 200),
+            PersonasEnEntrenamiento:rnd(0,  200),
+            PersonasEntrenadas:     rnd(0,  200),
+            HorasEntrenadas:        rndFloat(0, 150),
+          }]);
+          break;
+
+        case "Personas_Graficos_Pie_Pilar":
+          resolve(
+            ["Seguridad","Calidad","Producción","5S"].map(p => ({
+              Pilar:             p,
+              PersonasCreadas:   rnd(20,150),
+              PersonasEntrenadas:rnd(0,150),
+              HorasEntrenadas:   rndFloat(0,200),
+            }))
+          );
+          break;
+
+
+        // ── ESTÁNDARES ─────────────────────────────────────────────
+        case "Estandares_Graficos_Creados_Entrenados":
+          resolve({
+            total_estandares_creados:    rnd(200,800),
+            total_estandares_entrenados: rnd(0,  800),
+          });
+          break;
+
+        case "Estandares_Graficos_Pie_Pilar":
+          resolve({
+            seguridad_creados:    rnd(50,200),
+            seguridad_entrenados: rnd(0,200),
+            calidad_creados:      rnd(50,200),
+            calidad_entrenados:   rnd(0,200),
+            produccion_creados:   rnd(50,200),
+            produccion_entrenados:rnd(0,200),
+            s5_creados:           rnd(50,200),
+            s5_entrenados:        rnd(0,200),
+          });
+          break;
+
+        case "Estandares_Graficos_Barras_Entrenados":
+          resolve(
+            Array.from({ length: 12 }, (_, m) => ({
+              Mes:                          m + 1,
+              CantidadRegistrosEntrenados:  rnd(0,100),
+            }))
+          );
+          break;
+
+        case "Estandares_Graficos_Por_Area":
+          resolve(
+            Array.from({ length: 5 }, (_, i) => ({
+              Area:               `Área ${i+1}`,
+              RegistrosCreados:   rnd(50,300),
+              RegistrosEntrenados:rnd(0,300),
+            }))
+          );
+          break;
+
+        case "Estandares_Graficos_Anual":
+          resolve(
+            Array.from({ length: 5 }, (_, i) => ({
+              Año:                2020 + i,
+              RegistrosCreados:   rnd(100,500),
+              RegistrosEntrenados:rnd(0,500),
+            }))
+          );
+          break;
+
+
+        // ── ADQUISICIÓN ────────────────────────────────────────────
+        case "Estandares_Graficos_Entrenados_Adquiridos":
+          resolve({
+            total_estandares_entrenados: rnd(0,200),
+            total_estandares_adquiridos: rnd(0,200),
+          });
+          break;
+
+        case "Estandares_Graficos_Por_Area_Adquisicion":
+          resolve({
+            total_entrenados: rnd(0,200),
+            total_adquiridos:rnd(0,200),
+          });
+          break;
+
+        case "Estandares_Graficos_Adquisicion_Anual":
+          resolve(
+            Array.from({ length: 12 }, (_, m) => ({
+              MesNum:                m + 1,
+              Seguridad:             rnd(0,100),
+              Calidad:               rnd(0,100),
+              Producción:            rnd(0,100),
+              "5S":                  rnd(0,100),
+              TotalAdquiridos:       rnd(0,400),
+              PorcentajeCumplimiento:rnd(0,100),
+            }))
+          );
+          break;
+
+        case "Estandares_Graficos_Pie_Pilar_Adquisicion":
+          resolve(
+            ["Seguridad","Calidad","Producción","5S"].map(p => ({
+              Pilar:     p,
+              entrenados:rnd(0,100),
+              adquiridos:rnd(0,100),
+            }))
+          );
+          break;
+
+
+        // ── FALLBACK ───────────────────────────────────────────────
+        default:
+          resolve({});
+      }
+    });
+  }
+
+  // para cualquier otra planta, usamos la ruta real
+  return realFetchDashboardData(accion, params);
+};
+
+
+
+
 document.addEventListener("DOMContentLoaded", () => {
   const est = document.getElementById("areaFilter");
   const per = document.getElementById("areaFilterPersonas");
@@ -591,12 +770,12 @@ function updateCharts(areaId, seccion = "todas") {
               {
                 label: "Entrenados",
                 data: [entrenados],
-                backgroundColor: "#3b8bba",
+                backgroundColor: "#EB6D04", // naranja
               },
               {
                 label: "Adquiridos",
                 data: [adquiridos],
-                backgroundColor: "#5fa8d3",
+                backgroundColor: "#081A4A", // azul oscuro
               },
             ],
           },
@@ -612,20 +791,13 @@ function updateCharts(areaId, seccion = "todas") {
               ],
             },
             legend: { position: "top" },
-
-            // <-- aquí venimos con datalabels
             plugins: {
               datalabels: {
-                anchor: "center", // posición del label
-                align: "center", // alineación dentro de la barra
-                color: "#FFFDD0", // color del texto
-                font: {
-                  weight: "bold", // negrita
-                  size: 14, // tamaño en px
-                },
-                formatter: function (value) {
-                  return value; // muestra el valor bruto
-                },
+                anchor: "center",
+                align: "center",
+                color: "#FFFDD0",
+                font: { weight: "bold", size: 14 },
+                formatter: (v) => v,
               },
             },
           },
@@ -840,17 +1012,7 @@ function updateCharts(areaId, seccion = "todas") {
   console.groupEnd();
 }
 
-function fetchDashboardData(accion, params) {
-  return fetch("/SistemaEstandaresAquaChile/ajax/ajaxDashboard.php", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      accion,
-      planta_id: plantaActual,
-      ...params,
-    }),
-  }).then((r) => r.json());
-}
+
 
 function createOrUpdateChart(canvasId, config) {
   console.log("⚙️ createOrUpdateChart llamado con config:", config);
@@ -871,12 +1033,17 @@ function createOrUpdateChart(canvasId, config) {
   _charts[canvasId] = new Chart(ctx, config);
 }
 
-function renderDonut(canvasId, labels, data, titleText = "") {
+function renderDonut(
+  canvasId,
+  labels,
+  data,
+  titleText = "",
+  outsideLabels = false
+) {
   const total = data.reduce((sum, v) => sum + v, 0);
   const canvas = document.getElementById(canvasId);
   if (!canvas) return;
 
-  // Si no hay datos, mostramos un mensaje en lugar de la dona
   if (total === 0) {
     const ctx = canvas.getContext("2d");
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -887,78 +1054,93 @@ function renderDonut(canvasId, labels, data, titleText = "") {
     return;
   }
 
+  // ← aquí extendemos el colorMap
+  const colorMap = {
+    // Para Estandares
+    Creados: "#081A4A",
+    Entrenados: "#EB6D04",
+    Adquiridos: "#081A4A",
+    // Para Personas
+    "Entrenamientos Disponibles": "#081A4A", // azul oscuro
+    "Entrenamientos Ejecutados": "#EB6D04", // naranja
+    //personas x pilar
+    "Personas Creadas": "#081A4A",
+    "Personas Entrenadas": "#EB6D04",
+  };
+
+  const bgColors = labels.map((l) => colorMap[l] || "#ccc");
+
+  const datalabelsConfig = {
+    formatter: (v) => v,
+    backgroundColor: "#fff",
+    borderWidth: 2,
+    borderColor: (ctx) => bgColors[ctx.dataIndex],
+    borderRadius: 4,
+    padding: 6,
+    anchor: outsideLabels ? "end" : "center",
+    align: outsideLabels ? "start" : "center",
+    offset: outsideLabels ? 8 : 0,
+    color: (ctx) => bgColors[ctx.dataIndex],
+  };
+
   createOrUpdateChart(canvasId, {
     type: "doughnut",
-    data: {
-      labels,
-      datasets: [
-        {
-          data,
-          backgroundColor: ["#3b8bba", "#5fa8d3"],
-        },
-      ],
-    },
+    data: { labels, datasets: [{ data, backgroundColor: bgColors }] },
     options: {
       cutoutPercentage: 60,
-      title: {
-        display: !!titleText,
-        text: titleText,
-        fontSize: 14,
-      },
-      legend: {
-        position: "bottom",
-      },
-      // aquí activamos datalabels para el donut
-      plugins: {
-        datalabels: {
-          anchor: "center", // centra el label en el medio de cada porción
-          align: "center",
-          color: "#FFFDD0", // color del texto
-          font: {
-            weight: "bold",
-            size: 14,
-          },
-          formatter: (value, ctx) => {
-            // si quieres el número crudo:
-            return value;
-            // o si prefieres %:
-            // const sum = ctx.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
-            // return sum ? Math.round(value / sum * 100) + "%" : "";
-          },
-        },
-      },
+      title: { display: !!titleText, text: titleText, fontSize: 14 },
+      legend: { position: "bottom" },
+      plugins: { datalabels: datalabelsConfig },
     },
   });
 }
 
-function renderBar(canvasId, labels, data) {
-  createOrUpdateChart(canvasId, {
+function renderBar(canvasId, labels, data, barColor = "#EB6D04") {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+
+  // Destruye si ya existía
+  if (_charts[canvasId]) {
+    _charts[canvasId].destroy();
+  }
+
+  // Si me pasan un solo color, lo replico por cada barra
+  const bgColors = Array.isArray(barColor)
+    ? barColor
+    : labels.map(() => barColor);
+
+  // Crea el chart
+  const ctx = canvas.getContext("2d");
+  _charts[canvasId] = new Chart(ctx, {
     type: "bar",
     data: {
       labels,
-      datasets: [{ label: "Cantidad", data, backgroundColor: "#3b8bba" }],
+      datasets: [
+        {
+          label: "Cantidad",
+          data,
+          backgroundColor: bgColors,
+        },
+      ],
     },
     options: {
+      responsive: true,
+      maintainAspectRatio: false,
       scales: {
-        y: { beginAtZero: true },
-        plugins: {
-          datalabels: {
-            anchor: "center", // centra el label en el medio de cada porción
-            align: "center",
-            color: "#FFFDD0", // color del texto
-            font: {
-              weight: "bold",
-              size: 14,
-            },
-            formatter: (value, ctx) => {
-              // si quieres el número crudo:
-              return value;
-              // o si prefieres %:
-              // const sum = ctx.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
-              // return sum ? Math.round(value / sum * 100) + "%" : "";
-            },
-          },
+        y: {
+          beginAtZero: true,
         },
+      },
+      plugins: {
+        // Aquí debe ir DataLabels en v3
+        datalabels: {
+          anchor: "center",
+          align: "center",
+          color: "#FFFDD0",
+          font: { weight: "bold", size: 14 },
+          formatter: (value) => value,
+        },
+        // …y puedes añadir otros plugins aquí
       },
     },
   });
@@ -973,14 +1155,14 @@ function renderBarGrouped(canvasId, labels, data1, data2) {
         {
           label: "Creados",
           data: data1,
-          backgroundColor: "#3b8bba",
+          backgroundColor: "#081A4A", // ← azul oscuro
           barPercentage: 0.9,
           categoryPercentage: 0.9,
         },
         {
           label: "Entrenados",
           data: data2,
-          backgroundColor: "#5fa8d3",
+          backgroundColor: "#EB6D04", // ← naranja
           barPercentage: 0.9,
           categoryPercentage: 0.9,
         },
@@ -989,9 +1171,6 @@ function renderBarGrouped(canvasId, labels, data1, data2) {
     options: {
       responsive: true,
       maintainAspectRatio: false,
-      //layout: {
-      //  padding: { bottom: 10 },   // espacio extra para las etiquetas
-      //},
       scales: {
         xAxes: [
           {
@@ -999,20 +1178,17 @@ function renderBarGrouped(canvasId, labels, data1, data2) {
             offset: true,
             gridLines: { display: false },
             ticks: {
-              autoSkip: false,         // no saltar ninguna etiqueta
-              maxRotation: 0,          // sin rotación
+              autoSkip: false,
+              maxRotation: 0,
               minRotation: 0,
-              maxTicksLimit: labels.length, // forzar todas
+              maxTicksLimit: labels.length,
               fontSize: 12,
             },
           },
         ],
         yAxes: [
           {
-            ticks: {
-              beginAtZero: true,
-              stepSize: 40,
-            },
+            ticks: { beginAtZero: true, stepSize: 40 },
             gridLines: { color: "rgba(0,0,0,0.05)" },
           },
         ],
