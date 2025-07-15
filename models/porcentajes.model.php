@@ -233,13 +233,13 @@ class ModeloPorcentajes
             $stmt->execute();
 
             $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            $ruts = array_column($rows, 'rut');
+            $labels = array_map(fn($r) => $r['nombre_colaborador'], $rows);
             $porcs = array_map(fn($r) => (float) $r['porcentaje_promedio'], $rows);
 
             return [
                 'status' => 'success',
                 'data' => [
-                    'colaboradores' => $ruts,
+                    'labels' => $labels,
                     'porcentajesColaborador' => $porcs
                 ]
             ];

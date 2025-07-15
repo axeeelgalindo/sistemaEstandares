@@ -10,177 +10,20 @@ Chart.plugins.register(ChartDataLabels);
 // ────────────────────────────────────────────────────────────
 // 1) “Real” fetch al back-end
 // ────────────────────────────────────────────────────────────
-function fetchDashboardData(accion, params) {
-  return fetch("/SistemaEstandaresAquaChile/ajax/ajaxDashboard.php", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      accion,
-      planta_id: plantaActual,
-      ...params,
-    }),
-  }).then(r => r.json());
-}
 
 // Guardamos la función real para poder invocarla después
-const realFetchDashboardData = fetchDashboardData;
+//const realFetchDashboardData = fetchDashboardData;
 
 // ────────────────────────────────────────────────────────────
 // 2) WRAPPER que elige mock o real según plantaActual
 // ────────────────────────────────────────────────────────────
-fetchDashboardData = (accion, params) => {
-  if (plantaActual === 1) {
-    // Generadores de datos aleatorios
-    const rnd = (min, max) =>
-      Math.floor(Math.random() * (max - min + 1)) + min;
-    const rndFloat = (min, max, dec = 1) =>
-      parseFloat((Math.random() * (max - min) + min).toFixed(dec));
-
-    return new Promise(resolve => {
-      switch (accion) {
-        // ── PERSONAS ─────────────────────────────────────────────
-        case "Personas_Graficos_Creados_Entrenados":
-          resolve({
-            total_entrenamientos_disponibles: rnd(50, 200),
-            total_entrenamientos_ejecutados:    rnd(0, 180),
-            porcentaje_entrenados:              rnd(0, 100),
-            horas_entrenadas:                   rndFloat(0, 300),
-          });
-          break;
-
-        case "Personas_Graficos_Anual":
-          resolve(
-            Array.from({ length: 5 }, (_, i) => ({
-              Anio:               2020 + i,
-              PersonasTotales:    rnd(100, 500),
-              PersonasEntrenadas: rnd(0,   500),
-              HorasEntrenadas:    rndFloat(0, 400),
-            }))
-          );
-          break;
-
-        case "Personas_Graficos_Por_Area":
-          resolve([{
-            PersonasTotales:        rnd(50, 200),
-            PersonasEnEntrenamiento:rnd(0,  200),
-            PersonasEntrenadas:     rnd(0,  200),
-            HorasEntrenadas:        rndFloat(0, 150),
-          }]);
-          break;
-
-        case "Personas_Graficos_Pie_Pilar":
-          resolve(
-            ["Seguridad","Calidad","Producción","5S"].map(p => ({
-              Pilar:             p,
-              PersonasCreadas:   rnd(20,150),
-              PersonasEntrenadas:rnd(0,150),
-              HorasEntrenadas:   rndFloat(0,200),
-            }))
-          );
-          break;
-
-
-        // ── ESTÁNDARES ─────────────────────────────────────────────
-        case "Estandares_Graficos_Creados_Entrenados":
-          resolve({
-            total_estandares_creados:    rnd(200,800),
-            total_estandares_entrenados: rnd(0,  800),
-          });
-          break;
-
-        case "Estandares_Graficos_Pie_Pilar":
-          resolve({
-            seguridad_creados:    rnd(50,200),
-            seguridad_entrenados: rnd(0,200),
-            calidad_creados:      rnd(50,200),
-            calidad_entrenados:   rnd(0,200),
-            produccion_creados:   rnd(50,200),
-            produccion_entrenados:rnd(0,200),
-            s5_creados:           rnd(50,200),
-            s5_entrenados:        rnd(0,200),
-          });
-          break;
-
-        case "Estandares_Graficos_Barras_Entrenados":
-          resolve(
-            Array.from({ length: 12 }, (_, m) => ({
-              Mes:                          m + 1,
-              CantidadRegistrosEntrenados:  rnd(0,100),
-            }))
-          );
-          break;
-
-        case "Estandares_Graficos_Por_Area":
-          resolve(
-            Array.from({ length: 5 }, (_, i) => ({
-              Area:               `Área ${i+1}`,
-              RegistrosCreados:   rnd(50,300),
-              RegistrosEntrenados:rnd(0,300),
-            }))
-          );
-          break;
-
-        case "Estandares_Graficos_Anual":
-          resolve(
-            Array.from({ length: 5 }, (_, i) => ({
-              Año:                2020 + i,
-              RegistrosCreados:   rnd(100,500),
-              RegistrosEntrenados:rnd(0,500),
-            }))
-          );
-          break;
-
-
-        // ── ADQUISICIÓN ────────────────────────────────────────────
-        case "Estandares_Graficos_Entrenados_Adquiridos":
-          resolve({
-            total_estandares_entrenados: rnd(0,200),
-            total_estandares_adquiridos: rnd(0,200),
-          });
-          break;
-
-        case "Estandares_Graficos_Por_Area_Adquisicion":
-          resolve({
-            total_entrenados: rnd(0,200),
-            total_adquiridos:rnd(0,200),
-          });
-          break;
-
-        case "Estandares_Graficos_Adquisicion_Anual":
-          resolve(
-            Array.from({ length: 12 }, (_, m) => ({
-              MesNum:                m + 1,
-              Seguridad:             rnd(0,100),
-              Calidad:               rnd(0,100),
-              Producción:            rnd(0,100),
-              "5S":                  rnd(0,100),
-              TotalAdquiridos:       rnd(0,400),
-              PorcentajeCumplimiento:rnd(0,100),
-            }))
-          );
-          break;
-
-        case "Estandares_Graficos_Pie_Pilar_Adquisicion":
-          resolve(
-            ["Seguridad","Calidad","Producción","5S"].map(p => ({
-              Pilar:     p,
-              entrenados:rnd(0,100),
-              adquiridos:rnd(0,100),
-            }))
-          );
-          break;
-
-
-        // ── FALLBACK ───────────────────────────────────────────────
-        default:
-          resolve({});
-      }
-    });
-  }
-
-  // para cualquier otra planta, usamos la ruta real
-  return realFetchDashboardData(accion, params);
-};
+function fetchDashboardData(accion, params) {
+  return fetch("/SistemaEstandaresAquaChile/ajax/ajaxDashboard.php", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ accion, planta_id: plantaActual, ...params }),
+  }).then(r => r.json());
+}
 
 
 
