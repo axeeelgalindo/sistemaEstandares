@@ -18,7 +18,7 @@ Chart.plugins.register(ChartDataLabels);
 // 2) WRAPPER que elige mock o real según plantaActual
 // ────────────────────────────────────────────────────────────
 function fetchDashboardData(accion, params) {
-  return fetch("/SistemaEstandaresAquaChile/ajax/ajaxDashboard.php", {
+  return fetch("ajax/ajaxDashboard.php", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ accion, planta_id: plantaActual, ...params }),
