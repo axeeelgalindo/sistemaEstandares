@@ -17,15 +17,23 @@ Chart.plugins.register(ChartDataLabels);
 // ────────────────────────────────────────────────────────────
 // 2) WRAPPER que elige mock o real según plantaActual
 // ────────────────────────────────────────────────────────────
+
+//LOCAL
+//function fetchDashboardData(accion, params) {
+//  return fetch("/SistemaEstandaresAquaChile/ajax/ajaxDashboard.php", {
+//    method: "POST",
+//    headers: { "Content-Type": "application/json" },
+//    body: JSON.stringify({ accion, planta_id: plantaActual, ...params }),
+//  }).then(r => r.json());
+//}
+
 function fetchDashboardData(accion, params) {
-  return fetch("ajax/ajaxDashboard.php", {
+  return fetch("/ajax/ajaxDashboard.php", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ accion, planta_id: plantaActual, ...params }),
   }).then(r => r.json());
 }
-
-
 
 
 document.addEventListener("DOMContentLoaded", () => {
